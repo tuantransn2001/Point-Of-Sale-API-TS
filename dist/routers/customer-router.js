@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const CustomerController = require("../controller/customer-controller");
+const authenticate_1 = __importDefault(require("../middlewares/auth/authenticate"));
+const checkUserExist_1 = __importDefault(require("../middlewares/validation/checkUserExist"));
+const checkExist_1 = __importDefault(require("../middlewares/validation/checkExist"));
+const models_1 = __importDefault(require("../models"));
+const { Customers } = models_1.default;
+const customerRouter = (0, express_1.Router)();
+customerRouter.get("/get-all", authenticate_1.default, CustomerController.getAll);
+customerRouter.post("/create", authenticate_1.default, (0, checkUserExist_1.default)(), CustomerController.create);
+customerRouter.get("/get-by-id/:id", authenticate_1.default, (0, checkExist_1.default)(Customers), CustomerController.getByID);
+customerRouter.delete("/delete-by-id/:id", authenticate_1.default, (0, checkExist_1.default)(Customers), CustomerController.deleteByID);
+customerRouter.patch("/update-personalInfo-by-id/:id", authenticate_1.default, (0, checkExist_1.default)(Customers), (0, checkUserExist_1.default)(), CustomerController.updatePersonalInfoByID);
+customerRouter.post("/address/add/:id", authenticate_1.default, (0, checkExist_1.default)(Customers), CustomerController.addNewAddressByCustomerID);
+customerRouter.patch("/address/:addressID/update/:customerID", authenticate_1.default, CustomerController.updateAddressByCustomerIDNAddressID);
+customerRouter.delete("/address/:addressID/delete/:customerID", authenticate_1.default, CustomerController.deleteAddressByCustomerIDNAddressID);
+exports.default = customerRouter;
