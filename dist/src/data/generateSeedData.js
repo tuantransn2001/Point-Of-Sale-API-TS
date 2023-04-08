@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ST_A_INCHARGE = exports.ST_ROLE = exports.ST_ARRAY = exports.U_ST_ARRAY = exports.U_ARRAY = void 0;
+exports.ST_A_INCHARGE = exports.ST_ROLE = exports.ST_ARRAY = exports.U_ST_ARRAY = exports.C_ADDRESS_LIST = exports.U_C_ARRAY = exports.C_ARRAY = exports.U_ARRAY = void 0;
 const randomstring = require("randomstring");
 const { v4: uuidv4 } = require("uuid");
 const common_1 = require("../../src/common");
@@ -49,8 +49,11 @@ const U_ARRAY = [
 ];
 exports.U_ARRAY = U_ARRAY;
 const C_ARRAY = new Array();
+exports.C_ARRAY = C_ARRAY;
 const U_C_ARRAY = new Array();
+exports.U_C_ARRAY = U_C_ARRAY;
 const C_ADDRESS_LIST = new Array();
+exports.C_ADDRESS_LIST = C_ADDRESS_LIST;
 const C_ARRAY_LENGTH = 51;
 const randomAgencyBranchID = () => {
     const randomID = A_B_ARRAY.map(({ id }) => id)[(0, common_1.randomIntFromInterval)(0, 2)];

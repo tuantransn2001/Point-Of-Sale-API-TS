@@ -177,4 +177,13 @@ for (let index = C_ARRAY_LENGTH + 1; index <= ST_ARRAY_LENGTH + 1; index++) {
   ST_A_INCHARGE.push(PositionAgencyInCharge);
 }
 
-export { U_ARRAY, U_ST_ARRAY, ST_ARRAY, ST_ROLE, ST_A_INCHARGE };
+export {
+  U_ARRAY,
+  C_ARRAY,
+  U_C_ARRAY,
+  C_ADDRESS_LIST,
+  U_ST_ARRAY,
+  ST_ARRAY,
+  ST_ROLE,
+  ST_A_INCHARGE,
+};

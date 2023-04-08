@@ -10,27 +10,26 @@ const seeders_1 = require("../src/data/seeders");
 const seedRouter = (0, express_1.Router)();
 seedRouter.post("/data-initial", async (req, res) => {
     try {
-        const UserSeedList = await Users.bulkCreate(seeders_1.U_ARRAY);
-        // const CustomerSeedList = await Customers.bulkCreate(Customer_ARRAY);
-        // const UserCustomerSeedList = await UserCustomerList.bulkCreate(
-        //   UserCustomerList_ARRAY
-        // );
-        // const CustomerAddressSeedList = await CustomerAddressList.bulkCreate(
-        //   CustomerAddressList_ARRAY
-        // );
-        const StaffSeedList = await Staffs.bulkCreate(seeders_1.ST_ARRAY);
-        const StaffRoleSeederList = await StaffRoles.bulkCreate(seeders_1.ST_ROLE);
-        const StaffAgencyBranchInChargeSeederList = await StaffAgencyBranchInCharge.bulkCreate(seeders_1.ST_A_INCHARGE);
-        // const UserStaffSeederList = await UserStaffList.bulkCreate(U_ST_ARRAY);
-        const AgencyBranchSeedList = await AgencyBranchs.bulkCreate(seeders_1.AgencyBranch_ARRAY);
+        const UserSeedList = await Users.bulkCreate(seeders_1.USER_ARRAY);
+        const CustomerSeedList = await Customers.bulkCreate(seeders_1.CUSTOMER_ARRAY);
+        const UserCustomerSeedList = await UserCustomerList.bulkCreate(seeders_1.USER_CUSTOMER_ARRAY);
+        const CustomerAddressSeedList = await CustomerAddressList.bulkCreate(seeders_1.CUSTOMER_ADDRESS_LIST_ARRAY);
+        const StaffSeedList = await Staffs.bulkCreate(seeders_1.STAFF_ARRAY);
+        const StaffRoleSeederList = await StaffRoles.bulkCreate(seeders_1.STAFF_ROLE_ARRAY);
+        const StaffAgencyBranchInChargeSeederList = await StaffAgencyBranchInCharge.bulkCreate(seeders_1.STAFF_AGENCY_INCHARGE_ARRAY);
+        const UserStaffSeederList = await UserStaffList.bulkCreate(seeders_1.USER_STAFF_ARRAY);
+        const AgencyBranchSeedList = await AgencyBranchs.bulkCreate(seeders_1.AGENCY_BRANCH_ARRAY);
         res.status(201).send({
             status: "success",
             data: {
-                // UserSeedList,
-                // StaffSeedList,
+                UserSeedList,
+                CustomerSeedList,
+                UserCustomerSeedList,
+                CustomerAddressSeedList,
+                StaffSeedList,
                 StaffRoleSeederList,
                 StaffAgencyBranchInChargeSeederList,
-                // UserStaffSeederList,
+                UserStaffSeederList,
                 AgencyBranchSeedList,
             },
         });

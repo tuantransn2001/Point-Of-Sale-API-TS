@@ -5,15 +5,18 @@ import rootRouter from "../routers";
 
 dotenv.config();
 
-const PORT: string = process.env.PORT ?? "default is string";
 const app: Express = express();
 
 // ! Converted Data into JSON type - Important
 app.use(express.json());
 // ? Router Set up
+app.get("/" , (req,res) => {
+  res.send("Hello")
+} )
 app.use("/mhk-api/v2/", rootRouter);
 
 db.sequelize.sync({ force: true }).then(() => {
+  const PORT: string = process.env.PORT ?? "default is string";
   app.listen(PORT, () => {
     console.log("Connected - Synchronous Database Success");
     console.log(`Server is running http://localhost:${PORT}`);

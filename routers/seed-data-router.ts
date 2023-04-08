@@ -12,41 +12,49 @@ const {
   StaffAgencyBranchInCharge,
 } = db;
 import {
-  U_ARRAY,
-  U_ST_ARRAY,
-  ST_ARRAY,
-  ST_ROLE,
-  ST_A_INCHARGE,
-  AgencyBranch_ARRAY,
+  USER_ARRAY,
+  CUSTOMER_ARRAY,
+  USER_CUSTOMER_ARRAY,
+  CUSTOMER_ADDRESS_LIST_ARRAY,
+  USER_STAFF_ARRAY,
+  STAFF_ARRAY,
+  STAFF_ROLE_ARRAY,
+  STAFF_AGENCY_INCHARGE_ARRAY,
+  AGENCY_BRANCH_ARRAY,
 } from "../src/data/seeders";
 
 const seedRouter = Router();
 seedRouter.post("/data-initial", async (req: Request, res: Response) => {
   try {
-    const UserSeedList = await Users.bulkCreate(U_ARRAY);
-    // const CustomerSeedList = await Customers.bulkCreate(Customer_ARRAY);
-    // const UserCustomerSeedList = await UserCustomerList.bulkCreate(
-    //   UserCustomerList_ARRAY
-    // );
-    // const CustomerAddressSeedList = await CustomerAddressList.bulkCreate(
-    //   CustomerAddressList_ARRAY
-    // );
-    const StaffSeedList = await Staffs.bulkCreate(ST_ARRAY);
-    const StaffRoleSeederList = await StaffRoles.bulkCreate(ST_ROLE);
+    const UserSeedList = await Users.bulkCreate(USER_ARRAY);
+    const CustomerSeedList = await Customers.bulkCreate(CUSTOMER_ARRAY);
+    const UserCustomerSeedList = await UserCustomerList.bulkCreate(
+      USER_CUSTOMER_ARRAY
+    );
+    const CustomerAddressSeedList = await CustomerAddressList.bulkCreate(
+      CUSTOMER_ADDRESS_LIST_ARRAY
+    );
+    const StaffSeedList = await Staffs.bulkCreate(STAFF_ARRAY);
+    const StaffRoleSeederList = await StaffRoles.bulkCreate(STAFF_ROLE_ARRAY);
     const StaffAgencyBranchInChargeSeederList =
-      await StaffAgencyBranchInCharge.bulkCreate(ST_A_INCHARGE);
-    // const UserStaffSeederList = await UserStaffList.bulkCreate(U_ST_ARRAY);
+      await StaffAgencyBranchInCharge.bulkCreate(STAFF_AGENCY_INCHARGE_ARRAY);
+    const UserStaffSeederList = await UserStaffList.bulkCreate(
+      USER_STAFF_ARRAY
+    );
     const AgencyBranchSeedList = await AgencyBranchs.bulkCreate(
-      AgencyBranch_ARRAY
+      AGENCY_BRANCH_ARRAY
     );
     res.status(201).send({
       status: "success",
       data: {
-        // UserSeedList,
-        // StaffSeedList,
+        UserSeedList,
+        CustomerSeedList,
+        UserCustomerSeedList,
+        CustomerAddressSeedList,
+        StaffSeedList,
         StaffRoleSeederList,
         StaffAgencyBranchInChargeSeederList,
-        // UserStaffSeederList,
+        UserStaffSeederList,
         AgencyBranchSeedList,
       },
     });
