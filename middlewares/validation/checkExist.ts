@@ -10,7 +10,6 @@ const checkExist =
           id,
         },
       });
-
       if (foundItem) {
         next();
       } else {

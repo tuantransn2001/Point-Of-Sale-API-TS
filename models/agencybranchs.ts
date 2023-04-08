@@ -14,7 +14,7 @@ interface AgencyBranchAttributes {
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class AgencyBranch
+  class AgencyBranchs
     extends Model<AgencyBranchAttributes>
     implements AgencyBranchAttributes
   {
@@ -32,9 +32,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models: any) {}
+    static associate(models: any) {
+      AgencyBranchs.hasMany(models.StaffAgencyBranchInCharge, {
+        foreignKey: "agency_branch_id",
+      });
+    }
   }
-  AgencyBranch.init(
+  AgencyBranchs.init(
     {
       id: {
         allowNull: false,
@@ -69,8 +73,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
     },
     {
       sequelize,
-      modelName: "AgencyBranch",
+      modelName: "AgencyBranchs",
     }
   );
-  return AgencyBranch;
+  return AgencyBranchs;
 };

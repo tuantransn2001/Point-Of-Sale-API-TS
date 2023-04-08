@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
             StaffRoles.belongsTo(models.Staffs, {
                 foreignKey: "staff_id",
             });
+            StaffRoles.belongsTo(models.StaffAgencyBranchInCharge, {
+                foreignKey: "staff_role_id",
+            });
         }
     }
     StaffRoles.init({

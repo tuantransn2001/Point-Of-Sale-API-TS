@@ -9,16 +9,16 @@ const { UserStaffList, Users, Staffs, StaffAgencyBranchInCharge, StaffRoles, Age
 class StaffController {
     static async getAll(req, res) {
         try {
-            //   const staffList = await UserStaffList.findAll({
-            //     include: [
-            //       {
-            //         model: Users,
-            //       },
-            //       {
-            //         model: Staffs,
-            //       },
-            //     ],
-            //   });
+            const staffList = await UserStaffList.findAll({
+                include: [
+                    {
+                        model: Users,
+                    },
+                    {
+                        model: Staffs,
+                    },
+                ],
+            });
             const staffPRoleIncludeAgencyInChargeList = await StaffAgencyBranchInCharge.findAll({
                 include: [
                     {
@@ -31,8 +31,8 @@ class StaffController {
             });
             res.status(200).send({
                 status: "success",
-                // staffList,
                 staffPRoleIncludeAgencyInChargeList,
+                staffList,
             });
         }
         catch (err) {

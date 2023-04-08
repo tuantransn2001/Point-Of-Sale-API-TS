@@ -18,6 +18,6 @@ app.use("/mhk-api/v2/", routers_1.default);
 models_1.default.sequelize.sync({ force: true }).then(() => {
     app.listen(PORT, () => {
         console.log("Connected - Synchronous Database Success");
-        console.log(`Server is running test http://localhost:${PORT}`);
+        console.log(`Server is running http://localhost:${PORT}`);
     });
 });

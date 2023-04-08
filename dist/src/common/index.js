@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleFormatUpdateDataByValidValue = exports.handleFormatStaffIncludeCheckIsDelete = exports.handleFormatCustomerIncludeCheckIsDelete = exports.handleGetFirstNameFromFullName = void 0;
+exports.randomIntFromInterval = exports.handleFormatUpdateDataByValidValue = exports.handleFormatStaffIncludeCheckIsDelete = exports.handleFormatCustomerIncludeCheckIsDelete = exports.handleGetFirstNameFromFullName = void 0;
 const handleGetFirstNameFromFullName = (fullName) => {
     let targetIndex;
     for (let index = fullName.length - 1; index >= 0; index--) {
@@ -95,3 +95,8 @@ const handleFormatUpdateDataByValidValue = (targetObj, defaultValue) => {
     }, { ...defaultValue, updatedAt: new Date() });
 };
 exports.handleFormatUpdateDataByValidValue = handleFormatUpdateDataByValidValue;
+const randomIntFromInterval = (min, max) => {
+    // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min);
+};
+exports.randomIntFromInterval = randomIntFromInterval;

@@ -24,7 +24,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       StaffAgencyBranchInCharge.belongsTo(models.StaffRoles, {
         foreignKey: "staff_role_id",
       });
-      StaffAgencyBranchInCharge.belongsTo(models.AgencyBranch, {
+      StaffAgencyBranchInCharge.belongsTo(models.AgencyBranchs, {
         foreignKey: "agency_branch_id",
       });
     }
@@ -37,8 +37,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      staff_role_id: DataTypes.UUID,
-      agency_branch_id: DataTypes.UUID,
+      staff_role_id: { type: DataTypes.UUID },
+      agency_branch_id: { type: DataTypes.UUID },
     },
     {
       sequelize,

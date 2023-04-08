@@ -12,16 +12,16 @@ const {
 class StaffController {
   static async getAll(req: Request, res: Response) {
     try {
-      //   const staffList = await UserStaffList.findAll({
-      //     include: [
-      //       {
-      //         model: Users,
-      //       },
-      //       {
-      //         model: Staffs,
-      //       },
-      //     ],
-      //   });
+      const staffList = await UserStaffList.findAll({
+        include: [
+          {
+            model: Users,
+          },
+          {
+            model: Staffs,
+          },
+        ],
+      });
 
       const staffPRoleIncludeAgencyInChargeList =
         await StaffAgencyBranchInCharge.findAll({
@@ -37,8 +37,8 @@ class StaffController {
 
       res.status(200).send({
         status: "success",
-        // staffList,
         staffPRoleIncludeAgencyInChargeList,
+        staffList,
       });
     } catch (err) {
       res.status(500).send("Server is working wrong!");

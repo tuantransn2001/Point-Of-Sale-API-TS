@@ -1,64 +1,51 @@
 const randomstring = require("randomstring");
 const { v4: uuidv4 } = require("uuid");
-function randomIntFromInterval(min: number, max: number) {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+
+import { randomIntFromInterval } from "../../src/common";
 const A_B_ARRAY = [
   {
-    id: uuidv4(),
+    id: "e7b1d0d2-f2e0-437d-94f4-f3b75cb99e21",
     agency_branch_name: "LCD",
     agency_branch_code: "CN1",
     agency_branch_phone: "0706952905",
     agency_branch_address:
       "40-42 đường B (Trần Thị Vững), KDC Him Lam Phú Đông, KP Bình Đường 3",
     agency_branch_area: "Bình Dương - Thành phố Dĩ An",
-    agency_branch_expiration_date: new Date(),
     agency_branch_status: "active",
     isDefaultCN: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   },
   {
-    id: uuidv4(),
+    id: "6ab4f7c8-353f-47f2-8757-2347f2ab6332",
     agency_branch_name: "BẢO HÀNH",
     agency_branch_code: "CN2",
     agency_branch_phone: "0706952905",
     agency_branch_address:
       "40-42 đường B (Trần Thị Vững), KDC Him Lam Phú Đông, KP Bình Đường 3",
     agency_branch_area: "Bình Dương - Thành phố Dĩ An",
-    agency_branch_expiration_date: new Date(),
     agency_branch_status: "active",
     isDefaultCN: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   },
   {
-    id: uuidv4(),
+    id: "995ea74e-0358-4833-856c-cd45f2e99c21",
     agency_branch_name: "TRUNG TÂM SỬA CHỮA",
     agency_branch_code: "CN2",
     agency_branch_phone: "0706952905",
     agency_branch_address:
       "40-42 đường B (Trần Thị Vững), KDC Him Lam Phú Đông, KP Bình Đường 3",
     agency_branch_area: "Bình Dương - Thành phố Dĩ An",
-    agency_branch_expiration_date: new Date(),
     agency_branch_status: "active",
     isDefaultCN: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   },
 ];
 const U_ARRAY = [
   {
-    id: uuidv4(),
+    id: "27e83e28-b3de-4212-be39-81e61198d77b",
     user_name: "Trần Thái Tuấn",
     user_type: "admin",
     user_phone: "0987546325",
     user_email: "admin@gmail.com",
     user_password: "mhkadmin@123",
-    user_code: uuidv4(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    user_code: "ysc1",
   },
 ];
 const C_ARRAY = new Array();
@@ -88,14 +75,12 @@ for (let index = 1; index <= C_ARRAY_LENGTH; index++) {
 
   const newUSer = {
     id: uuidv4(),
-    user_name: `Khách hàng ${uuidv4()}`,
+    user_name: `Khách hàng ${index}`,
     user_type: "customer",
     user_phone: `0${c_number}`,
     user_email: `${c_email}@gmail.com`,
     user_password: c_email,
     user_code: c_code,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
 
   const newCustomer = {
@@ -105,16 +90,12 @@ for (let index = 1; index <= C_ARRAY_LENGTH; index++) {
     staff_in_charge_note: "Be carefull to change data!",
     customer_status: "Đang giao dịch",
     tags: "Lazada",
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   const newUserCustomerItem = {
     id: uuidv4(),
     customer_id: newCustomer.id,
     user_id: newUSer.id,
     user_customer_list_note: "Created by staff",
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   const newCAddressItem = {
     id: uuidv4(),
@@ -122,8 +103,6 @@ for (let index = 1; index <= C_ARRAY_LENGTH; index++) {
     customer_province: "Hồ Chí Minh",
     customer_district: "Quận Bình Tân",
     customer_address: "Phường 4",
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   U_ARRAY.push(newUSer);
   C_ARRAY.push(newCustomer);
@@ -137,8 +116,7 @@ const ST_ROLE = new Array();
 const ST_A_INCHARGE = new Array();
 const U_ST_ARRAY = new Array();
 
-for (let index = C_ARRAY_LENGTH; index <= ST_ARRAY_LENGTH; index++) {
-  const randomStringID = uuidv4();
+for (let index = C_ARRAY_LENGTH + 1; index <= ST_ARRAY_LENGTH + 1; index++) {
   const c_number = randomstring.generate({
     charset: "numeric",
     length: 9,
@@ -156,18 +134,16 @@ for (let index = C_ARRAY_LENGTH; index <= ST_ARRAY_LENGTH; index++) {
   });
 
   const newUSer = {
-    id: randomStringID,
-    user_name: `Nhân viên ${randomStringID}`,
+    id: uuidv4(),
+    user_name: `Nhân viên ${index}`,
     user_type: "staff",
     user_phone: `0${c_number}`,
     user_email: `${c_email}@gmail.com`,
     user_password: c_email,
     user_code: c_code,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   const newStaff = {
-    id: randomStringID,
+    id: uuidv4(),
     staff_status: "Đang làm việc",
     staff_birthday: new Date(),
     note_about_staff: "Nhân viên mới",
@@ -177,30 +153,22 @@ for (let index = C_ARRAY_LENGTH; index <= ST_ARRAY_LENGTH; index++) {
     staff_address: "Phường Linh Trung Quận Thủ Đức",
     isAllowViewImportNWholesalePrice: false,
     isAllowViewShippingPrice: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   const userStaffItem = {
-    id: randomStringID,
+    id: uuidv4(),
     staff_id: newStaff.id,
     user_id: newUSer.id,
     user_staff_list_note: "Be carefully",
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   const newStaffRole = {
-    id: randomStringID,
+    id: uuidv4(),
     staff_id: newStaff.id,
     staff_role: `Nhân viên ${randomRole}`,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   const PositionAgencyInCharge = {
-    id: randomStringID,
+    id: uuidv4(),
     staff_role_id: newStaffRole.id,
     agency_branch_id: randomAgencyBranchID(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   U_ARRAY.push(newUSer);
   U_ST_ARRAY.push(userStaffItem);
@@ -209,14 +177,4 @@ for (let index = C_ARRAY_LENGTH; index <= ST_ARRAY_LENGTH; index++) {
   ST_A_INCHARGE.push(PositionAgencyInCharge);
 }
 
-export {
-  U_ARRAY,
-  C_ARRAY,
-  U_C_ARRAY,
-  C_ADDRESS_LIST,
-  ST_ARRAY,
-  ST_ROLE,
-  ST_A_INCHARGE,
-  U_ST_ARRAY,
-  A_B_ARRAY,
-};
+export { U_ARRAY, U_ST_ARRAY, ST_ARRAY, ST_ROLE, ST_A_INCHARGE };

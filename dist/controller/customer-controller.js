@@ -90,8 +90,10 @@ class CustomerController {
                 },
             });
             // TODO: Add check address exist or not
+            const isUserExist = foundCustomerList[0].dataValues.User.dataValues.isDelete === null;
+            console.log(isUserExist);
             const customerAddressList = await CustomerAddressList.findAll();
-            if (foundCustomerList.length > 0) {
+            if (isUserExist) {
                 res.status(200).send({
                     status: "success",
                     data: (0, common_1.handleFormatCustomerIncludeCheckIsDelete)(foundCustomerList, customerAddressList, "isObject"),
@@ -99,13 +101,12 @@ class CustomerController {
             }
             else {
                 res.status(404).send({
-                    status: "fail",
+                    status: "Fail",
                     data: "Customer Not Found",
                 });
             }
         }
         catch (err) {
-            console.log(err);
             res.status(500).send({
                 status: "fail",
                 message: "Server is working wrong!",
@@ -174,9 +175,17 @@ class CustomerController {
                 user_phone,
                 user_email,
             }, foundUserByID.dataValues);
+            // TODO: Fix random StaffID
+            // const handleRandomStaffID = () => {
+            //   const staffSeedArrayLength: number = StaffSeedArray.length;
+            //   const randomStaffID: string = StaffSeedArray.map(({ id }) => id)[
+            //     randomIntFromInterval(0, staffSeedArrayLength - 1)
+            //   ];
+            //   return randomStaffID;
+            // };
             const newCustomerRowUpdate = (0, common_1.handleFormatUpdateDataByValidValue)({
                 customer_status,
-                staff_id,
+                // staff_id: handleRandomStaffID(),
                 staff_in_charge_note,
                 tags,
             }, foundCustomerByID.dataValues);

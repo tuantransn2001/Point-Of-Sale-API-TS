@@ -5,31 +5,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const models_1 = __importDefault(require("../models"));
-const { Users, Customers, UserCustomerList, CustomerAddressList, Staffs, StaffRoles, StaffAgencyInCharge, UserStaffList, AgencyBranch, } = models_1.default;
-const generateSeedData_1 = require("../src/data/generateSeedData");
+const { Users, Customers, UserCustomerList, CustomerAddressList, Staffs, StaffRoles, UserStaffList, AgencyBranchs, StaffAgencyBranchInCharge, } = models_1.default;
+const seeders_1 = require("../src/data/seeders");
 const seedRouter = (0, express_1.Router)();
 seedRouter.post("/data-initial", async (req, res) => {
     try {
-        const UserSeedList = await Users.bulkCreate(generateSeedData_1.U_ARRAY);
-        const CustomerSeedList = await Customers.bulkCreate(generateSeedData_1.C_ARRAY);
-        const UserCustomerSeedList = await UserCustomerList.bulkCreate(generateSeedData_1.U_C_ARRAY);
-        const CustomerAddressSeedList = await CustomerAddressList.bulkCreate(generateSeedData_1.C_ADDRESS_LIST);
-        const StaffSeedList = await Staffs.bulkCreate(generateSeedData_1.ST_ARRAY);
-        const StaffRoleSeederList = await StaffRoles.bulkCreate(generateSeedData_1.ST_ROLE);
-        const StaffAgencyInChargeSeederList = await StaffAgencyInCharge.bulkCreate(generateSeedData_1.ST_A_INCHARGE);
-        const UserStaffSeederList = await UserStaffList.bulkCreate(generateSeedData_1.U_ST_ARRAY);
-        const AgencyBranchSeedList = await AgencyBranch.bulkCreate(generateSeedData_1.A_B_ARRAY);
+        const UserSeedList = await Users.bulkCreate(seeders_1.U_ARRAY);
+        // const CustomerSeedList = await Customers.bulkCreate(Customer_ARRAY);
+        // const UserCustomerSeedList = await UserCustomerList.bulkCreate(
+        //   UserCustomerList_ARRAY
+        // );
+        // const CustomerAddressSeedList = await CustomerAddressList.bulkCreate(
+        //   CustomerAddressList_ARRAY
+        // );
+        const StaffSeedList = await Staffs.bulkCreate(seeders_1.ST_ARRAY);
+        const StaffRoleSeederList = await StaffRoles.bulkCreate(seeders_1.ST_ROLE);
+        const StaffAgencyBranchInChargeSeederList = await StaffAgencyBranchInCharge.bulkCreate(seeders_1.ST_A_INCHARGE);
+        // const UserStaffSeederList = await UserStaffList.bulkCreate(U_ST_ARRAY);
+        const AgencyBranchSeedList = await AgencyBranchs.bulkCreate(seeders_1.AgencyBranch_ARRAY);
         res.status(201).send({
             status: "success",
             data: {
-                UserSeedList,
-                CustomerSeedList,
-                UserCustomerSeedList,
-                CustomerAddressSeedList,
-                StaffSeedList,
+                // UserSeedList,
+                // StaffSeedList,
                 StaffRoleSeederList,
-                StaffAgencyInChargeSeederList,
-                UserStaffSeederList,
+                StaffAgencyBranchInChargeSeederList,
+                // UserStaffSeederList,
                 AgencyBranchSeedList,
             },
         });
@@ -50,7 +51,7 @@ seedRouter.delete("/data-reset", async (req, res) => {
         await models_1.default.CustomerAddressList.truncate({ cascade: true });
         await models_1.default.Staffs.truncate({ cascade: true });
         await models_1.default.StaffRoles.truncate({ cascade: true });
-        await models_1.default.StaffAgencyInCharge.truncate({ cascade: true });
+        // await db.StaffAgencyBrachInCharge.truncate({ cascade: true });
         await models_1.default.UserStaffList.truncate({ cascade: true });
         res.status(200).send({
             status: "Success",
