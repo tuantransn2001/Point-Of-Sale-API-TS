@@ -2,10 +2,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class Users extends sequelize_1.Model {
-        static associate(models) { }
+    class User extends sequelize_1.Model {
+        static associate({ Customer, Staff, UserHistoryOrders, UserAddress }) {
+            User.hasOne(Customer, {
+                foreignKey: "user_id",
+            });
+            User.hasOne(Staff, {
+                foreignKey: "user_id",
+            });
+            User.hasMany(UserAddress, {
+                foreignKey: "user_id",
+            });
+        }
     }
-    Users.init({
+    User.init({
         id: {
             allowNull: false,
             primaryKey: true,
@@ -35,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
-        modelName: "Users",
+        modelName: "User",
     });
-    return Users;
+    return User;
 };

@@ -13,12 +13,7 @@ interface UserAttributes {
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class Users extends Model<UserAttributes> implements UserAttributes {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class User extends Model<UserAttributes> implements UserAttributes {
     id!: string;
     user_code!: string;
     user_phone!: string;
@@ -27,9 +22,19 @@ module.exports = (sequelize: any, DataTypes: any) => {
     user_name!: string;
     user_type!: string;
     isDelete!: boolean;
-    static associate(models: any) {}
+    static associate({ Customer, Staff, UserHistoryOrders, UserAddress }: any) {
+      User.hasOne(Customer, {
+        foreignKey: "user_id",
+      });
+      User.hasOne(Staff, {
+        foreignKey: "user_id",
+      });
+      User.hasMany(UserAddress, {
+        foreignKey: "user_id",
+      });
+    }
   }
-  Users.init(
+  User.init(
     {
       id: {
         allowNull: false,
@@ -61,8 +66,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
     },
     {
       sequelize,
-      modelName: "Users",
+      modelName: "User",
     }
   );
-  return Users;
+  return User;
 };

@@ -3,27 +3,23 @@ import { Model } from "sequelize";
 
 interface StaffAttributes {
   id: string;
+  user_id: string;
   staff_status: string;
   staff_birthday: Date;
   note_about_staff: string;
-  staff_gender: string;
-  staff_province: string;
-  staff_district: string;
-  staff_address: string;
+  staff_gender: boolean;
   isAllowViewImportNWholesalePrice: boolean;
   isAllowViewShippingPrice: boolean;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class Staffs extends Model<StaffAttributes> implements StaffAttributes {
+  class Staff extends Model<StaffAttributes> implements StaffAttributes {
     id!: string;
+    user_id!: string;
     staff_status!: string;
     staff_birthday!: Date;
     note_about_staff!: string;
-    staff_gender!: string;
-    staff_province!: string;
-    staff_district!: string;
-    staff_address!: string;
+    staff_gender!: boolean;
     isAllowViewImportNWholesalePrice!: boolean;
     isAllowViewShippingPrice!: boolean;
     /**
@@ -31,13 +27,19 @@ module.exports = (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models: any) {
-      Staffs.hasMany(models.StaffRoles, {
+    static associate({ User, StaffRole, Customer }: any) {
+      Staff.hasMany(StaffRole, {
+        foreignKey: "staff_id",
+      });
+      Staff.belongsTo(User, {
+        foreignKey: "user_id",
+      });
+      Staff.hasMany(Customer, {
         foreignKey: "staff_id",
       });
     }
   }
-  Staffs.init(
+  Staff.init(
     {
       id: {
         allowNull: false,
@@ -45,20 +47,18 @@ module.exports = (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
+      user_id: DataTypes.UUID,
       staff_status: DataTypes.STRING,
       staff_birthday: DataTypes.DATE,
       note_about_staff: DataTypes.STRING,
-      staff_gender: DataTypes.STRING,
-      staff_province: DataTypes.STRING,
-      staff_district: DataTypes.STRING,
-      staff_address: DataTypes.STRING,
+      staff_gender: DataTypes.BOOLEAN,
       isAllowViewImportNWholesalePrice: DataTypes.BOOLEAN,
       isAllowViewShippingPrice: DataTypes.BOOLEAN,
     },
     {
       sequelize,
-      modelName: "Staffs",
+      modelName: "Staff",
     }
   );
-  return Staffs;
+  return Staff;
 };

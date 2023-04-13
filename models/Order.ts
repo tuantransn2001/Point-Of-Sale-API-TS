@@ -3,7 +3,7 @@ import { Model } from "sequelize";
 
 interface OrderAttributes {
   id: string;
-  user_history_order_list_id: number;
+  user_history_order_id: number;
   user_id: string;
   order_tags: string;
   order_status: string;
@@ -17,9 +17,9 @@ interface OrderAttributes {
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class Orders extends Model<OrderAttributes> implements OrderAttributes {
+  class Order extends Model<OrderAttributes> implements OrderAttributes {
     id!: string;
-    user_history_order_list_id!: number;
+    user_history_order_id!: number;
     user_id!: string;
     order_tags!: string;
     order_status!: string;
@@ -35,9 +35,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models: any) {}
+    static associate({ UserHistoryOrders, Customer, OrderProductList }: any) {}
   }
-  Orders.init(
+  Order.init(
     {
       id: {
         allowNull: false,
@@ -45,7 +45,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      user_history_order_list_id: {
+      user_history_order_id: {
         type: DataTypes.UUID,
       },
       user_id: {
@@ -81,8 +81,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
     },
     {
       sequelize,
-      modelName: "Orders",
+      modelName: "Order",
     }
   );
-  return Orders;
+  return Order;
 };

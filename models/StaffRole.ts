@@ -1,35 +1,32 @@
-"use strict";
+("use strict");
 import { Model } from "sequelize";
 
 interface StaffRoleAttributes {
   id: string;
+  role_id: string;
   staff_id: string;
-  staff_role: number;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class StaffRoles
+  class StaffRole
     extends Model<StaffRoleAttributes>
     implements StaffRoleAttributes
   {
     id!: string;
+    role_id!: string;
     staff_id!: string;
-    staff_role!: number;
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models: any) {
-      StaffRoles.belongsTo(models.Staffs, {
+
+    static associate({ Staff, Role, StaffAgencyBranchInCharge }: any) {
+      StaffRole.hasOne(Role, { foreignKey: "role_id" });
+      StaffRole.belongsTo(Staff, {
         foreignKey: "staff_id",
       });
-      StaffRoles.belongsTo(models.StaffAgencyBranchInCharge, {
+      StaffRole.hasMany(StaffAgencyBranchInCharge, {
         foreignKey: "staff_role_id",
       });
     }
   }
-  StaffRoles.init(
+  StaffRole.init(
     {
       id: {
         allowNull: false,
@@ -37,15 +34,17 @@ module.exports = (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      staff_id: { type: DataTypes.UUID },
-      staff_role: {
-        type: DataTypes.STRING,
+      role_id: {
+        type: DataTypes.UUID,
+      },
+      staff_id: {
+        type: DataTypes.UUID,
       },
     },
     {
       sequelize,
-      modelName: "StaffRoles",
+      modelName: "StaffRole",
     }
   );
-  return StaffRoles;
+  return StaffRole;
 };

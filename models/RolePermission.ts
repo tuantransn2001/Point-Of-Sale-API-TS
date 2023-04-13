@@ -1,26 +1,32 @@
 "use strict";
 import { Model } from "sequelize";
 
-interface UserHistoryOrderListAttributes {
+interface RolePermissionAttributes {
   id: string;
-  user_id: string;
+  role_id: string;
+  role_permission_description: string;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class UserHistoryOrderList
-    extends Model<UserHistoryOrderListAttributes>
-    implements UserHistoryOrderListAttributes
+  class RolePermission
+    extends Model<RolePermissionAttributes>
+    implements RolePermissionAttributes
   {
     id!: string;
-    user_id!: string;
+    role_id!: string;
+    role_permission_description!: string;
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models: any) {}
+    static associate({ Role }: any) {
+      RolePermission.belongsTo(Role, {
+        foreignKey: "role_id",
+      });
+    }
   }
-  UserHistoryOrderList.init(
+  RolePermission.init(
     {
       id: {
         allowNull: false,
@@ -28,14 +34,17 @@ module.exports = (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      user_id: {
+      role_id: {
         type: DataTypes.UUID,
+      },
+      role_permission_description: {
+        type: DataTypes.STRING,
       },
     },
     {
       sequelize,
-      modelName: "UserHistoryOrderList",
+      modelName: "RolePermission",
     }
   );
-  return UserHistoryOrderList;
+  return RolePermission;
 };
