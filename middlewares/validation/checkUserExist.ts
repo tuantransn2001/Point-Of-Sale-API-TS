@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "../../src/common/type";
 import db from "../../models";
-const { Users } = db;
+const { User } = db;
 const checkUserExist =
   () => async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -9,7 +9,7 @@ const checkUserExist =
       const errorMessage: Array<string> = new Array();
       // * ================= Name =============
       if (user_name)
-        await Users.findOne({
+        await User.findOne({
           where: {
             user_name,
           },
@@ -21,7 +21,7 @@ const checkUserExist =
         });
       // * ================= Code =============
       if (user_code)
-        await Users.findOne({
+        await User.findOne({
           where: {
             user_code,
           },
@@ -33,7 +33,7 @@ const checkUserExist =
         });
       // * ================= Phone =============
       if (user_phone)
-        await Users.findOne({
+        await User.findOne({
           where: {
             user_phone,
           },
@@ -46,7 +46,7 @@ const checkUserExist =
       // * ================= Email =============
 
       if (user_email)
-        await Users.findOne({
+        await User.findOne({
           where: {
             user_email,
           },

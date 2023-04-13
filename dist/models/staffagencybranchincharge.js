@@ -3,16 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class StaffAgencyBranchInCharge extends sequelize_1.Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
-            StaffAgencyBranchInCharge.belongsTo(models.StaffRoles, {
+            StaffAgencyBranchInCharge.belongsTo(models.StaffRole, {
                 foreignKey: "staff_role_id",
             });
-            StaffAgencyBranchInCharge.belongsTo(models.AgencyBranchs, {
+            StaffAgencyBranchInCharge.belongsTo(models.AgencyBranches, {
                 foreignKey: "agency_branch_id",
             });
         }

@@ -5,98 +5,62 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const { v4: uuidv4 } = require("uuid");
 const models_1 = __importDefault(require("../models"));
+const { Customer, User, UserAddress } = models_1.default;
 const common_1 = require("../src/common");
-const { Users, Customers, UserCustomerList, CustomerAddressList } = models_1.default;
 class CustomerController {
     static async getAll(req, res) {
         try {
-            const customerList = await UserCustomerList.findAll({
+            const User_Customer_List = await User.findAll({
+                where: {
+                    isDelete: null,
+                    user_type: "customer",
+                },
                 include: [
                     {
-                        model: Users,
-                    },
-                    {
-                        model: Customers,
+                        model: Customer,
                     },
                 ],
             });
-            const customerAddressList = await CustomerAddressList.findAll();
+            const User_Address_List = await UserAddress.findAll();
             res.status(200).send({
                 status: "success",
-                data: (0, common_1.handleFormatCustomerIncludeCheckIsDelete)(customerList, customerAddressList, "isArray"),
+                data: (0, common_1.handleFormatCustomer)(User_Customer_List, User_Address_List, "isArray"),
             });
         }
         catch (err) {
             res.status(500).send({
                 status: "error",
                 message: "Server is working wrong!",
-                error: err,
             });
-        }
-    }
-    static async create(req, res) {
-        try {
-            const { user_name, user_code, user_phone, user_email, customer_status, customer_province, customer_district, customer_address, 
-            // TODO: Client provide staff_id with uuid
-            staff_id, staff_in_charge_note, tags, } = req.body;
-            const newUserRow = await Users.create({
-                user_name,
-                user_code,
-                user_phone,
-                user_email,
-                isDelete: null,
-                user_type: "customer",
-            });
-            const newCustomerRow = await Customers.create({
-                staff_id: uuidv4(),
-                staff_in_charge_note,
-                customer_status,
-                tags,
-            });
-            await UserCustomerList.create({
-                customer_id: newCustomerRow.dataValues.id,
-                user_id: newUserRow.dataValues.id,
-            });
-            await CustomerAddressList.create({
-                customer_id: newCustomerRow.dataValues.id,
-                customer_province,
-                customer_district,
-                customer_address,
-            });
-            res
-                .status(201)
-                .send({ status: "Success", message: "Created successfully!" });
-        }
-        catch (err) {
-            res
-                .status(500)
-                .send({ status: "Fail", message: "Server is working wrong!" });
         }
     }
     static async getByID(req, res) {
         try {
-            const { id } = req.params;
-            const foundCustomerList = await UserCustomerList.findAll({
+            const { id } = req.params; // ? This id is belongs to User
+            const foundCustomer = await User.findOne({
                 include: [
                     {
-                        model: Users,
-                    },
-                    {
-                        model: Customers,
+                        model: Customer,
+                        where: {
+                            user_id: id,
+                        },
                     },
                 ],
                 where: {
-                    customer_id: id,
+                    isDelete: null,
+                    user_type: "customer",
                 },
             });
             // TODO: Add check address exist or not
-            const isUserExist = foundCustomerList[0].dataValues.User.dataValues.isDelete === null;
-            console.log(isUserExist);
-            const customerAddressList = await CustomerAddressList.findAll();
-            if (isUserExist) {
+            if (foundCustomer) {
+                const foundCustomerAddressList = await UserAddress.findAll({
+                    where: {
+                        user_id: id,
+                    },
+                });
                 res.status(200).send({
                     status: "success",
-                    data: (0, common_1.handleFormatCustomerIncludeCheckIsDelete)(foundCustomerList, customerAddressList, "isObject"),
+                    data: (0, common_1.handleFormatCustomer)(foundCustomer, foundCustomerAddressList, "isObject"),
                 });
             }
             else {
@@ -113,31 +77,63 @@ class CustomerController {
             });
         }
     }
+    static async create(req, res) {
+        try {
+            const { user_name, user_code, user_phone, user_email, customer_status, address_list, 
+            // TODO: Client provide staff_id with uuid
+            staff_id, staff_in_charge_note, tags, } = req.body;
+            const userID = uuidv4();
+            const newUserRow = {
+                id: userID,
+                user_code,
+                user_phone,
+                user_email,
+                user_name,
+                user_type: "customer",
+                isDelete: null,
+            };
+            const newCustomerRow = {
+                user_id: userID,
+                // TODO: Add STAFF ID
+                staff_in_charge_note,
+                tags,
+                customer_status,
+            };
+            const userAddressArray = address_list.map((address) => {
+                const { user_province, user_district, user_specific_address } = address;
+                const newAddress = {
+                    user_id: userID,
+                    user_province,
+                    user_district,
+                    user_specific_address,
+                };
+                return newAddress;
+            });
+            const newUserCreated = await User.create(newUserRow);
+            const newCustomerCreated = await Customer.create(newCustomerRow);
+            const newUserAddressListCreated = await UserAddress.bulkCreate(userAddressArray);
+            res.status(201).send({
+                status: "Success",
+                message: "Created successfully!",
+                data: {
+                    newUserCreated,
+                    newCustomerCreated,
+                    newUserAddressListCreated,
+                },
+            });
+        }
+        catch (err) {
+            res
+                .status(500)
+                .send({ status: "Fail", message: "Server is working wrong!" });
+        }
+    }
     static async deleteByID(req, res) {
         try {
-            const { id } = req.params;
-            // ? Trường hợp khi xóa rồi -> isDelete = true -> Nếu nhập lại id này thì sẽ fake thông báo ( client xử lý )
-            const foundCustomerList = await UserCustomerList.findAll({
-                include: [
-                    {
-                        model: Users,
-                    },
-                    {
-                        model: Customers,
-                    },
-                ],
-                where: {
-                    customer_id: id,
-                },
-            });
-            const targetUserID = foundCustomerList[0].User.dataValues.id;
-            const foundUser = await Users.findOne({
-                where: {
-                    id: targetUserID,
-                },
-            });
+            const { id } = req.params; // ? ID nay la user id
+            const foundUser = await User.findByPk(id);
             foundUser.isDelete = true;
-            await foundUser.save();
+            foundUser.save();
             res.status(202).send({
                 status: "success",
                 message: "Delete customer successfully!",
@@ -154,56 +150,37 @@ class CustomerController {
         try {
             const { user_code, user_name, user_phone, user_email, customer_status, staff_id, staff_in_charge_note, tags, } = req.body;
             const { id } = req.params;
-            const { user_id, customer_id } = await UserCustomerList.findOne({
+            const foundUser = await User.findByPk(id);
+            const foundCustomer = await Customer.findOne({
                 where: {
-                    customer_id: id,
+                    user_id: foundUser.id,
                 },
             });
-            const foundUserByID = await Users.findOne({
-                where: {
-                    id: user_id,
-                },
-            });
-            const foundCustomerByID = await Customers.findOne({
-                where: {
-                    id: customer_id,
-                },
-            });
-            const newUserRowUpdate = (0, common_1.handleFormatUpdateDataByValidValue)({
+            const userRowUpdated = (0, common_1.handleFormatUpdateDataByValidValue)({
                 user_code,
                 user_name,
                 user_phone,
                 user_email,
-            }, foundUserByID.dataValues);
-            // TODO: Fix random StaffID
-            // const handleRandomStaffID = () => {
-            //   const staffSeedArrayLength: number = StaffSeedArray.length;
-            //   const randomStaffID: string = StaffSeedArray.map(({ id }) => id)[
-            //     randomIntFromInterval(0, staffSeedArrayLength - 1)
-            //   ];
-            //   return randomStaffID;
-            // };
-            const newCustomerRowUpdate = (0, common_1.handleFormatUpdateDataByValidValue)({
+            }, foundUser.dataValues);
+            const customerRowUpdated = (0, common_1.handleFormatUpdateDataByValidValue)({
                 customer_status,
-                // staff_id: handleRandomStaffID(),
+                staff_id,
                 staff_in_charge_note,
                 tags,
-            }, foundCustomerByID.dataValues);
-            const UserUpdated = await foundUserByID.update(newUserRowUpdate);
-            const CustomerUpdated = await foundCustomerByID.update(newCustomerRowUpdate);
+            }, foundCustomer.dataValues);
+            await User.update(userRowUpdated, {
+                where: {
+                    id,
+                },
+            });
+            await Customer.update(customerRowUpdated, {
+                where: {
+                    user_id: foundUser.id,
+                },
+            });
             res.status(202).send({
                 status: "success",
                 message: "Update successfully!",
-                data: {
-                    user: {
-                        prev: foundUserByID,
-                        updated: UserUpdated,
-                    },
-                    customer: {
-                        prev: foundCustomerByID,
-                        updated: CustomerUpdated,
-                    },
-                },
             });
         }
         catch (err) {
@@ -216,18 +193,17 @@ class CustomerController {
     static async addNewAddressByCustomerID(req, res) {
         try {
             const { id } = req.params;
-            const { customer_province, customer_district, customer_address } = req.body;
+            const { user_province, user_district, user_specific_address } = req.body;
             const newAddressRow = {
-                customer_province,
-                customer_district,
-                customer_address,
-                customer_id: +id,
+                user_id: id,
+                user_province,
+                user_district,
+                user_specific_address,
             };
-            const newAddressRowAdd = await CustomerAddressList.create(newAddressRow);
+            await UserAddress.create(newAddressRow);
             res.status(201).send({
                 status: "success",
                 message: "Add new address successfully!",
-                newAddress: newAddressRowAdd,
             });
         }
         catch (err) {
@@ -235,64 +211,6 @@ class CustomerController {
                 status: "fail",
                 message: "Server is working wrong!",
             });
-        }
-    }
-    static async updateAddressByCustomerIDNAddressID(req, res) {
-        try {
-            const { addressID, customerID } = req.params;
-            const { customer_address, customer_district, customer_province } = req.body;
-            const foundCustomerAddress = await CustomerAddressList.findOne({
-                where: {
-                    id: addressID,
-                    customer_id: customerID,
-                },
-            });
-            const updateAddress = await foundCustomerAddress.update((0, common_1.handleFormatUpdateDataByValidValue)({
-                customer_address,
-                customer_district,
-                customer_province,
-                updatedAt: new Date(),
-            }, foundCustomerAddress.dataValues));
-            res.status(201).send({
-                status: "Success",
-                message: "Update Success",
-                newAddressUpdated: updateAddress,
-            });
-        }
-        catch (err) {
-            res.status(500).send("Server is working wrong!");
-        }
-    }
-    static async deleteAddressByCustomerIDNAddressID(req, res) {
-        try {
-            const { addressID, customerID } = req.params;
-            const foundCustomerAddress = await CustomerAddressList.findOne({
-                where: {
-                    id: addressID,
-                    customer_id: customerID,
-                },
-            });
-            if (foundCustomerAddress) {
-                await foundCustomerAddress.destroy({
-                    where: {
-                        id: addressID,
-                        customer_id: customerID,
-                    },
-                });
-                res.status(201).send({
-                    status: "success",
-                    message: "Delete successfully address",
-                });
-            }
-            else {
-                res.status(404).send({
-                    status: "Not found",
-                    message: "Address Not Found",
-                });
-            }
-        }
-        catch (err) {
-            res.status(500).send("Server is working wrong!");
         }
     }
 }

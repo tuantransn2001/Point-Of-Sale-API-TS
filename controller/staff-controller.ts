@@ -1,46 +1,40 @@
 import { Request, Response } from "express";
 import db from "../models";
-const {
-  UserStaffList,
-  Users,
-  Staffs,
-  StaffAgencyBranchInCharge,
-  StaffRoles,
-  AgencyBranch,
-} = db;
-// import { handleFormatStaffIncludeCheckIsDelete } from "../src/common";
+const { StaffRole, Staff, User, StaffAgencyBranchInCharge, UserAddress } = db;
+import { handleFormatStaff } from "../src/common";
 class StaffController {
-  static async getAll(req: Request, res: Response) {
+  public static async getAll(req: Request, res: Response) {
     try {
-      const staffList = await UserStaffList.findAll({
+      const userStaffList = await User.findAll({
+        where: {
+          isDelete: null,
+          user_type: "staff",
+        },
         include: [
           {
-            model: Users,
+            model: Staff,
+            include: [
+              {
+                model: StaffRole,
+                include: [
+                  {
+                    model: StaffAgencyBranchInCharge,
+                  },
+                ],
+              },
+            ],
           },
           {
-            model: Staffs,
+            model: UserAddress,
           },
         ],
       });
-
-      const staffPRoleIncludeAgencyInChargeList =
-        await StaffAgencyBranchInCharge.findAll({
-          include: [
-            {
-              model: StaffRoles,
-            },
-            {
-              model: AgencyBranch,
-            },
-          ],
-        });
-
       res.status(200).send({
         status: "success",
-        staffPRoleIncludeAgencyInChargeList,
-        staffList,
+        data: handleFormatStaff(userStaffList, "isArray"),
       });
     } catch (err) {
+      console.log(err);
       res.status(500).send("Server is working wrong!");
     }
   }

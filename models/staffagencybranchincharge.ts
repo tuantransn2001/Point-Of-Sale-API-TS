@@ -15,16 +15,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
     id!: string;
     staff_role_id!: string;
     agency_branch_id!: string;
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models: any) {
-      StaffAgencyBranchInCharge.belongsTo(models.StaffRoles, {
+      StaffAgencyBranchInCharge.belongsTo(models.StaffRole, {
         foreignKey: "staff_role_id",
       });
-      StaffAgencyBranchInCharge.belongsTo(models.AgencyBranchs, {
+      StaffAgencyBranchInCharge.belongsTo(models.AgencyBranches, {
         foreignKey: "agency_branch_id",
       });
     }

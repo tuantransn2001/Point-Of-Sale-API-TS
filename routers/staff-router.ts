@@ -1,9 +1,12 @@
 import { Router } from "express";
 const staffRouter = Router();
 const StaffController = require("../controller/staff-controller");
-import authenticate from "../middlewares/auth/authenticate";
 
-staffRouter.get("/get-all", authenticate, StaffController.getAll);
+staffRouter.get(
+  "/get-all",
+  // authenticate,
+  StaffController.getAll
+);
 // staffRouter.get("/get-by-id/:id", authenticate, StaffController.getByID);
 // staffRouter.post(
 //   "/create",

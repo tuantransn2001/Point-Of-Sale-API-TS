@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = __importDefault(require("../../models"));
-const { Users } = models_1.default;
+const { User } = models_1.default;
 const checkUserExist = () => async (req, res, next) => {
     try {
         const { user_code, user_name, user_phone, user_email } = req.body;
         const errorMessage = new Array();
         // * ================= Name =============
         if (user_name)
-            await Users.findOne({
+            await User.findOne({
                 where: {
                     user_name,
                 },
@@ -21,7 +21,7 @@ const checkUserExist = () => async (req, res, next) => {
             });
         // * ================= Code =============
         if (user_code)
-            await Users.findOne({
+            await User.findOne({
                 where: {
                     user_code,
                 },
@@ -31,7 +31,7 @@ const checkUserExist = () => async (req, res, next) => {
             });
         // * ================= Phone =============
         if (user_phone)
-            await Users.findOne({
+            await User.findOne({
                 where: {
                     user_phone,
                 },
@@ -41,7 +41,7 @@ const checkUserExist = () => async (req, res, next) => {
             });
         // * ================= Email =============
         if (user_email)
-            await Users.findOne({
+            await User.findOne({
                 where: {
                     user_email,
                 },

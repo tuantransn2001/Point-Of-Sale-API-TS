@@ -1,36 +1,35 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+("use strict");
 const sequelize_1 = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class StaffRoles extends sequelize_1.Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
-        static associate(models) {
-            StaffRoles.belongsTo(models.Staffs, {
+    class StaffRole extends sequelize_1.Model {
+        static associate({ Staff, Role, StaffAgencyBranchInCharge }) {
+            StaffRole.hasOne(Role, { foreignKey: "role_id" });
+            StaffRole.belongsTo(Staff, {
                 foreignKey: "staff_id",
             });
-            StaffRoles.belongsTo(models.StaffAgencyBranchInCharge, {
+            StaffRole.hasMany(StaffAgencyBranchInCharge, {
                 foreignKey: "staff_role_id",
             });
         }
     }
-    StaffRoles.init({
+    StaffRole.init({
         id: {
             allowNull: false,
             primaryKey: true,
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
         },
-        staff_id: { type: DataTypes.UUID },
-        staff_role: {
-            type: DataTypes.STRING,
+        role_id: {
+            type: DataTypes.UUID,
+        },
+        staff_id: {
+            type: DataTypes.UUID,
         },
     }, {
         sequelize,
-        modelName: "StaffRoles",
+        modelName: "StaffRole",
     });
-    return StaffRoles;
+    return StaffRole;
 };

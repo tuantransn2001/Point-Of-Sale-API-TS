@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import db from "../models";
-const { AgencyBranch } = db;
+const { AgencyBranches } = db;
 import { handleFormatUpdateDataByValidValue } from "../src/common";
 import { AgencyBranchAttributes } from "../src/common/type";
 class AgencyController {
   static async getAll(req: Request, res: Response) {
     try {
       const agencyBranchList: Array<AgencyBranchAttributes> =
-        await AgencyBranch.findAll();
+        await AgencyBranches.findAll();
       res.status(200).send({
         status: "success",
         data: agencyBranchList,
@@ -34,7 +34,7 @@ class AgencyController {
 
       const targetAgencyCode: string = agency_branch_code;
 
-      const foundAgencyBranch = await AgencyBranch.findOne({
+      const foundAgencyBranch = await AgencyBranches.findOne({
         where: {
           agency_branch_code: targetAgencyCode,
         },
@@ -49,7 +49,7 @@ class AgencyController {
       } else {
         const targetIsDefaultCN: boolean = true;
         if (isDefaultCN) {
-          await AgencyBranch.update(
+          await AgencyBranches.update(
             {
               isDefaultCN: !targetIsDefaultCN,
             },
@@ -81,7 +81,7 @@ class AgencyController {
         };
 
         const newAgencyBrach: AgencyBranchAttributes =
-          await AgencyBranch.create(newAgencyBranchRow);
+          await AgencyBranches.create(newAgencyBranchRow);
 
         res.status(201).send({
           status: "Success",
@@ -113,7 +113,7 @@ class AgencyController {
       const targetAgencyID: string = id;
       const foundAgencyBranch: {
         dataValues: AgencyBranchAttributes;
-      } = await AgencyBranch.findOne({
+      } = await AgencyBranches.findOne({
         where: {
           id: targetAgencyID,
         },
@@ -121,7 +121,7 @@ class AgencyController {
 
       if (isDefaultCN) {
         const targetIsDefaultCN: boolean = true;
-        await AgencyBranch.update(
+        await AgencyBranches.update(
           {
             isDefaultCN: !targetIsDefaultCN,
           },
@@ -148,17 +148,15 @@ class AgencyController {
           foundAgencyBranch.dataValues
         );
 
-      const agencyBranchUpdated: AgencyBranchAttributes =
-        await AgencyBranch.update(updateAgencyBrach, {
-          where: {
-            id: targetAgencyID,
-          },
-        });
+      await AgencyBranches.update(updateAgencyBrach, {
+        where: {
+          id: targetAgencyID,
+        },
+      });
 
       res.status(202).send({
         status: "success",
         message: "Update successfully!",
-        agencyBranchUpdated,
       });
     } catch (err) {
       res.status(500).send("Server is working wrong!");

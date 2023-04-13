@@ -16,7 +16,9 @@ class AuthController {
         password: string;
       } = req.body;
 
-      const foundUser: User = await db.Users.findOne({
+      const foundUser: {
+        dataValues: User;
+      } = await db.User.findOne({
         where: {
           user_phone: phone,
         },
@@ -24,16 +26,20 @@ class AuthController {
       // ? Check user is exist or not by phone
       if (foundUser) {
         // * Case Exist
-        const isMatchPassword: boolean = foundUser.user_password === password;
+        const isMatchPassword: boolean =
+          foundUser.dataValues.user_password === password;
         switch (isMatchPassword) {
           case true: {
+            const { id, user_name } = foundUser.dataValues;
+
             const tokenPayload: {
-              id: string;
-              name: string;
+              id: string | undefined;
+              user_name: string | undefined;
             } = {
-              id: foundUser.id,
-              name: foundUser.user_name,
+              id,
+              user_name,
             };
+
             const jwtSecretKey: string =
               process.env.JWT_TOKEN_SECRET_KEY ?? "default is string";
             const token = jwt.sign(tokenPayload, jwtSecretKey, {
@@ -62,7 +68,6 @@ class AuthController {
         });
       }
     } catch (err) {
-      console.log(err);
       res.status(500).send({
         status: "fail",
         message: "Server is working wrong!",

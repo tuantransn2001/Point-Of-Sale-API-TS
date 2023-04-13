@@ -2,19 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class AgencyBranchs extends sequelize_1.Model {
+    class AgencyBranches extends sequelize_1.Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            AgencyBranchs.hasMany(models.StaffAgencyBranchInCharge, {
+            AgencyBranches.hasOne(models.StaffAgencyBranchInCharge, {
                 foreignKey: "agency_branch_id",
             });
         }
     }
-    AgencyBranchs.init({
+    AgencyBranches.init({
         id: {
             allowNull: false,
             primaryKey: true,
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
-        modelName: "AgencyBranchs",
+        modelName: "AgencyBranches",
     });
-    return AgencyBranchs;
+    return AgencyBranches;
 };

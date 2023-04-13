@@ -4,50 +4,40 @@ import authenticate from "../middlewares/auth/authenticate";
 import checkUserExist from "../middlewares/validation/checkUserExist";
 import checkExist from "../middlewares/validation/checkExist";
 import db from "../models";
-const { Customers } = db;
+const { User, Customers } = db;
 
 const customerRouter = Router();
 
-customerRouter.get("/get-all", authenticate, CustomerController.getAll);
-customerRouter.post(
-  "/create",
-  authenticate,
-  checkUserExist(),
-  CustomerController.create
+customerRouter.get(
+  "/get-all",
+  //  authenticate,
+  CustomerController.getAll
 );
 customerRouter.get(
   "/get-by-id/:id",
-  authenticate,
-  checkExist(Customers),
+  // authenticate,
+  checkExist(User),
   CustomerController.getByID
 );
+customerRouter.post(
+  "/create",
+  // authenticate,
+  // checkUserExist(),
+  CustomerController.create
+);
+
 customerRouter.delete(
   "/delete-by-id/:id",
-  authenticate,
-  checkExist(Customers),
+  // authenticate,
+  checkExist(User),
   CustomerController.deleteByID
 );
 customerRouter.patch(
   "/update-personalInfo-by-id/:id",
-  authenticate,
-  checkExist(Customers),
+  // authenticate,
+  checkExist(User),
   checkUserExist(),
   CustomerController.updatePersonalInfoByID
 );
-customerRouter.post(
-  "/address/add/:id",
-  authenticate,
-  checkExist(Customers),
-  CustomerController.addNewAddressByCustomerID
-);
-customerRouter.patch(
-  "/address/:addressID/update/:customerID",
-  authenticate,
-  CustomerController.updateAddressByCustomerIDNAddressID
-);
-customerRouter.delete(
-  "/address/:addressID/delete/:customerID",
-  authenticate,
-  CustomerController.deleteAddressByCustomerIDNAddressID
-);
+
 export default customerRouter;

@@ -12,7 +12,7 @@ class AuthController {
         var _a;
         try {
             const { phone, password, } = req.body;
-            const foundUser = await models_1.default.Users.findOne({
+            const foundUser = await models_1.default.User.findOne({
                 where: {
                     user_phone: phone,
                 },
@@ -20,12 +20,13 @@ class AuthController {
             // ? Check user is exist or not by phone
             if (foundUser) {
                 // * Case Exist
-                const isMatchPassword = foundUser.user_password === password;
+                const isMatchPassword = foundUser.dataValues.user_password === password;
                 switch (isMatchPassword) {
                     case true: {
+                        const { id, user_name } = foundUser.dataValues;
                         const tokenPayload = {
-                            id: foundUser.id,
-                            name: foundUser.user_name,
+                            id,
+                            user_name,
                         };
                         const jwtSecretKey = (_a = process.env.JWT_TOKEN_SECRET_KEY) !== null && _a !== void 0 ? _a : "default is string";
                         const token = jsonwebtoken_1.default.sign(tokenPayload, jwtSecretKey, {
@@ -55,7 +56,6 @@ class AuthController {
             }
         }
         catch (err) {
-            console.log(err);
             res.status(500).send({
                 status: "fail",
                 message: "Server is working wrong!",

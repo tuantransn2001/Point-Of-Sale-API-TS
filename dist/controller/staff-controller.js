@@ -4,38 +4,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const models_1 = __importDefault(require("../models"));
-const { UserStaffList, Users, Staffs, StaffAgencyBranchInCharge, StaffRoles, AgencyBranch, } = models_1.default;
-// import { handleFormatStaffIncludeCheckIsDelete } from "../src/common";
+const { StaffRole, Staff, User, StaffAgencyBranchInCharge, UserAddress } = models_1.default;
+const common_1 = require("../src/common");
 class StaffController {
     static async getAll(req, res) {
         try {
-            const staffList = await UserStaffList.findAll({
+            const userStaffList = await User.findAll({
+                where: {
+                    isDelete: null,
+                    user_type: "staff",
+                },
                 include: [
                     {
-                        model: Users,
+                        model: Staff,
+                        include: [
+                            {
+                                model: StaffRole,
+                                include: [
+                                    {
+                                        model: StaffAgencyBranchInCharge,
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
-                        model: Staffs,
-                    },
-                ],
-            });
-            const staffPRoleIncludeAgencyInChargeList = await StaffAgencyBranchInCharge.findAll({
-                include: [
-                    {
-                        model: StaffRoles,
-                    },
-                    {
-                        model: AgencyBranch,
+                        model: UserAddress,
                     },
                 ],
             });
             res.status(200).send({
                 status: "success",
-                staffPRoleIncludeAgencyInChargeList,
-                staffList,
+                data: (0, common_1.handleFormatStaff)(userStaffList, "isArray"),
             });
         }
         catch (err) {
+            console.log(err);
             res.status(500).send("Server is working wrong!");
         }
     }
