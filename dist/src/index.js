@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const routers_1 = __importDefault(require("../routers"));
-const seeders_1 = require("../src/data/seeders");
+const seeders_1 = require("./data/seeders");
 const models_1 = __importDefault(require("../models"));
 const { User, Customer, UserAddress, AgencyBranches, Role, Staff, StaffAgencyBranchInCharge, StaffRole, } = models_1.default;
 dotenv_1.default.config();

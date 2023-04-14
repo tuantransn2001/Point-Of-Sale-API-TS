@@ -10,7 +10,7 @@ import {
   STAFF_AGENCY_INCHARGE_ARRAY,
   AGENCY_BRANCH_ARRAY,
   ROLE_ARRAY,
-} from "../src/data/seeders";
+} from "./data/seeders";
 import db from "../models";
 const {
   User,
@@ -22,10 +22,6 @@ const {
   StaffAgencyBranchInCharge,
   StaffRole,
 } = db;
-
-const {
-  handleGenerateSeedData,
-} = require("../controller/seed-data-controller");
 
 dotenv.config();
 
