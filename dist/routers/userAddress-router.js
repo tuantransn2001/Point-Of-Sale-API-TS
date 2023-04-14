@@ -6,16 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const UserAddressController = require("../controller/userAddress-controllers");
 const models_1 = __importDefault(require("../models"));
-const checkExist_1 = __importDefault(require("../middlewares/validation/checkExist"));
+const middlewares_1 = require("../middlewares");
 const { User, UserAddress } = models_1.default;
 const userAddressRouter = (0, express_1.Router)();
 userAddressRouter.post("/add/:id", 
 // authenticate,
-(0, checkExist_1.default)(User), UserAddressController.addNewAddressByUserID);
+(0, middlewares_1.checkExist)(User), UserAddressController.addNewAddressByUserID, middlewares_1.errorMiddleware);
 userAddressRouter.patch("/update/:id", 
 //   authenticate,
-(0, checkExist_1.default)(UserAddress), UserAddressController.updateAddressByID);
+(0, middlewares_1.checkExist)(UserAddress), UserAddressController.updateAddressByID, middlewares_1.errorMiddleware);
 userAddressRouter.delete("/delete/:id", 
 //   authenticate,
-(0, checkExist_1.default)(UserAddress), UserAddressController.deleteAddressByID);
+(0, middlewares_1.checkExist)(UserAddress), UserAddressController.deleteAddressByID, middlewares_1.errorMiddleware);
 exports.default = userAddressRouter;

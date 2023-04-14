@@ -5,25 +5,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const CustomerController = require("../controller/customer-controller");
-const checkUserExist_1 = __importDefault(require("../middlewares/validation/checkUserExist"));
-const checkExist_1 = __importDefault(require("../middlewares/validation/checkExist"));
+const middlewares_1 = require("../middlewares");
 const models_1 = __importDefault(require("../models"));
-const { User, Customers } = models_1.default;
+const { User } = models_1.default;
 const customerRouter = (0, express_1.Router)();
 customerRouter.get("/get-all", 
 //  authenticate,
-CustomerController.getAll);
+CustomerController.getAll, middlewares_1.errorMiddleware);
 customerRouter.get("/get-by-id/:id", 
 // authenticate,
-(0, checkExist_1.default)(User), CustomerController.getByID);
+(0, middlewares_1.checkExist)(User), CustomerController.getByID, middlewares_1.errorMiddleware);
 customerRouter.post("/create", 
 // authenticate,
 // checkUserExist(),
-CustomerController.create);
+CustomerController.create, middlewares_1.errorMiddleware);
 customerRouter.delete("/delete-by-id/:id", 
 // authenticate,
-(0, checkExist_1.default)(User), CustomerController.deleteByID);
+(0, middlewares_1.checkExist)(User), CustomerController.deleteByID, middlewares_1.errorMiddleware);
 customerRouter.patch("/update-personalInfo-by-id/:id", 
 // authenticate,
-(0, checkExist_1.default)(User), (0, checkUserExist_1.default)(), CustomerController.updatePersonalInfoByID);
+(0, middlewares_1.checkExist)(User), (0, middlewares_1.checkUserExist)(), CustomerController.updatePersonalInfoByID, middlewares_1.errorMiddleware);
 exports.default = customerRouter;

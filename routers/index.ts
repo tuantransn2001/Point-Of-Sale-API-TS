@@ -5,13 +5,14 @@ import customerRouter from "../routers/customer-router";
 import staffRouter from "../routers/staff-router";
 import agencyBranchRouter from "../routers/agencyBranch-router";
 import userAddressRouter from "./userAddress-router";
+
 const rootRouter = Router();
 
-rootRouter.use("/auth", authRouter); // ? => Done
-rootRouter.use("/customer", customerRouter); // ? => Done
-rootRouter.use("/address", userAddressRouter); // ? => Done
-rootRouter.use("/seed", seedRouter); // ? => Done
-rootRouter.use("/agency-branch", agencyBranchRouter); // ? => Done
-rootRouter.use("/staff", staffRouter); // ! => Developing
+rootRouter.use("/auth", authRouter);
+rootRouter.use("/customer", customerRouter);
+rootRouter.use("/address", userAddressRouter);
+rootRouter.use("/seed-data", seedRouter);
+rootRouter.use("/agency-branch", agencyBranchRouter);
+rootRouter.use("/staff", staffRouter);
 
 export default rootRouter;

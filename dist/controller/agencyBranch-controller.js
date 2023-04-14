@@ -7,7 +7,7 @@ const models_1 = __importDefault(require("../models"));
 const { AgencyBranches } = models_1.default;
 const common_1 = require("../src/common");
 class AgencyController {
-    static async getAll(req, res) {
+    static async getAll(req, res, next) {
         try {
             const agencyBranchList = await AgencyBranches.findAll();
             res.status(200).send({
@@ -16,13 +16,10 @@ class AgencyController {
             });
         }
         catch (err) {
-            res.status(500).send({
-                status: "error",
-                message: "Server is working wrong!",
-            });
+            next(err);
         }
     }
-    static async create(req, res) {
+    static async create(req, res, next) {
         try {
             const { agency_branch_code, agency_branch_name, agency_branch_phone, agency_branch_address, agency_branch_area, agency_branch_expiration_date, agency_branch_status, isDefaultCN, } = req.body;
             const targetAgencyCode = agency_branch_code;
@@ -66,13 +63,10 @@ class AgencyController {
             }
         }
         catch (err) {
-            res.status(500).send({
-                status: "error",
-                message: "Server is working wrong!",
-            });
+            next(err);
         }
     }
-    static async updateByID(req, res) {
+    static async updateByID(req, res, next) {
         try {
             const { id } = req.params;
             const { isDefaultCN, agency_branch_code, agency_branch_name, agency_branch_phone, agency_branch_address, agency_branch_area, agency_branch_expiration_date, agency_branch_status, } = req.body;
@@ -113,7 +107,7 @@ class AgencyController {
             });
         }
         catch (err) {
-            res.status(500).send("Server is working wrong!");
+            next(err);
         }
     }
 }

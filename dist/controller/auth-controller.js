@@ -8,7 +8,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const models_1 = __importDefault(require("../models"));
 dotenv_1.default.config();
 class AuthController {
-    static async login(req, res) {
+    static async login(req, res, next) {
         var _a;
         try {
             const { phone, password, } = req.body;
@@ -56,10 +56,7 @@ class AuthController {
             }
         }
         catch (err) {
-            res.status(500).send({
-                status: "fail",
-                message: "Server is working wrong!",
-            });
+            next(err);
         }
     }
 }

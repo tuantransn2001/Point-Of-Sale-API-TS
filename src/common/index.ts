@@ -1,14 +1,10 @@
-import {
-  Address,
-  Customer,
-  Role,
-  StaffAgencyBranchInCharge,
-  User,
-} from "./type";
 const randomstring = require("randomstring");
-import db from "../../models";
-const { Role } = db;
-
+import {
+  AgencyBranchAttributes,
+  CustomerAttributes,
+  RoleAttributes,
+  UserAddressAttributes,
+} from "../ts/interfaces/app_interfaces";
 export const handleGetFirstNameFromFullName = (fullName: string) => {
   let targetIndex: number | undefined;
   for (let index = fullName.length - 1; index >= 0; index--) {
@@ -22,17 +18,18 @@ export const handleGetFirstNameFromFullName = (fullName: string) => {
 };
 
 interface CustomerResult {
-  id?: string;
-  user_code?: string;
-  customer_status?: string;
-  customer_name?: string;
-  customer_phone?: string;
-  customer_email?: string;
-  staff_in_charge_note?: string;
-  tags?: string;
-  customer_addressList?: Array<Address>;
-  createdAt?: Date;
-  updatedAt?: Date;
+  id: string;
+  user_code: string;
+  customer_id: string | undefined;
+  customer_status: string | undefined;
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string;
+  staff_in_charge_note: string | undefined;
+  address_list: Array<UserAddressAttributes>;
+  tags: string | undefined;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface UserCustomerAttributes {
@@ -48,35 +45,22 @@ interface UserCustomerAttributes {
     createdAt: Date;
     updatedAt: Date;
     Customer: {
-      dataValues: Customer;
+      dataValues: CustomerAttributes;
+    };
+    UserAddresses: {
+      dataValues: UserAddressAttributes;
+      map: any;
     };
   };
-  map: any;
 }
 
 type UserCustomerParameterType = UserCustomerAttributes &
   Array<UserCustomerAttributes>;
 
-interface AddressAttributes {
-  dataValues: {
-    id: string;
-    user_id: string;
-    user_province: string;
-    user_district: string;
-    user_specific_address: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-  filter: any;
-}
-
-type AddressParameterType = Array<AddressAttributes> | AddressAttributes;
-
 export const handleFormatCustomer = (
   UserCustomerArray: UserCustomerParameterType, // ? isObject if format type === object
-  AddressArray: AddressParameterType,
   formatType: string
-): Array<CustomerResult> & CustomerResult => {
+): Array<CustomerResult> | CustomerResult => {
   // ? Handle Case Format Object options
 
   if (formatType === "isObject") {
@@ -91,9 +75,32 @@ export const handleFormatCustomer = (
     } = UserCustomerArray.dataValues;
     const { customer_status, staff_in_charge_note, tags } =
       UserCustomerArray.dataValues.Customer.dataValues;
+    const address_list: Array<UserAddressAttributes> =
+      UserCustomerArray.dataValues.UserAddresses.map(
+        (address: { dataValues: UserAddressAttributes }) => {
+          const {
+            id,
+            user_province,
+            user_district,
+            user_specific_address,
+            createdAt,
+            updatedAt,
+          } = address.dataValues;
+
+          return {
+            id,
+            user_province,
+            user_district,
+            user_specific_address,
+            createdAt,
+            updatedAt,
+          };
+        }
+      );
 
     return {
       id,
+      customer_id: UserCustomerArray.dataValues.Customer.dataValues.id,
       user_code,
       customer_phone: user_phone,
       customer_email: user_email,
@@ -101,13 +108,13 @@ export const handleFormatCustomer = (
       customer_status,
       staff_in_charge_note,
       tags,
-      customer_addressList: AddressArray,
+      address_list,
       createdAt,
       updatedAt,
     };
   }
 
-  let customerResultList: Array<CustomerResult>;
+  let customerResultList: Array<CustomerResult> = new Array();
   customerResultList = UserCustomerArray.map((User: UserCustomerAttributes) => {
     const {
       id,
@@ -120,18 +127,38 @@ export const handleFormatCustomer = (
     } = User.dataValues;
     const { customer_status, staff_in_charge_note, tags } =
       User.dataValues.Customer.dataValues;
+    const address_list = User.dataValues.UserAddresses.map(
+      (address: { dataValues: UserAddressAttributes }) => {
+        const {
+          id,
+          user_province,
+          user_district,
+          user_specific_address,
+          createdAt,
+          updatedAt,
+        } = address.dataValues;
+
+        return {
+          id,
+          user_province,
+          user_district,
+          user_specific_address,
+          createdAt,
+          updatedAt,
+        };
+      }
+    );
     return {
       id,
       user_code,
+      customer_id: User.dataValues.Customer.dataValues.id,
       customer_phone: user_phone,
       customer_email: user_email,
       customer_name: user_name,
       customer_status,
       staff_in_charge_note,
       tags,
-      customer_addressList: AddressArray.filter(({ user_id }: Address) => {
-        return user_id === id;
-      }),
+      address_list,
       createdAt,
       updatedAt,
     };
@@ -170,7 +197,7 @@ export const randomStringByCharsetAndLength = (
   });
 };
 
-interface UserStaffListAttributes {
+interface UserStaffAttributes {
   dataValues: {
     id: string;
     user_code: string;
@@ -189,7 +216,7 @@ interface UserStaffListAttributes {
         staff_status: string;
         staff_birthday: Date;
         note_about_staff: string;
-        staff_gender: boolean;
+        staff_gender: boolean | string;
         isAllowViewImportNWholesalePrice: boolean;
         isAllowViewShippingPrice: boolean;
         createdAt: Date;
@@ -224,17 +251,63 @@ interface UserStaffListAttributes {
         createdAt: Date;
         updatedAt: Date;
       };
+      map: any;
     }>;
   };
 }
 
-export const handleFormatStaff = (
-  userStaffList: Array<UserStaffListAttributes>,
-  formatType: string
-) => {
-  let staffListResult: Array<any> = [];
+interface StaffAddressItemAttributes {
+  dataValues: {
+    id: string;
+    user_province: string;
+    user_district: string;
+    user_specific_address: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+}
 
-  staffListResult = userStaffList.reduce((result: any, UserStaff: any) => {
+interface StaffRoleItemAttributes {
+  dataValues: {
+    id: string;
+    role: string | undefined;
+    updatedAt: Date;
+    createdAt: Date;
+    agencyBranchesInCharge: Array<{
+      id: string;
+      agency_branch_inCharge_name: string | undefined;
+      createdAt: Date;
+      updatedAt: Date;
+    }>;
+  };
+}
+
+interface StaffResult {
+  id: string;
+  staff_id: string;
+  staff_code: string;
+  staff_phone: string;
+  staff_email: string;
+  staff_password: string;
+  staff_name: string;
+  staff_status: string;
+  staff_birthday: Date;
+  note_about_staff: string;
+  staff_gender: boolean | string;
+  isAllowViewImportNWholesalePrice: boolean;
+  isAllowViewShippingPrice: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  addressList: Array<StaffAddressItemAttributes["dataValues"]>;
+  staffRoleList: Array<StaffRoleItemAttributes["dataValues"]>;
+}
+export const handleFormatStaff = (
+  userStaffList: Array<UserStaffAttributes> & UserStaffAttributes,
+  roleList: Array<{ dataValues: RoleAttributes }>,
+  agencyBranchList: Array<{ dataValues: AgencyBranchAttributes }>,
+  formatType: string
+): Array<StaffResult> | StaffResult => {
+  if (formatType === "isObject") {
     const {
       id,
       user_code,
@@ -244,7 +317,7 @@ export const handleFormatStaff = (
       user_name,
       createdAt,
       updatedAt,
-    } = UserStaff.dataValues;
+    } = userStaffList.dataValues;
 
     const {
       staff_status,
@@ -253,46 +326,78 @@ export const handleFormatStaff = (
       staff_gender,
       isAllowViewImportNWholesalePrice,
       isAllowViewShippingPrice,
-    } = UserStaff.dataValues.Staff;
+    } = userStaffList.dataValues.Staff.dataValues;
+    const addressList: StaffResult["addressList"] =
+      userStaffList.dataValues.UserAddresses.map(
+        (UserAddress: StaffAddressItemAttributes) => {
+          const {
+            id,
+            user_province,
+            user_district,
+            user_specific_address,
+            createdAt,
+            updatedAt,
+          } = UserAddress.dataValues;
 
-    const addressList = UserStaff.dataValues.UserAddresses.map(
-      ({
-        id,
-        user_province,
-        user_district,
-        user_specific_address,
-        createdAt,
-        updatedAt,
-      }: any) => ({
-        id,
-        user_province,
-        user_district,
-        user_specific_address,
-        createdAt,
-        updatedAt,
-      })
-    );
+          return {
+            id,
+            user_province,
+            user_district,
+            user_specific_address,
+            createdAt,
+            updatedAt,
+          };
+        }
+      );
 
-    const staffRoleList = UserStaff.Staff.dataValues.StaffRoles.map(
-      (StaffRole: any) => {
-        const { id, role_id, createdAt, updatedAt } = StaffRole.dataValues;
-        const result: { text?: string } = new Object();
-        (async () => {
-          await Role.findOne({
-            where: {
-              id: role_id,
-            },
-          }).then((roleRes: any) => {
-            result.text = roleRes.dataValues.role_title;
-          });
-        })();
+    const staffRoleList: StaffResult["staffRoleList"] =
+      userStaffList.dataValues.Staff.dataValues.StaffRoles.map(
+        // TODO: fix
+        (StaffRole: any) => {
+          const { id, role_id, createdAt, updatedAt } = StaffRole.dataValues;
 
-        return result;
-      }
-    );
+          const currentStaffRole: string | undefined = roleList.filter(
+            ({ id }: any) => role_id === id
+          )[0].dataValues.role_title;
 
-    result.push({
+          const staffAgencyBranchInCharge: Array<{
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            agency_branch_inCharge_name: string | undefined;
+          }> = StaffRole.dataValues.StaffAgencyBranchInCharges.map(
+            (AgencyInCharge: {
+              id: string;
+              agency_branch_id: string;
+              createdAt: Date;
+              updatedAt: Date;
+            }) => {
+              const { id, agency_branch_id, createdAt, updatedAt } =
+                AgencyInCharge;
+              const currentAgencyBranchName = agencyBranchList.filter(
+                ({ id }: any) => agency_branch_id === id
+              )[0].dataValues.agency_branch_name;
+              return {
+                id,
+                createdAt,
+                updatedAt,
+                agency_branch_inCharge_name: currentAgencyBranchName,
+              };
+            }
+          );
+          return {
+            id,
+            createdAt,
+            updatedAt,
+            role: currentStaffRole,
+            agencyBranchesInCharge: staffAgencyBranchInCharge,
+          };
+        }
+      );
+
+    return {
       id,
+      staff_id: userStaffList.dataValues.Staff.dataValues.id,
       staff_code: user_code,
       staff_phone: user_phone,
       staff_email: user_email,
@@ -301,17 +406,130 @@ export const handleFormatStaff = (
       staff_status,
       staff_birthday,
       note_about_staff,
-      staff_gender,
+      staff_gender: staff_gender ? "male" : "female",
       isAllowViewImportNWholesalePrice,
       isAllowViewShippingPrice,
       createdAt,
       updatedAt,
-      addressList,
       staffRoleList,
-    });
+      addressList,
+    };
+  }
+  let staffListResult: Array<StaffResult> = new Array();
+  staffListResult = userStaffList.reduce(
+    (result: Array<StaffResult>, UserStaff: UserStaffAttributes) => {
+      const {
+        id,
+        user_code,
+        user_phone,
+        user_email,
+        user_password,
+        user_name,
+        createdAt,
+        updatedAt,
+      } = UserStaff.dataValues;
 
-    return result;
-  }, []);
+      const {
+        staff_status,
+        staff_birthday,
+        note_about_staff,
+        staff_gender,
+        isAllowViewImportNWholesalePrice,
+        isAllowViewShippingPrice,
+      } = UserStaff.dataValues.Staff.dataValues;
+
+      const addressList: StaffResult["addressList"] =
+        UserStaff.dataValues.UserAddresses.map(
+          (UserAddress: StaffAddressItemAttributes) => {
+            const {
+              id,
+              user_province,
+              user_district,
+              user_specific_address,
+              createdAt,
+              updatedAt,
+            } = UserAddress.dataValues;
+
+            return {
+              id,
+              user_province,
+              user_district,
+              user_specific_address,
+              createdAt,
+              updatedAt,
+            };
+          }
+        );
+
+      const staffRoleList: StaffResult["staffRoleList"] =
+        UserStaff.dataValues.Staff.dataValues.StaffRoles.map(
+          // TODO: fix
+          (StaffRole: any) => {
+            const { id, role_id, createdAt, updatedAt } = StaffRole.dataValues;
+
+            const currentStaffRole: string | undefined = roleList.filter(
+              ({ id }: any) => role_id === id
+            )[0].dataValues.role_title;
+
+            const staffAgencyBranchInCharge: Array<{
+              id: string;
+              createdAt: Date;
+              updatedAt: Date;
+              agency_branch_inCharge_name: string | undefined;
+            }> = StaffRole.dataValues.StaffAgencyBranchInCharges.map(
+              (AgencyInCharge: {
+                id: string;
+                agency_branch_id: string;
+                createdAt: Date;
+                updatedAt: Date;
+              }) => {
+                const { id, agency_branch_id, createdAt, updatedAt } =
+                  AgencyInCharge;
+                const currentAgencyBranchName = agencyBranchList.filter(
+                  ({ id }: any) => agency_branch_id === id
+                )[0].dataValues.agency_branch_name;
+                return {
+                  id,
+                  createdAt,
+                  updatedAt,
+                  agency_branch_inCharge_name: currentAgencyBranchName,
+                };
+              }
+            );
+            return {
+              id,
+              createdAt,
+              updatedAt,
+              role: currentStaffRole,
+              agencyBranchesInCharge: staffAgencyBranchInCharge,
+            };
+          }
+        );
+
+      result.push({
+        id,
+        staff_id: UserStaff.dataValues.Staff.dataValues.id,
+        staff_code: user_code,
+        staff_phone: user_phone,
+        staff_email: user_email,
+        staff_password: user_password,
+        staff_name: user_name,
+        staff_status,
+        staff_birthday,
+        note_about_staff,
+        staff_gender: staff_gender ? "male" : "female",
+        isAllowViewImportNWholesalePrice,
+        isAllowViewShippingPrice,
+        createdAt,
+        updatedAt,
+        addressList,
+        staffRoleList,
+      });
+
+      return result;
+    },
+    []
+  );
 
   return staffListResult;
 };

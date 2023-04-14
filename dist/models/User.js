@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class User extends sequelize_1.Model {
-        static associate({ Customer, Staff, UserHistoryOrders, UserAddress }) {
+        static associate({ Customer, Staff, UserAddress }) {
             User.hasOne(Customer, {
                 foreignKey: "user_id",
             });

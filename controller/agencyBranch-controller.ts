@@ -1,25 +1,22 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import db from "../models";
 const { AgencyBranches } = db;
 import { handleFormatUpdateDataByValidValue } from "../src/common";
-import { AgencyBranchAttributes } from "../src/common/type";
+import { AgencyBranch } from "../src/ts/types/type";
 class AgencyController {
-  static async getAll(req: Request, res: Response) {
+  public static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const agencyBranchList: Array<AgencyBranchAttributes> =
+      const agencyBranchList: Array<AgencyBranch> =
         await AgencyBranches.findAll();
       res.status(200).send({
         status: "success",
         data: agencyBranchList,
       });
     } catch (err) {
-      res.status(500).send({
-        status: "error",
-        message: "Server is working wrong!",
-      });
+      next(err);
     }
   }
-  static async create(req: Request, res: Response) {
+  public static async create(req: Request, res: Response, next: NextFunction) {
     try {
       const {
         agency_branch_code,
@@ -66,7 +63,7 @@ class AgencyController {
           agency_branch_phone: string;
           agency_branch_address: string;
           agency_branch_area: string;
-          agency_branch_expiration_date: string;
+          agency_branch_expiration_date: Date;
           agency_branch_status: string;
           isDefaultCN: string;
         } = {
@@ -80,8 +77,9 @@ class AgencyController {
           isDefaultCN,
         };
 
-        const newAgencyBrach: AgencyBranchAttributes =
-          await AgencyBranches.create(newAgencyBranchRow);
+        const newAgencyBrach: AgencyBranch = await AgencyBranches.create(
+          newAgencyBranchRow
+        );
 
         res.status(201).send({
           status: "Success",
@@ -90,13 +88,14 @@ class AgencyController {
         });
       }
     } catch (err) {
-      res.status(500).send({
-        status: "error",
-        message: "Server is working wrong!",
-      });
+      next(err);
     }
   }
-  static async updateByID(req: Request, res: Response) {
+  public static async updateByID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id } = req.params;
       const {
@@ -112,7 +111,7 @@ class AgencyController {
 
       const targetAgencyID: string = id;
       const foundAgencyBranch: {
-        dataValues: AgencyBranchAttributes;
+        dataValues: AgencyBranch;
       } = await AgencyBranches.findOne({
         where: {
           id: targetAgencyID,
@@ -133,7 +132,7 @@ class AgencyController {
         );
       }
 
-      const updateAgencyBrach: AgencyBranchAttributes =
+      const updateAgencyBrach: AgencyBranch =
         handleFormatUpdateDataByValidValue(
           {
             isDefaultCN,
@@ -159,7 +158,7 @@ class AgencyController {
         message: "Update successfully!",
       });
     } catch (err) {
-      res.status(500).send("Server is working wrong!");
+      next(err);
     }
   }
 }

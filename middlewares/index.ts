@@ -1,5 +1,7 @@
-import authenticate from "../middlewares/auth/authenticate";
+import authenticate from "./auth/authenticate";
+import errorMiddleware from "./errorHandler";
 import checkExist from "./validation/checkExist";
 import checkUserExist from "./validation/checkUserExist";
+import authorize from "./auth/authorize";
 
-export * from "../middlewares";
+export { authenticate, errorMiddleware, checkExist, checkUserExist, authorize };

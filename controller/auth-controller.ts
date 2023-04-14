@@ -1,12 +1,13 @@
-import { Request, Response } from "express";
-import { User } from "../src/common/type";
+import { NextFunction, Request, Response } from "express";
+import { User } from "../src/ts/types/type";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import db from "../models";
+
 dotenv.config();
 
 class AuthController {
-  public static async login(req: Request, res: Response) {
+  public static async login(req: Request, res: Response, next: NextFunction) {
     try {
       const {
         phone,
@@ -68,10 +69,7 @@ class AuthController {
         });
       }
     } catch (err) {
-      res.status(500).send({
-        status: "fail",
-        message: "Server is working wrong!",
-      });
+      next(err);
     }
   }
 }

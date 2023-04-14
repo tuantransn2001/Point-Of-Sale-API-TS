@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../src/common/type";
+import { User } from "../../src/ts/types/type";
 import db from "../../models";
 const { User } = db;
 const checkUserExist =

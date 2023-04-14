@@ -1,7 +1,13 @@
 import { Router } from "express";
 const agencyBranchRouter = Router();
 const AgencyController = require("../controller/agencyBranch-controller");
-agencyBranchRouter.get("/get-all", AgencyController.getAll);
-agencyBranchRouter.post("/create", AgencyController.create);
-agencyBranchRouter.patch("/update-by-id/:id", AgencyController.updateByID);
+import { authenticate, errorMiddleware } from "../middlewares";
+
+agencyBranchRouter.get("/get-all", AgencyController.getAll, errorMiddleware);
+agencyBranchRouter.post("/create", AgencyController.create, errorMiddleware);
+agencyBranchRouter.patch(
+  "/update-by-id/:id",
+  AgencyController.updateByID,
+  errorMiddleware
+);
 export default agencyBranchRouter;

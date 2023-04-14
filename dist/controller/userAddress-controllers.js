@@ -8,7 +8,7 @@ const models_1 = __importDefault(require("../models"));
 const { Customer, User, UserAddress } = models_1.default;
 const common_1 = require("../src/common");
 class UserAddressController {
-    static async addNewAddressByUserID(req, res) {
+    static async addNewAddressByUserID(req, res, next) {
         try {
             const { id } = req.params;
             const { user_province, user_district, user_specific_address } = req.body;
@@ -25,13 +25,10 @@ class UserAddressController {
             });
         }
         catch (err) {
-            res.status(500).send({
-                status: "fail",
-                message: "Server is working wrong!",
-            });
+            next(err);
         }
     }
-    static async updateAddressByID(req, res) {
+    static async updateAddressByID(req, res, next) {
         try {
             const { id } = req.params;
             const { user_province, user_district, user_specific_address } = req.body;
@@ -52,10 +49,10 @@ class UserAddressController {
             });
         }
         catch (err) {
-            res.status(500).send("Server is working wrong!");
+            next(err);
         }
     }
-    static async deleteAddressByID(req, res) {
+    static async deleteAddressByID(req, res, next) {
         try {
             const { id } = req.params;
             await UserAddress.destroy({
@@ -69,7 +66,7 @@ class UserAddressController {
             });
         }
         catch (err) {
-            res.status(500).send("Server is working wrong!");
+            next(err);
         }
     }
 }

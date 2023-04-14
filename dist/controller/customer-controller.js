@@ -8,9 +8,9 @@ const models_1 = __importDefault(require("../models"));
 const { Customer, User, UserAddress } = models_1.default;
 const common_1 = require("../src/common");
 class CustomerController {
-    static async getAll(req, res) {
+    static async getAll(req, res, next) {
         try {
-            const User_Customer_List = await User.findAll({
+            const userCustomerList = await User.findAll({
                 where: {
                     isDelete: null,
                     user_type: "customer",
@@ -19,28 +19,33 @@ class CustomerController {
                     {
                         model: Customer,
                     },
+                    {
+                        model: UserAddress,
+                    },
                 ],
             });
-            const User_Address_List = await UserAddress.findAll();
             res.status(200).send({
                 status: "success",
-                data: (0, common_1.handleFormatCustomer)(User_Customer_List, User_Address_List, "isArray"),
+                data: (0, common_1.handleFormatCustomer)(userCustomerList, "isArray"),
             });
         }
         catch (err) {
-            res.status(500).send({
-                status: "error",
-                message: "Server is working wrong!",
-            });
+            next(err);
         }
     }
-    static async getByID(req, res) {
+    static async getByID(req, res, next) {
         try {
             const { id } = req.params; // ? This id is belongs to User
             const foundCustomer = await User.findOne({
                 include: [
                     {
                         model: Customer,
+                        where: {
+                            user_id: id,
+                        },
+                    },
+                    {
+                        model: UserAddress,
                         where: {
                             user_id: id,
                         },
@@ -52,36 +57,18 @@ class CustomerController {
                 },
             });
             // TODO: Add check address exist or not
-            if (foundCustomer) {
-                const foundCustomerAddressList = await UserAddress.findAll({
-                    where: {
-                        user_id: id,
-                    },
-                });
-                res.status(200).send({
-                    status: "success",
-                    data: (0, common_1.handleFormatCustomer)(foundCustomer, foundCustomerAddressList, "isObject"),
-                });
-            }
-            else {
-                res.status(404).send({
-                    status: "Fail",
-                    data: "Customer Not Found",
-                });
-            }
-        }
-        catch (err) {
-            res.status(500).send({
-                status: "fail",
-                message: "Server is working wrong!",
+            res.status(200).send({
+                status: "success",
+                data: (0, common_1.handleFormatCustomer)(foundCustomer, "isObject"),
             });
         }
+        catch (err) {
+            next(err);
+        }
     }
-    static async create(req, res) {
+    static async create(req, res, next) {
         try {
-            const { user_name, user_code, user_phone, user_email, customer_status, address_list, 
-            // TODO: Client provide staff_id with uuid
-            staff_id, staff_in_charge_note, tags, } = req.body;
+            const { user_name, user_code, user_phone, user_email, customer_status, address_list, staff_id, staff_in_charge_note, tags, } = req.body;
             const userID = uuidv4();
             const newUserRow = {
                 id: userID,
@@ -93,8 +80,8 @@ class CustomerController {
                 isDelete: null,
             };
             const newCustomerRow = {
-                user_id: userID,
-                // TODO: Add STAFF ID
+                user_id: newUserRow.id,
+                staff_id,
                 staff_in_charge_note,
                 tags,
                 customer_status,
@@ -109,26 +96,29 @@ class CustomerController {
                 };
                 return newAddress;
             });
-            const newUserCreated = await User.create(newUserRow);
-            const newCustomerCreated = await Customer.create(newCustomerRow);
-            const newUserAddressListCreated = await UserAddress.bulkCreate(userAddressArray);
-            res.status(201).send({
-                status: "Success",
-                message: "Created successfully!",
-                data: {
-                    newUserCreated,
-                    newCustomerCreated,
-                    newUserAddressListCreated,
-                },
-            });
+            if (newUserRow && newCustomerRow && userAddressArray) {
+                await User.create(newUserRow);
+                await Customer.create(newCustomerRow);
+                await UserAddress.bulkCreate(userAddressArray);
+                res.status(201).send({
+                    status: "Success",
+                    message: "Created successfully!",
+                });
+            }
+            else {
+                res.status(409).send({
+                    status: "Fail",
+                    message: "Create new customer fail - Please check request and try again!",
+                });
+            }
         }
         catch (err) {
-            res
-                .status(500)
-                .send({ status: "Fail", message: "Server is working wrong!" });
+            // TODO: ID Sai
+            console.log(err);
+            // next(err);
         }
     }
-    static async deleteByID(req, res) {
+    static async deleteByID(req, res, next) {
         try {
             const { id } = req.params; // ? ID nay la user id
             const foundUser = await User.findByPk(id);
@@ -140,13 +130,10 @@ class CustomerController {
             });
         }
         catch (err) {
-            res.status(500).send({
-                status: "fail",
-                message: "Server is working wrong!",
-            });
+            next(err);
         }
     }
-    static async updatePersonalInfoByID(req, res) {
+    static async updatePersonalInfoByID(req, res, next) {
         try {
             const { user_code, user_name, user_phone, user_email, customer_status, staff_id, staff_in_charge_note, tags, } = req.body;
             const { id } = req.params;
@@ -184,13 +171,10 @@ class CustomerController {
             });
         }
         catch (err) {
-            res.status(500).send({
-                status: "error",
-                message: "Server is working wrong!",
-            });
+            next(err);
         }
     }
-    static async addNewAddressByCustomerID(req, res) {
+    static async addNewAddressByCustomerID(req, res, next) {
         try {
             const { id } = req.params;
             const { user_province, user_district, user_specific_address } = req.body;
@@ -207,10 +191,7 @@ class CustomerController {
             });
         }
         catch (err) {
-            res.status(500).send({
-                status: "fail",
-                message: "Server is working wrong!",
-            });
+            next(err);
         }
     }
 }

@@ -1,16 +1,20 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 const { v4: uuidv4 } = require("uuid");
 import db from "../models";
 const { Customer, User, UserAddress } = db;
-import { User, Customer, Address } from "../src/common/type";
 import {
   handleFormatCustomer,
   handleFormatUpdateDataByValidValue,
 } from "../src/common";
+import {
+  UserAddressAttributes,
+  CustomerAttributes,
+  UserAttributes,
+} from "../src/ts/interfaces/app_interfaces";
 class CustomerController {
-  public static async getAll(req: Request, res: Response) {
+  public static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const User_Customer_List = await User.findAll({
+      const userCustomerList = await User.findAll({
         where: {
           isDelete: null,
           user_type: "customer",
@@ -19,26 +23,21 @@ class CustomerController {
           {
             model: Customer,
           },
+          {
+            model: UserAddress,
+          },
         ],
       });
-      const User_Address_List = await UserAddress.findAll();
 
       res.status(200).send({
         status: "success",
-        data: handleFormatCustomer(
-          User_Customer_List,
-          User_Address_List,
-          "isArray"
-        ),
+        data: handleFormatCustomer(userCustomerList, "isArray"),
       });
     } catch (err) {
-      res.status(500).send({
-        status: "error",
-        message: "Server is working wrong!",
-      });
+      next(err);
     }
   }
-  public static async getByID(req: Request, res: Response) {
+  public static async getByID(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params; // ? This id is belongs to User
 
@@ -46,6 +45,12 @@ class CustomerController {
         include: [
           {
             model: Customer,
+            where: {
+              user_id: id,
+            },
+          },
+          {
+            model: UserAddress,
             where: {
               user_id: id,
             },
@@ -59,35 +64,15 @@ class CustomerController {
 
       // TODO: Add check address exist or not
 
-      if (foundCustomer) {
-        const foundCustomerAddressList = await UserAddress.findAll({
-          where: {
-            user_id: id,
-          },
-        });
-
-        res.status(200).send({
-          status: "success",
-          data: handleFormatCustomer(
-            foundCustomer,
-            foundCustomerAddressList,
-            "isObject"
-          ),
-        });
-      } else {
-        res.status(404).send({
-          status: "Fail",
-          data: "Customer Not Found",
-        });
-      }
-    } catch (err) {
-      res.status(500).send({
-        status: "fail",
-        message: "Server is working wrong!",
+      res.status(200).send({
+        status: "success",
+        data: handleFormatCustomer(foundCustomer, "isObject"),
       });
+    } catch (err) {
+      next(err);
     }
   }
-  public static async create(req: Request, res: Response) {
+  public static async create(req: Request, res: Response, next: NextFunction) {
     try {
       const {
         user_name,
@@ -96,15 +81,13 @@ class CustomerController {
         user_email,
         customer_status,
         address_list,
-        // TODO: Client provide staff_id with uuid
         staff_id,
         staff_in_charge_note,
         tags,
       } = req.body;
 
-      const userID = uuidv4();
-
-      const newUserRow: User = {
+      const userID: string = uuidv4();
+      const newUserRow: UserAttributes = {
         id: userID,
         user_code,
         user_phone,
@@ -114,16 +97,16 @@ class CustomerController {
         isDelete: null,
       };
 
-      const newCustomerRow: Customer = {
-        user_id: userID,
-        // TODO: Add STAFF ID
+      const newCustomerRow: CustomerAttributes = {
+        user_id: newUserRow.id,
+        staff_id,
         staff_in_charge_note,
         tags,
         customer_status,
       };
 
-      const userAddressArray: Array<Address> = address_list.map(
-        (address: Address) => {
+      const userAddressArray: Array<UserAddressAttributes> = address_list.map(
+        (address: UserAddressAttributes) => {
           const { user_province, user_district, user_specific_address } =
             address;
           const newAddress = {
@@ -136,29 +119,33 @@ class CustomerController {
         }
       );
 
-      const newUserCreated: User = await User.create(newUserRow);
-      const newCustomerCreated: Customer = await Customer.create(
-        newCustomerRow
-      );
-      const newUserAddressListCreated: Array<Address> =
+      if (newUserRow && newCustomerRow && userAddressArray) {
+        await User.create(newUserRow);
+        await Customer.create(newCustomerRow);
         await UserAddress.bulkCreate(userAddressArray);
 
-      res.status(201).send({
-        status: "Success",
-        message: "Created successfully!",
-        data: {
-          newUserCreated,
-          newCustomerCreated,
-          newUserAddressListCreated,
-        },
-      });
+        res.status(201).send({
+          status: "Success",
+          message: "Created successfully!",
+        });
+      } else {
+        res.status(409).send({
+          status: "Fail",
+          message:
+            "Create new customer fail - Please check request and try again!",
+        });
+      }
     } catch (err) {
-      res
-        .status(500)
-        .send({ status: "Fail", message: "Server is working wrong!" });
+      // TODO: ID Sai
+      console.log(err);
+      // next(err);
     }
   }
-  public static async deleteByID(req: Request, res: Response) {
+  public static async deleteByID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id } = req.params; // ? ID nay la user id
       const foundUser = await User.findByPk(id);
@@ -169,13 +156,14 @@ class CustomerController {
         message: "Delete customer successfully!",
       });
     } catch (err) {
-      res.status(500).send({
-        status: "fail",
-        message: "Server is working wrong!",
-      });
+      next(err);
     }
   }
-  public static async updatePersonalInfoByID(req: Request, res: Response) {
+  public static async updatePersonalInfoByID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const {
         user_code,
@@ -197,24 +185,26 @@ class CustomerController {
         },
       });
 
-      const userRowUpdated: User = handleFormatUpdateDataByValidValue(
-        {
-          user_code,
-          user_name,
-          user_phone,
-          user_email,
-        },
-        foundUser.dataValues
-      );
-      const customerRowUpdated: Customer = handleFormatUpdateDataByValidValue(
-        {
-          customer_status,
-          staff_id,
-          staff_in_charge_note,
-          tags,
-        },
-        foundCustomer.dataValues
-      );
+      const userRowUpdated: UserAddressAttributes =
+        handleFormatUpdateDataByValidValue(
+          {
+            user_code,
+            user_name,
+            user_phone,
+            user_email,
+          },
+          foundUser.dataValues
+        );
+      const customerRowUpdated: CustomerAttributes =
+        handleFormatUpdateDataByValidValue(
+          {
+            customer_status,
+            staff_id,
+            staff_in_charge_note,
+            tags,
+          },
+          foundCustomer.dataValues
+        );
 
       await User.update(userRowUpdated, {
         where: {
@@ -233,13 +223,14 @@ class CustomerController {
         message: "Update successfully!",
       });
     } catch (err) {
-      res.status(500).send({
-        status: "error",
-        message: "Server is working wrong!",
-      });
+      next(err);
     }
   }
-  public static async addNewAddressByCustomerID(req: Request, res: Response) {
+  public static async addNewAddressByCustomerID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id } = req.params;
       const { user_province, user_district, user_specific_address } = req.body;
@@ -264,10 +255,7 @@ class CustomerController {
         message: "Add new address successfully!",
       });
     } catch (err) {
-      res.status(500).send({
-        status: "fail",
-        message: "Server is working wrong!",
-      });
+      next(err);
     }
   }
 }

@@ -1,8 +1,7 @@
 import { Router } from "express";
 const UserAddressController = require("../controller/userAddress-controllers");
 import db from "../models";
-import authenticate from "../middlewares/auth/authenticate";
-import checkExist from "../middlewares/validation/checkExist";
+import { authenticate, checkExist, errorMiddleware } from "../middlewares";
 const { User, UserAddress } = db;
 const userAddressRouter = Router();
 
@@ -10,19 +9,22 @@ userAddressRouter.post(
   "/add/:id",
   // authenticate,
   checkExist(User),
-  UserAddressController.addNewAddressByUserID
+  UserAddressController.addNewAddressByUserID,
+  errorMiddleware
 );
 userAddressRouter.patch(
   "/update/:id",
   //   authenticate,
   checkExist(UserAddress),
-  UserAddressController.updateAddressByID
+  UserAddressController.updateAddressByID,
+  errorMiddleware
 );
 userAddressRouter.delete(
   "/delete/:id",
   //   authenticate,
   checkExist(UserAddress),
-  UserAddressController.deleteAddressByID
+  UserAddressController.deleteAddressByID,
+  errorMiddleware
 );
 
 export default userAddressRouter;

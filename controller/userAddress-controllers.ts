@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 const { v4: uuidv4 } = require("uuid");
 import db from "../models";
 const { Customer, User, UserAddress } = db;
-import { User, Customer, Address } from "../src/common/type";
+import { User, Customer, Address } from "../src/ts/types/type";
 import {
   handleFormatCustomer,
   handleFormatUpdateDataByValidValue,
@@ -14,7 +14,11 @@ interface NewAddressAttributes {
   user_id?: string;
 }
 class UserAddressController {
-  public static async addNewAddressByUserID(req: Request, res: Response) {
+  public static async addNewAddressByUserID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id } = req.params;
       const { user_province, user_district, user_specific_address } = req.body;
@@ -32,13 +36,14 @@ class UserAddressController {
         message: "Add new address successfully!",
       });
     } catch (err) {
-      res.status(500).send({
-        status: "fail",
-        message: "Server is working wrong!",
-      });
+      next(err);
     }
   }
-  public static async updateAddressByID(req: Request, res: Response) {
+  public static async updateAddressByID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id } = req.params;
       const { user_province, user_district, user_specific_address } = req.body;
@@ -64,13 +69,16 @@ class UserAddressController {
         message: "Update Success",
       });
     } catch (err) {
-      res.status(500).send("Server is working wrong!");
+      next(err);
     }
   }
-  public static async deleteAddressByID(req: Request, res: Response) {
+  public static async deleteAddressByID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id } = req.params;
-
       await UserAddress.destroy({
         where: {
           id,
@@ -82,7 +90,7 @@ class UserAddressController {
         message: "Delete successfully address",
       });
     } catch (err) {
-      res.status(500).send("Server is working wrong!");
+      next(err);
     }
   }
 }

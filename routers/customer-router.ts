@@ -1,43 +1,51 @@
 import { Router } from "express";
 const CustomerController = require("../controller/customer-controller");
-import authenticate from "../middlewares/auth/authenticate";
-import checkUserExist from "../middlewares/validation/checkUserExist";
-import checkExist from "../middlewares/validation/checkExist";
+import {
+  authenticate,
+  checkExist,
+  checkUserExist,
+  errorMiddleware,
+} from "../middlewares";
 import db from "../models";
-const { User, Customers } = db;
+const { User } = db;
 
 const customerRouter = Router();
 
 customerRouter.get(
   "/get-all",
   //  authenticate,
-  CustomerController.getAll
+  CustomerController.getAll,
+  errorMiddleware
 );
 customerRouter.get(
   "/get-by-id/:id",
   // authenticate,
   checkExist(User),
-  CustomerController.getByID
+  CustomerController.getByID,
+  errorMiddleware
 );
 customerRouter.post(
   "/create",
   // authenticate,
   // checkUserExist(),
-  CustomerController.create
+  CustomerController.create,
+  errorMiddleware
 );
 
 customerRouter.delete(
   "/delete-by-id/:id",
   // authenticate,
   checkExist(User),
-  CustomerController.deleteByID
+  CustomerController.deleteByID,
+  errorMiddleware
 );
 customerRouter.patch(
   "/update-personalInfo-by-id/:id",
   // authenticate,
   checkExist(User),
   checkUserExist(),
-  CustomerController.updatePersonalInfoByID
+  CustomerController.updatePersonalInfoByID,
+  errorMiddleware
 );
 
 export default customerRouter;

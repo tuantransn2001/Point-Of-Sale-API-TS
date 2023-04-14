@@ -1,31 +1,35 @@
 import { IncomingHttpHeaders } from "http2";
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
+import { MyRequest } from "../../src/ts/interfaces/global_interfaces";
 import jwt from "jsonwebtoken";
+
 require("dotenv").config();
 
 interface MyCustomsHeaders {
   token: string;
 }
-
 type IncomingCustomHeaders = IncomingHttpHeaders & MyCustomsHeaders;
 
 const authenticate = async (
-  req: Request,
+  req: MyRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const JWT_TOKEN_SECRET_KEY: string =
-    process.env.JWT_TOKEN_SECRET_KEY ?? "default is string";
   try {
+    const JWT_TOKEN_SECRET_KEY: string =
+      process.env.JWT_TOKEN_SECRET_KEY ?? "default is string";
     const { token } = req.headers as IncomingCustomHeaders;
-
-    const isAuth = jwt.verify(token, JWT_TOKEN_SECRET_KEY);
+    interface JwtPayload {
+      id: string;
+    }
+    const isAuth = jwt.verify(token, JWT_TOKEN_SECRET_KEY) as JwtPayload;
     if (isAuth) {
+      req.currentUserID = isAuth.id;
       return next();
     } else {
-      res.status(403).send({
-        status: "Forbidden",
-        message: "Client-Error ?? In-Valid Token",
+      res.status(401).send({
+        status: "Unauthorised",
+        message: "Client-Error && In-Valid Token",
       });
     }
   } catch (err) {

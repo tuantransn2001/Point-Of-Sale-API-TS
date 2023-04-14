@@ -24,7 +24,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       Customer.belongsTo(User, {
         foreignKey: "user_id",
       });
-      Customer.belongsTo(Staff, { foreignKey: "customer_id" });
+      Customer.belongsTo(Staff, { foreignKey: "staff_id" });
       Customer.hasMany(Order, {
         foreignKey: "customer_id",
       });

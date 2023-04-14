@@ -1,9 +1,28 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+const { v4: uuidv4 } = require("uuid");
 import db from "../models";
-const { StaffRole, Staff, User, StaffAgencyBranchInCharge, UserAddress } = db;
-import { handleFormatStaff } from "../src/common";
+const {
+  StaffRole,
+  Staff,
+  User,
+  StaffAgencyBranchInCharge,
+  Role,
+  UserAddress,
+  AgencyBranches,
+} = db;
+import {
+  handleFormatStaff,
+  handleFormatUpdateDataByValidValue,
+  randomStringByCharsetAndLength,
+} from "../src/common";
+import {
+  StaffAttributes,
+  UserAddressAttributes,
+  StaffRoleAttributes,
+  StaffAgencyBranchInChargeAttributes,
+} from "../src/ts/interfaces/app_interfaces";
 class StaffController {
-  public static async getAll(req: Request, res: Response) {
+  public static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const userStaffList = await User.findAll({
         where: {
@@ -29,373 +48,459 @@ class StaffController {
           },
         ],
       });
+
+      const roleList = await Role.findAll();
+      const agencyBranchList = await AgencyBranches.findAll();
       res.status(200).send({
         status: "success",
-        data: handleFormatStaff(userStaffList, "isArray"),
+        data: handleFormatStaff(
+          userStaffList,
+          roleList,
+          agencyBranchList,
+          "isArray"
+        ),
       });
     } catch (err) {
-      console.log(err);
-      res.status(500).send("Server is working wrong!");
+      next(err);
     }
   }
-  //   static async create(req, res) {
-  //     try {
-  //       const {
-  //         user_phone,
-  //         user_email,
-  //         user_name,
-  //         user_code,
-  //         staff_password,
-  //         staff_status,
-  //         staff_gender,
-  //         staff_region,
-  //         staff_commune,
-  //         staff_address,
-  //         note_about_staff,
-  //         isAllowViewImportNWholesalePrice,
-  //         isAllowViewShippingPrice,
-  //         positionIncludeAgencyBranchInCharge,
-  //       } = req.body;
+  public static async create(req: Request, res: Response, next: NextFunction) {
+    try {
+      const {
+        user_phone,
+        user_email,
+        user_password,
+        user_name,
+        staff_birthday,
+        staff_gender,
+        isAllowViewImportNWholesalePrice,
+        isAllowViewShippingPrice,
+        roles,
+        address_list,
+      } = req.body;
+      const userID: string = uuidv4();
+      const newUserRow: {
+        id: string;
+        user_type: string;
+        user_code: string;
+        user_phone: string;
+        user_email: string;
+        user_password: string;
+        user_name: string;
+        isDelete: boolean | null;
+      } = {
+        id: userID,
+        user_type: "staff",
+        user_code: randomStringByCharsetAndLength("alphanumeric", 6),
+        user_phone,
+        user_email,
+        user_password,
+        user_name,
+        isDelete: null,
+      };
+      const staffID: string = uuidv4();
+      const newStaffRow: {
+        id: string;
+        user_id: string;
+        staff_status: string;
+        staff_birthday: Date;
+        staff_gender: boolean;
+        isAllowViewImportNWholesalePrice: boolean;
+        isAllowViewShippingPrice: boolean;
+      } = {
+        id: staffID,
+        user_id: userID,
+        staff_status: "Đang giao dịch",
+        staff_birthday,
+        staff_gender,
+        isAllowViewImportNWholesalePrice,
+        isAllowViewShippingPrice,
+      };
 
-  //       // ? Create Users
-  //       const newUserRecord = {
-  //         user_name,
-  //         user_code,
-  //         user_phone,
-  //         user_email,
-  //         user_password: staff_password,
-  //         isDelete: null,
-  //         user_type: "staff",
-  //       };
-  //       const newUser = await Users.create(newUserRecord);
-  //       // ? Create Staffs
-  //       const newStaffRecord = {
-  //         staff_status,
-  //         staff_birthday: new Date(),
-  //         staff_address,
-  //         staff_gender,
-  //         staff_region,
-  //         staff_commune,
-  //         note_about_staff,
-  //         isAllowViewImportNWholesalePrice,
-  //         isAllowViewShippingPrice,
-  //       };
-  //       const newStaff = await Staffs.create(newStaffRecord);
-  //       // ? Create UserStaffList
-  //       const newUserStaffListRecord = {
-  //         staff_id: newStaff.dataValues.id,
-  //         user_id: newUser.dataValues.id,
-  //         user_staff_list_note: "create by admin",
-  //       };
-  //       const newUserStaffList = await UserStaffList.create(
-  //         newUserStaffListRecord
-  //       );
-  //       // ? Create StaffPositions
-  //       const newStaffPositionRecord = positionIncludeAgencyBranchInCharge.map(
-  //         ({ title }) => ({
-  //           staff_id: newStaff.dataValues.id,
-  //           staff_title: title,
-  //         })
-  //       );
-  //       const newStaffPosition = await StaffPositions.bulkCreate(
-  //         newStaffPositionRecord
-  //       );
-  //       // ? Create StaffAgencyBranchInCharge
-  //       positionIncludeAgencyBranchInCharge.forEach(
-  //         ({ title, agencyInChargeIDList }) => {
-  //           (async () => {
-  //             await StaffPositions.findOne({
-  //               where: {
-  //                 staff_title: title,
-  //                 staff_id: newStaff.dataValues.id,
-  //               },
-  //             }).then((response) => {
-  //               let targetStaffPositionID = response.dataValues.id;
+      interface StaffRoleInputAttributes {
+        role_id: string;
+        agencyBranches_inCharge: Array<string>;
+      }
 
-  //               const newStaffAgencyBranchInChargeRecordArray =
-  //                 agencyInChargeIDList.map((id) => ({
-  //                   staff_position_id: targetStaffPositionID,
-  //                   agency_branch_id: id,
-  //                 }));
+      interface StaffRoleAndAgencyInChargeInputAttributes {
+        staffRolesRowArr: Array<StaffRoleAttributes>;
+        staffAgencyBranchesInChargeRowArr: Array<StaffAgencyBranchInChargeAttributes>;
+      }
+      const {
+        staffRolesRowArr,
+        staffAgencyBranchesInChargeRowArr,
+      }: StaffRoleAndAgencyInChargeInputAttributes = roles.reduce(
+        (
+          result: StaffRoleAndAgencyInChargeInputAttributes,
+          role: StaffRoleInputAttributes
+        ) => {
+          const { role_id, agencyBranches_inCharge } = role;
+          const staffRoleID: string = uuidv4();
+          const newStaffRoleRow: StaffRoleAttributes = {
+            id: staffRoleID,
+            staff_id: newStaffRow.id,
+            role_id,
+          };
+          result.staffRolesRowArr.push(newStaffRoleRow);
+          agencyBranches_inCharge.forEach((agencyBranchID: any) => {
+            const newStaffAgencyBranchInCharge: StaffAgencyBranchInChargeAttributes =
+              {
+                staff_role_id: newStaffRoleRow.id,
+                agency_branch_id: agencyBranchID,
+              };
+            result.staffAgencyBranchesInChargeRowArr.push(
+              newStaffAgencyBranchInCharge
+            );
+          });
 
-  //               (async () => {
-  //                 if (newStaffAgencyBranchInChargeRecordArray.length === 1) {
-  //                   await StaffAgencyBranchInCharge.create(
-  //                     newStaffAgencyBranchInChargeRecordArray[0]
-  //                   );
-  //                 } else {
-  //                   await StaffAgencyBranchInCharge.bulkCreate(
-  //                     newStaffAgencyBranchInChargeRecordArray
-  //                   );
-  //                 }
-  //               })();
-  //             });
-  //           })();
-  //         }
-  //       );
+          return result;
+        },
+        {
+          staffRolesRowArr: [],
+          staffAgencyBranchesInChargeRowArr: [],
+        }
+      );
 
-  //       res.status(201).send({
-  //         status: "success",
-  //         message: "create new staff successfully",
-  //       });
-  //     } catch (err) {
-  //       res.status(500).send("Server is working wrong!");
-  //     }
-  //   }
-  //   static async updateByID(req, res) {
-  //     try {
-  //       const { id } = req.params;
-  //       const {
-  //         user_name,
-  //         user_phone,
-  //         user_email,
-  //         staff_birthday,
-  //         staff_gender,
-  //         staff_region,
-  //         staff_commune,
-  //         staff_address,
-  //       } = req.body;
+      const staffAddressRowArr: Array<UserAddressAttributes> = address_list.map(
+        (address: Array<UserAddressAttributes>) => {
+          return {
+            ...address,
+            user_id: userID,
+          };
+        }
+      );
 
-  //       const foundStaff = await Staffs.findOne({
-  //         where: {
-  //           id,
-  //         },
-  //       });
+      if (
+        newUserRow &&
+        newStaffRow &&
+        staffRolesRowArr &&
+        staffAgencyBranchesInChargeRowArr &&
+        staffAddressRowArr
+      ) {
+        await User.create(newUserRow);
+        await Staff.create(newStaffRow);
+        await StaffRole.bulkCreate(staffRolesRowArr);
+        await StaffAgencyBranchInCharge.bulkCreate(
+          staffAgencyBranchesInChargeRowArr
+        );
+        await UserAddress.bulkCreate(staffAddressRowArr);
+        res.status(201).send({
+          status: "Success",
+          message: "Create new staff successfully",
+        });
+      } else {
+        res.status(409).send({
+          status: "Fail",
+          message:
+            "Create new staff fail - Please check request and try again!",
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+  public static async updateByID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const {
+        user_name,
+        user_phone,
+        user_email,
+        staff_birthday,
+        staff_gender,
+        staff_address_list,
+      } = req.body;
 
-  //       const foundUserStaffList = await UserStaffList.findOne({
-  //         where: {
-  //           staff_id: id,
-  //         },
-  //       });
+      const foundUser = await User.findOne({
+        where: {
+          isDelete: null,
+          user_type: "staff",
+          id,
+        },
+      });
+      const userID: string = foundUser.dataValues.id;
+      const foundStaff = await Staff.findOne({
+        user_id: userID,
+      });
+      const staffID: string = foundStaff.dataValues.id;
+      const userRowUpdate: UserAddressAttributes =
+        handleFormatUpdateDataByValidValue(
+          { user_name, user_phone, user_email },
+          foundUser.dataValues
+        );
+      const staffRowUpdate: StaffAttributes =
+        handleFormatUpdateDataByValidValue(
+          {
+            staff_birthday,
+            staff_gender,
+          },
+          foundStaff.dataValues
+        );
 
-  //       const foundUser = await Users.findOne({
-  //         where: {
-  //           id: foundUserStaffList.dataValues.user_id,
-  //         },
-  //       });
+      if (userRowUpdate && staffRowUpdate) {
+        await User.update(userRowUpdate, {
+          where: {
+            id: userID,
+          },
+        });
+        await Staff.update(staffRowUpdate, {
+          where: {
+            id: staffID,
+          },
+        });
+        // ? Handle modify address list
+        const isAddressListEmpty: boolean = staff_address_list.length === 0;
+        if (isAddressListEmpty) {
+          // ? Dependency empty -> Delete old address
+          await UserAddress.destroy({
+            where: {
+              user_id: userID,
+            },
+          });
+        } else {
+          // ? Update the new one
 
-  //       const updateStaff = await foundStaff.update(
-  //         handleFormatUpdateDataByValidValue(
-  //           {
-  //             staff_birthday: new Date(),
-  //             staff_gender,
-  //             staff_region,
-  //             staff_commune,
-  //             staff_address,
-  //           },
-  //           foundStaff.dataValues
-  //         )
-  //       );
+          const staffAddressRowArr: Array<UserAddressAttributes> =
+            staff_address_list.map((address: UserAddressAttributes) => {
+              return {
+                ...address,
+                user_id: userID,
+              };
+            });
+          await UserAddress.destroy({
+            where: {
+              user_id: userID,
+            },
+          });
+          await UserAddress.bulkCreate(staffAddressRowArr);
+        }
 
-  //       const updateUser = await foundUser.update(
-  //         handleFormatUpdateDataByValidValue(
-  //           { user_name, user_phone, user_email },
-  //           foundUser.dataValues
-  //         )
-  //       );
+        res.status(201).send({
+          status: "Success",
+          message: "Create new staff successfully",
+        });
+      } else {
+        res.status(409).send({
+          status: "Fail",
+          message: "Update staff fail - Please check request and try again!",
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+  public static async deleteByID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params; // ? ID nay la user id
+      const foundUser = await User.findByPk(id);
+      foundUser.isDelete = true;
+      foundUser.save();
+      res.status(202).send({
+        status: "success",
+        message: "Delete customer successfully!",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+  public static async updateRoleByID(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params; // ? This belongs to User
+      const { roles } = req.body;
 
-  //       res.send({
-  //         status: "success",
-  //         message: "Update staff success",
-  //       });
-  //     } catch (err) {
-  //       res.status(500).send("Server is working wrong!");
-  //     }
-  //   }
-  //   static async getByID(req, res) {
-  //     try {
-  //       const { id } = req.params;
-  //       const staffList = await UserStaffList.findOne({
-  //         include: [
-  //           {
-  //             model: Users,
-  //           },
-  //           {
-  //             model: Staffs,
-  //           },
-  //         ],
-  //         where: {
-  //           staff_id: id,
-  //         },
-  //       });
+      const foundUserStaff = await User.findOne({
+        where: {
+          id,
+        },
+        include: [
+          {
+            model: Staff,
+            include: [
+              {
+                model: StaffRole,
+                include: [
+                  {
+                    model: StaffAgencyBranchInCharge,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+      // * =====================  DELETE ALL STAFF ROLE =====================
+      interface DeleteDataArrAttributes {
+        staffRoleIDArray: Array<string>;
+        staffAgencyBranchInChargeIDArray: Array<string>;
+      }
+      interface StaffAgencyBranchInChargeItemAttributes {
+        dataValues: StaffAgencyBranchInChargeAttributes;
+      }
+      const {
+        staffRoleIDArray,
+        staffAgencyBranchInChargeIDArray,
+      }: DeleteDataArrAttributes =
+        // TODO: FIX
+        foundUserStaff.dataValues.Staff.dataValues.StaffRoles.reduce(
+          (
+            result: DeleteDataArrAttributes,
+            staffRoleData: {
+              dataValues: {
+                id: string;
+                role_id: string;
+                staff_id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                StaffAgencyBranchInCharges: Array<StaffAgencyBranchInChargeItemAttributes>;
+              };
+            }
+          ) => {
+            // TODO: fix
+            const id: string = staffRoleData.dataValues.id;
 
-  //       const staffPositionIncludeAgencyInchargeList =
-  //         await StaffAgencyBranchInCharge.findAll({
-  //           include: [
-  //             {
-  //               model: StaffPositions,
-  //             },
-  //             {
-  //               model: AgencyBranchs,
-  //             },
-  //           ],
-  //         });
+            const staffAgencyInChargeListArr: Array<StaffAgencyBranchInChargeItemAttributes> =
+              staffRoleData.dataValues.StaffAgencyBranchInCharges;
 
-  //       res.status(200).send({
-  //         status: "success",
-  //         data: handleFormatStaffIncludeCheckIsDelete(
-  //           staffPositionIncludeAgencyInchargeList,
-  //           staffList,
-  //           "isObject"
-  //         ),
-  //       });
-  //     } catch (err) {
-  //       console.log(err);
-  //       res.status(500).send("Server is working wrong!");
-  //     }
-  //   }
-  //   static async deleteByID(req, res) {
-  //     try {
-  //       const { id } = req.params;
+            result.staffRoleIDArray.push(id);
 
-  //       const foundStaffList = await UserStaffList.findAll({
-  //         include: [
-  //           {
-  //             model: Users,
-  //           },
-  //           {
-  //             model: Staffs,
-  //           },
-  //         ],
-  //         where: {
-  //           staff_id: id,
-  //         },
-  //       });
+            staffAgencyInChargeListArr.forEach(
+              (staffAgencyBranch: StaffAgencyBranchInChargeItemAttributes) => {
+                result.staffAgencyBranchInChargeIDArray.push(
+                  staffAgencyBranch.dataValues.id as string
+                );
+              }
+            );
 
-  //       const targetUserID = foundStaffList[0].User.dataValues.id;
+            return result;
+          },
+          {
+            staffRoleIDArray: [],
+            staffAgencyBranchInChargeIDArray: [],
+          }
+        );
+      await StaffAgencyBranchInCharge.destroy({
+        where: {
+          id: staffAgencyBranchInChargeIDArray,
+        },
+      });
+      await StaffRole.destroy({
+        where: {
+          id: staffRoleIDArray,
+        },
+      });
+      // * ===================== ADD NEW  =====================
+      interface CreateDataArrAttributes {
+        newStaffRoleRowArr: Array<{
+          id: string;
+          role_id: string;
+          staff_id: string;
+        }>;
+        newStaffAgencyBranchInChargeRowArr: Array<{
+          staff_role_id: string;
+          agency_branch_id: string;
+        }>;
+      }
+      const staffID: string = foundUserStaff.dataValues.Staff.id;
 
-  //       const foundStaff = await Users.findOne({
-  //         where: {
-  //           id: targetUserID,
-  //         },
-  //       });
+      interface RolesInputAttributes {
+        role_id: string;
+        agencyBranches_inCharge_id_list: Array<string>;
+      }
 
-  //       foundStaff.isDelete = true;
-  //       foundStaff.save();
+      const {
+        newStaffRoleRowArr,
+        newStaffAgencyBranchInChargeRowArr,
+      }: CreateDataArrAttributes = roles.reduce(
+        (result: CreateDataArrAttributes, role: RolesInputAttributes) => {
+          const { role_id, agencyBranches_inCharge_id_list } = role;
+          const staffRoleID: string = uuidv4();
 
-  //       res.status(201).send({
-  //         status: "success",
-  //         message: "Delete staff success",
-  //       });
-  //     } catch (err) {
-  //       res
-  //         .status(500)
-  //         .send({ status: "fail", message: "Server is working wrong!" });
-  //     }
-  //   }
-  //   static async updateRoleByStaffIDAndPositionID(req, res) {
-  //     try {
-  //       const { id } = req.params;
-  //       const { positionIncludeAgencyBranchInCharge } = req.body;
+          result.newStaffRoleRowArr.push({
+            id: staffRoleID,
+            role_id,
+            staff_id: staffID,
+          });
 
-  //       if (positionIncludeAgencyBranchInCharge.length === 0) {
-  //         // ? Delete all old data
-  //         const positionList = await StaffPositions.findAll({
-  //           where: {
-  //             staff_id: id,
-  //           },
-  //         });
+          agencyBranches_inCharge_id_list.forEach((agencyBranch_id: string) => {
+            result.newStaffAgencyBranchInChargeRowArr.push({
+              staff_role_id: staffRoleID,
+              agency_branch_id: agencyBranch_id,
+            });
+          });
 
-  //         positionList.forEach((position) => {
-  //           const positionID = position.dataValues.id;
-
-  //           // ? Delete
-
-  //           (async () => {
-  //             await StaffPositions.destroy({
-  //               where: { id: positionID },
-  //             });
-  //           })();
-  //           // ? Find AC InCharge
-  //           (async () => {
-  //             const foundAC = await StaffAgencyBranchInCharge.findOne({
-  //               where: {
-  //                 staff_position_id: positionID,
-  //               },
-  //             });
-
-  //             const ACInChargeID = foundAC.dataValues.id;
-
-  //             await StaffAgencyBranchInCharge.destroy({
-  //               where: { id: ACInChargeID },
-  //             });
-  //           })();
-  //         });
-  //       } else {
-  //         // ? Delete all old data
-  //         const positionList = await StaffPositions.findAll({
-  //           where: {
-  //             staff_id: id,
-  //           },
-  //         });
-
-  //         positionList.forEach((position) => {
-  //           const positionID = position.dataValues.id;
-
-  //           // ? Delete
-
-  //           (async () => {
-  //             await StaffPositions.destroy({
-  //               where: { id: positionID },
-  //             });
-  //           })();
-  //           // ? Find AC InCharge
-  //           (async () => {
-  //             const foundAC = await StaffAgencyBranchInCharge.findOne({
-  //               where: {
-  //                 staff_position_id: positionID,
-  //               },
-  //             });
-
-  //             const ACInChargeID = foundAC.dataValues.id;
-
-  //             await StaffAgencyBranchInCharge.destroy({
-  //               where: { id: ACInChargeID },
-  //             });
-  //           })();
-  //         });
-
-  //         // ? Create StaffPositions
-  //         const newStaffPositionRecord = positionIncludeAgencyBranchInCharge.map(
-  //           ({ title }) => ({
-  //             staff_id: id,
-  //             staff_title: title,
-  //           })
-  //         );
-
-  //         await StaffPositions.bulkCreate(newStaffPositionRecord);
-  //         // ? Create StaffAgencyBranchInCharge
-  //         positionIncludeAgencyBranchInCharge.forEach(
-  //           ({ title, agencyInChargeIDList }) => {
-  //             (async () => {
-  //               await StaffPositions.findOne({
-  //                 where: {
-  //                   staff_title: title,
-  //                   staff_id: id,
-  //                 },
-  //               }).then((response) => {
-  //                 const targetStaffPositionID = response.dataValues.id;
-
-  //                 const newStaffAgencyBranchInChargeRecordArray =
-  //                   agencyInChargeIDList.map((ID) => ({
-  //                     staff_position_id: targetStaffPositionID,
-  //                     agency_branch_id: ID,
-  //                   }));
-
-  //                 (async () => {
-  //                   await StaffAgencyBranchInCharge.bulkCreate(
-  //                     newStaffAgencyBranchInChargeRecordArray
-  //                   );
-  //                 })();
-  //               });
-  //             })();
-  //           }
-  //         );
-  //       }
-  //       res.send({ status: "success", message: "update success" });
-  //     } catch (err) {
-  //       res.status(500).send("Server is working wrong!");
-  //     }
-  //   }
+          return result;
+        },
+        {
+          newStaffRoleRowArr: [],
+          newStaffAgencyBranchInChargeRowArr: [],
+        }
+      );
+      await StaffRole.bulkCreate(newStaffRoleRowArr);
+      await StaffAgencyBranchInCharge.bulkCreate(
+        newStaffAgencyBranchInChargeRowArr
+      );
+      res.status(201).send({
+        status: "Success",
+        message: "Update staff role success!",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+  public static async getByID(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const userStaffList = await User.findOne({
+        where: {
+          isDelete: null,
+          id,
+          user_type: "staff",
+        },
+        include: [
+          {
+            model: Staff,
+            include: [
+              {
+                model: StaffRole,
+                include: [
+                  {
+                    model: StaffAgencyBranchInCharge,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: UserAddress,
+          },
+        ],
+      });
+      const roleList = await Role.findAll();
+      const agencyBranchList = await AgencyBranches.findAll();
+      res.status(200).send({
+        status: "success",
+        data: handleFormatStaff(
+          userStaffList,
+          roleList,
+          agencyBranchList,
+          "isObject"
+        ),
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 module.exports = StaffController;

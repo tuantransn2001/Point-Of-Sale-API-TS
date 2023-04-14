@@ -22,7 +22,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     user_name!: string;
     user_type!: string;
     isDelete!: boolean;
-    static associate({ Customer, Staff, UserHistoryOrders, UserAddress }: any) {
+    static associate({ Customer, Staff, UserAddress }: any) {
       User.hasOne(Customer, {
         foreignKey: "user_id",
       });
