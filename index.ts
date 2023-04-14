@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
-import rootRouter from "../routers";
+import rootRouter from "./routers";
 import {
   USER_ARRAY,
   USER_ADDRESS_LIST_ARRAY,
@@ -10,8 +10,8 @@ import {
   STAFF_AGENCY_INCHARGE_ARRAY,
   AGENCY_BRANCH_ARRAY,
   ROLE_ARRAY,
-} from "./data/seeders";
-import db from "../models";
+} from "./src/data/seeders";
+import db from "./models";
 const {
   User,
   Customer,
