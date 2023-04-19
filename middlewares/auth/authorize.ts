@@ -1,12 +1,6 @@
 import { Response, NextFunction } from "express";
 import { MyRequest } from "../../src/ts/interfaces/global_interfaces";
-import { IncomingHttpHeaders } from "http2";
 import db from "../../models";
-interface MyCustomsHeaders {
-  token: string;
-}
-
-type IncomingCustomHeaders = IncomingHttpHeaders & MyCustomsHeaders;
 
 const authorize = async (req: MyRequest, res: Response, next: NextFunction) => {
   try {

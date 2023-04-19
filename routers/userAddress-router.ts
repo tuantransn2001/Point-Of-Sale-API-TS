@@ -7,21 +7,21 @@ const userAddressRouter = Router();
 
 userAddressRouter.post(
   "/add/:id",
-  // authenticate,
+  authenticate,
   checkExist(User),
   UserAddressController.addNewAddressByUserID,
   errorMiddleware
 );
 userAddressRouter.patch(
   "/update/:id",
-  //   authenticate,
+  authenticate,
   checkExist(UserAddress),
   UserAddressController.updateAddressByID,
   errorMiddleware
 );
 userAddressRouter.delete(
   "/delete/:id",
-  //   authenticate,
+  authenticate,
   checkExist(UserAddress),
   UserAddressController.deleteAddressByID,
   errorMiddleware

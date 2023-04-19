@@ -20,6 +20,7 @@ import {
   UserAddressAttributes,
   StaffRoleAttributes,
   StaffAgencyBranchInChargeAttributes,
+  UserAttributes,
 } from "../src/ts/interfaces/app_interfaces";
 class StaffController {
   public static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -79,16 +80,7 @@ class StaffController {
         address_list,
       } = req.body;
       const userID: string = uuidv4();
-      const newUserRow: {
-        id: string;
-        user_type: string;
-        user_code: string;
-        user_phone: string;
-        user_email: string;
-        user_password: string;
-        user_name: string;
-        isDelete: boolean | null;
-      } = {
+      const newUserRow: UserAttributes = {
         id: userID,
         user_type: "staff",
         user_code: randomStringByCharsetAndLength("alphanumeric", 6),
@@ -99,20 +91,13 @@ class StaffController {
         isDelete: null,
       };
       const staffID: string = uuidv4();
-      const newStaffRow: {
-        id: string;
-        user_id: string;
-        staff_status: string;
-        staff_birthday: Date;
-        staff_gender: boolean;
-        isAllowViewImportNWholesalePrice: boolean;
-        isAllowViewShippingPrice: boolean;
-      } = {
+      const newStaffRow: StaffAttributes = {
         id: staffID,
         user_id: userID,
         staff_status: "Đang giao dịch",
         staff_birthday,
         staff_gender,
+        note_about_staff: "Những ghi chú về nhân viên sẽ được lưu ở cột này",
         isAllowViewImportNWholesalePrice,
         isAllowViewShippingPrice,
       };
@@ -143,8 +128,10 @@ class StaffController {
           };
           result.staffRolesRowArr.push(newStaffRoleRow);
           agencyBranches_inCharge.forEach((agencyBranchID: any) => {
+            const staffAgencyBranchInChargeID: string = uuidv4();
             const newStaffAgencyBranchInCharge: StaffAgencyBranchInChargeAttributes =
               {
+                id: staffAgencyBranchInChargeID,
                 staff_role_id: newStaffRoleRow.id,
                 agency_branch_id: agencyBranchID,
               };
@@ -190,7 +177,7 @@ class StaffController {
         });
       } else {
         res.status(409).send({
-          status: "Fail",
+          status: "Conflict",
           message:
             "Create new staff fail - Please check request and try again!",
         });
@@ -279,13 +266,13 @@ class StaffController {
           await UserAddress.bulkCreate(staffAddressRowArr);
         }
 
-        res.status(201).send({
+        res.status(202).send({
           status: "Success",
           message: "Create new staff successfully",
         });
       } else {
         res.status(409).send({
-          status: "Fail",
+          status: "Conflict",
           message: "Update staff fail - Please check request and try again!",
         });
       }
@@ -303,7 +290,7 @@ class StaffController {
       const foundUser = await User.findByPk(id);
       foundUser.isDelete = true;
       foundUser.save();
-      res.status(202).send({
+      res.status(200).send({
         status: "success",
         message: "Delete customer successfully!",
       });

@@ -1,6 +1,7 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 const seedRouter = Router();
+import { authenticate, authorize } from "../middlewares";
 const { SeedDataController } = require("../controller/seed-data-controller");
-seedRouter.post("/start", SeedDataController.start);
-seedRouter.delete("/reset", SeedDataController.reset);
+seedRouter.post("/start", authenticate, authorize, SeedDataController.start);
+seedRouter.delete("/reset", authenticate, authorize, SeedDataController.reset);
 export default seedRouter;

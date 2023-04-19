@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const priceRouter = (0, express_1.Router)();
+const middlewares_1 = require("../middlewares");
+const PriceController = require("../controller/price-controller");
+priceRouter.get("/get-all", PriceController.getAll, middlewares_1.errorMiddleware);
+priceRouter.post("/create", PriceController.create, middlewares_1.errorMiddleware);
+priceRouter.patch("/update-by-id/:id", PriceController.updateByID, middlewares_1.errorMiddleware);
+priceRouter.delete("/delete-by-id/:id", PriceController.deleteByID, middlewares_1.errorMiddleware);
+exports.default = priceRouter;

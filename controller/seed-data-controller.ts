@@ -8,6 +8,7 @@ import {
   STAFF_AGENCY_INCHARGE_ARRAY,
   AGENCY_BRANCH_ARRAY,
   ROLE_ARRAY,
+  CUSTOMER_TAG_LIST_ARRAY,
 } from "../src/data/seeders";
 import db from "../models";
 const {
@@ -86,9 +87,10 @@ const handleGenerateSeedData = (action: string) => {
 
 class SeedDataController {
   public static async start(req: Request, res: Response) {
-    handleGenerateSeedData("start");
+    // handleGenerateSeedData("start");
     res.status(201).send({
       status: "Success",
+      CUSTOMER_TAG_LIST_ARRAY,
       message: "Seed data success",
     });
   }

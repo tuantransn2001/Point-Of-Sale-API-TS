@@ -9,20 +9,12 @@ const StaffController = require("../controller/staff-controller");
 const models_1 = __importDefault(require("../models"));
 const { User } = models_1.default;
 const middlewares_1 = require("../middlewares");
-staffRouter.get("/get-all", 
-// authenticate,
-StaffController.getAll, middlewares_1.errorMiddleware);
+staffRouter.get("/get-all", middlewares_1.authenticate, StaffController.getAll, middlewares_1.errorMiddleware);
 staffRouter.post("/create", middlewares_1.authenticate, middlewares_1.authorize, (0, middlewares_1.checkUserExist)(), StaffController.create, middlewares_1.errorMiddleware);
-staffRouter.get("/get-by-id/:id", 
-// authenticate,
-StaffController.getByID, middlewares_1.errorMiddleware);
+staffRouter.get("/get-by-id/:id", middlewares_1.authenticate, StaffController.getByID, middlewares_1.errorMiddleware);
 staffRouter.patch("/update/:id", (0, middlewares_1.checkExist)(User), (0, middlewares_1.checkUserExist)(), 
-//   authenticate,
+// authenticate,
 StaffController.updateByID, middlewares_1.errorMiddleware);
-staffRouter.delete("/delete-by-id/:id", 
-// authenticate,
-(0, middlewares_1.checkExist)(User), StaffController.deleteByID, middlewares_1.errorMiddleware);
-staffRouter.patch("/update-role-by-id/:id", (0, middlewares_1.checkExist)(User), 
-// authenticate,
-StaffController.updateRoleByID, middlewares_1.errorMiddleware);
+staffRouter.delete("/delete-by-id/:id", middlewares_1.authenticate, (0, middlewares_1.checkExist)(User), StaffController.deleteByID, middlewares_1.errorMiddleware);
+staffRouter.patch("/update-role-by-id/:id", (0, middlewares_1.checkExist)(User), middlewares_1.authenticate, StaffController.updateRoleByID, middlewares_1.errorMiddleware);
 exports.default = staffRouter;

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { User } from "../src/ts/types/type";
+import { UserAttributes } from "../src/ts/interfaces/app_interfaces";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import db from "../models";
@@ -18,7 +18,7 @@ class AuthController {
       } = req.body;
 
       const foundUser: {
-        dataValues: User;
+        dataValues: UserAttributes;
       } = await db.User.findOne({
         where: {
           user_phone: phone,
@@ -41,8 +41,8 @@ class AuthController {
               user_name,
             };
 
-            const jwtSecretKey: string =
-              process.env.JWT_TOKEN_SECRET_KEY ?? "default is string";
+            const jwtSecretKey: string = process.env
+              .JWT_TOKEN_SECRET_KEY as string;
             const token = jwt.sign(tokenPayload, jwtSecretKey, {
               expiresIn: "3d",
             });

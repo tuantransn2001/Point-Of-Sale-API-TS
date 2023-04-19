@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class Customer extends sequelize_1.Model {
-        static associate({ User, Staff, Order, UserHistoryOrders }) {
+        static associate({ User, Staff, Order, UserHistoryOrders, CustomerTag, }) {
             Customer.belongsTo(User, {
                 foreignKey: "user_id",
             });
@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
             });
             Customer.hasMany(UserHistoryOrders, {
                 foreignKey: "customer_id",
+            });
+            Customer.hasMany(CustomerTag, {
+                foreignKey: "customer_id"
             });
         }
     }

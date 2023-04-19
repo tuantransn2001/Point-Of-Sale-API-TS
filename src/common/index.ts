@@ -4,6 +4,8 @@ import {
   CustomerAttributes,
   RoleAttributes,
   UserAddressAttributes,
+  TagAttributes,
+  CustomerTagAttributes,
 } from "../ts/interfaces/app_interfaces";
 export const handleGetFirstNameFromFullName = (fullName: string) => {
   let targetIndex: number | undefined;
@@ -27,11 +29,19 @@ interface CustomerResult {
   customer_email: string;
   staff_in_charge_note: string | undefined;
   address_list: Array<UserAddressAttributes>;
-  tags: string | undefined;
+  tags: Array<TagAttributes>;
   createdAt: Date;
   updatedAt: Date;
 }
 
+interface QueryTagAttributes extends CustomerTagAttributes {
+  Tag: {
+    dataValues: TagAttributes;
+  };
+}
+interface QueryCustomerAttributes extends CustomerAttributes {
+  CustomerTags: Array<QueryTagAttributes>;
+}
 interface UserCustomerAttributes {
   dataValues: {
     id: string;
@@ -45,7 +55,7 @@ interface UserCustomerAttributes {
     createdAt: Date;
     updatedAt: Date;
     Customer: {
-      dataValues: CustomerAttributes;
+      dataValues: QueryCustomerAttributes;
     };
     UserAddresses: {
       dataValues: UserAddressAttributes;
@@ -75,6 +85,22 @@ export const handleFormatCustomer = (
     } = UserCustomerArray.dataValues;
     const { customer_status, staff_in_charge_note, tags } =
       UserCustomerArray.dataValues.Customer.dataValues;
+    const tagList: Array<TagAttributes> =
+      UserCustomerArray.dataValues.Customer.dataValues.CustomerTags.map(
+        (tag: QueryTagAttributes) => {
+          const { id, createdAt, updatedAt, Tag } = tag;
+
+          return {
+            id,
+            tag_title: Tag.dataValues.tag_title,
+            tag_description: Tag.dataValues.tag_description,
+            createdAt,
+            updatedAt,
+          };
+        }
+      );
+
+    console.log(UserCustomerArray.dataValues.Customer.dataValues);
     const address_list: Array<UserAddressAttributes> =
       UserCustomerArray.dataValues.UserAddresses.map(
         (address: { dataValues: UserAddressAttributes }) => {
@@ -107,7 +133,7 @@ export const handleFormatCustomer = (
       customer_name: user_name,
       customer_status,
       staff_in_charge_note,
-      tags,
+      tags: tagList,
       address_list,
       createdAt,
       updatedAt,
@@ -127,6 +153,21 @@ export const handleFormatCustomer = (
     } = User.dataValues;
     const { customer_status, staff_in_charge_note, tags } =
       User.dataValues.Customer.dataValues;
+
+    const tagList: Array<TagAttributes> =
+      User.dataValues.Customer.dataValues.CustomerTags.map(
+        (tag: QueryTagAttributes) => {
+          const { id, createdAt, updatedAt, Tag } = tag;
+
+          return {
+            id,
+            tag_title: Tag.dataValues.tag_title,
+            tag_description: Tag.dataValues.tag_description,
+            createdAt,
+            updatedAt,
+          };
+        }
+      );
     const address_list = User.dataValues.UserAddresses.map(
       (address: { dataValues: UserAddressAttributes }) => {
         const {
@@ -157,7 +198,7 @@ export const handleFormatCustomer = (
       customer_name: user_name,
       customer_status,
       staff_in_charge_note,
-      tags,
+      tags: tagList,
       address_list,
       createdAt,
       updatedAt,

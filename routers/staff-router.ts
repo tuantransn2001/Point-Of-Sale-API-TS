@@ -12,7 +12,7 @@ import {
 } from "../middlewares";
 staffRouter.get(
   "/get-all",
-  // authenticate,
+  authenticate,
   StaffController.getAll,
   errorMiddleware
 );
@@ -26,7 +26,7 @@ staffRouter.post(
 );
 staffRouter.get(
   "/get-by-id/:id",
-  // authenticate,
+  authenticate,
   StaffController.getByID,
   errorMiddleware
 );
@@ -34,13 +34,13 @@ staffRouter.patch(
   "/update/:id",
   checkExist(User),
   checkUserExist(),
-  //   authenticate,
+  // authenticate,
   StaffController.updateByID,
   errorMiddleware
 );
 staffRouter.delete(
   "/delete-by-id/:id",
-  // authenticate,
+  authenticate,
   checkExist(User),
   StaffController.deleteByID,
   errorMiddleware
@@ -48,7 +48,7 @@ staffRouter.delete(
 staffRouter.patch(
   "/update-role-by-id/:id",
   checkExist(User),
-  // authenticate,
+  authenticate,
   StaffController.updateRoleByID,
   errorMiddleware
 );

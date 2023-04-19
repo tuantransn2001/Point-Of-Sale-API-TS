@@ -16,8 +16,8 @@ const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    const JWT_TOKEN_SECRET_KEY: string =
-      process.env.JWT_TOKEN_SECRET_KEY ?? "default is string";
+    const JWT_TOKEN_SECRET_KEY: string = process.env
+      .JWT_TOKEN_SECRET_KEY as string;
     const { token } = req.headers as IncomingCustomHeaders;
     interface JwtPayload {
       id: string;

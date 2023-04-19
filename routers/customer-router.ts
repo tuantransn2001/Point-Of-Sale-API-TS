@@ -13,20 +13,20 @@ const customerRouter = Router();
 
 customerRouter.get(
   "/get-all",
-  //  authenticate,
+  authenticate,
   CustomerController.getAll,
   errorMiddleware
 );
 customerRouter.get(
   "/get-by-id/:id",
-  // authenticate,
+  authenticate,
   checkExist(User),
   CustomerController.getByID,
   errorMiddleware
 );
 customerRouter.post(
   "/create",
-  // authenticate,
+  authenticate,
   // checkUserExist(),
   CustomerController.create,
   errorMiddleware
@@ -34,14 +34,14 @@ customerRouter.post(
 
 customerRouter.delete(
   "/delete-by-id/:id",
-  // authenticate,
+  authenticate,
   checkExist(User),
   CustomerController.deleteByID,
   errorMiddleware
 );
 customerRouter.patch(
   "/update-personalInfo-by-id/:id",
-  // authenticate,
+  authenticate,
   checkExist(User),
   checkUserExist(),
   CustomerController.updatePersonalInfoByID,

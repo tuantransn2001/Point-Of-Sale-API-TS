@@ -19,6 +19,17 @@ formatType) => {
     if (formatType === "isObject") {
         const { id, user_code, user_phone, user_email, user_name, createdAt, updatedAt, } = UserCustomerArray.dataValues;
         const { customer_status, staff_in_charge_note, tags } = UserCustomerArray.dataValues.Customer.dataValues;
+        const tagList = UserCustomerArray.dataValues.Customer.dataValues.CustomerTags.map((tag) => {
+            const { id, createdAt, updatedAt, Tag } = tag;
+            return {
+                id,
+                tag_title: Tag.dataValues.tag_title,
+                tag_description: Tag.dataValues.tag_description,
+                createdAt,
+                updatedAt,
+            };
+        });
+        console.log(UserCustomerArray.dataValues.Customer.dataValues);
         const address_list = UserCustomerArray.dataValues.UserAddresses.map((address) => {
             const { id, user_province, user_district, user_specific_address, createdAt, updatedAt, } = address.dataValues;
             return {
@@ -39,7 +50,7 @@ formatType) => {
             customer_name: user_name,
             customer_status,
             staff_in_charge_note,
-            tags,
+            tags: tagList,
             address_list,
             createdAt,
             updatedAt,
@@ -49,6 +60,16 @@ formatType) => {
     customerResultList = UserCustomerArray.map((User) => {
         const { id, user_code, user_phone, user_email, user_name, createdAt, updatedAt, } = User.dataValues;
         const { customer_status, staff_in_charge_note, tags } = User.dataValues.Customer.dataValues;
+        const tagList = User.dataValues.Customer.dataValues.CustomerTags.map((tag) => {
+            const { id, createdAt, updatedAt, Tag } = tag;
+            return {
+                id,
+                tag_title: Tag.dataValues.tag_title,
+                tag_description: Tag.dataValues.tag_description,
+                createdAt,
+                updatedAt,
+            };
+        });
         const address_list = User.dataValues.UserAddresses.map((address) => {
             const { id, user_province, user_district, user_specific_address, createdAt, updatedAt, } = address.dataValues;
             return {
@@ -69,7 +90,7 @@ formatType) => {
             customer_name: user_name,
             customer_status,
             staff_in_charge_note,
-            tags,
+            tags: tagList,
             address_list,
             createdAt,
             updatedAt,

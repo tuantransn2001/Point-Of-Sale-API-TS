@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.STAFF_AGENCY_INCHARGE_ARRAY = exports.STAFF_ROLE_ARRAY = exports.STAFF_ARRAY = exports.CUSTOMER_ARRAY = exports.USER_ADDRESS_LIST_ARRAY = exports.USER_ARRAY = void 0;
+exports.CUSTOMER_TAG_LIST_ARRAY = exports.STAFF_AGENCY_INCHARGE_ARRAY = exports.STAFF_ROLE_ARRAY = exports.STAFF_ARRAY = exports.CUSTOMER_ARRAY = exports.USER_ADDRESS_LIST_ARRAY = exports.USER_ARRAY = void 0;
 const { v4: uuidv4 } = require("uuid");
 const common_1 = require("../../src/common");
 const seeders_1 = require("./seeders");
@@ -20,9 +20,11 @@ const CUSTOMER_ARRAY = new Array();
 exports.CUSTOMER_ARRAY = CUSTOMER_ARRAY;
 const USER_ADDRESS_LIST_ARRAY = new Array();
 exports.USER_ADDRESS_LIST_ARRAY = USER_ADDRESS_LIST_ARRAY;
+const CUSTOMER_TAG_LIST_ARRAY = new Array();
+exports.CUSTOMER_TAG_LIST_ARRAY = CUSTOMER_TAG_LIST_ARRAY;
 const CUSTOMER_ARRAY_LENGTH = 50;
 for (let index = 0; index <= CUSTOMER_ARRAY_LENGTH; index++) {
-    const randomZeroToThreeNum = (0, common_1.randomIntFromInterval)(0, 3);
+    const randomZeroToThreeNum = (0, common_1.randomIntFromInterval)(1, 4);
     const newUser = {
         id: uuidv4(),
         user_code: (0, common_1.randomStringByCharsetAndLength)("alphabetic", 4),
@@ -33,13 +35,6 @@ for (let index = 0; index <= CUSTOMER_ARRAY_LENGTH; index++) {
         user_type: "customer",
         isDelete: null,
     };
-    const newUserAddress = {
-        id: uuidv4(),
-        user_id: newUser.id,
-        user_province: "Thành phố Hồ Chí Minh",
-        user_district: `Quận ${(0, common_1.randomStringByCharsetAndLength)("alphanumeric", 10)}`,
-        user_specific_address: `Số nhà ... ${(0, common_1.randomStringByCharsetAndLength)("alphanumeric", 10)}`,
-    };
     const newCustomer = {
         id: uuidv4(),
         user_id: newUser.id,
@@ -47,9 +42,18 @@ for (let index = 0; index <= CUSTOMER_ARRAY_LENGTH; index++) {
         staff_in_charge_note: "Lưu ý về khách hàng sẽ được lưu vào cột này",
         tags: "Shoppe , Tiki",
     };
-    USER_ARRAY.push(newUser);
-    USER_ADDRESS_LIST_ARRAY.push(newUserAddress);
+    for (let index = 0; index <= randomZeroToThreeNum; index++) {
+        const newUserAddress = {
+            id: uuidv4(),
+            user_id: newUser.id,
+            user_province: "Thành phố Hồ Chí Minh",
+            user_district: `Quận ${(0, common_1.randomStringByCharsetAndLength)("alphanumeric", 10)}`,
+            user_specific_address: `Số nhà ... ${(0, common_1.randomStringByCharsetAndLength)("alphanumeric", 10)}`,
+        };
+        USER_ADDRESS_LIST_ARRAY.push(newUserAddress);
+    }
     CUSTOMER_ARRAY.push(newCustomer);
+    USER_ARRAY.push(newUser);
 }
 const STAFF_ARRAY_LENGTH = 100;
 const STAFF_ARRAY = new Array();

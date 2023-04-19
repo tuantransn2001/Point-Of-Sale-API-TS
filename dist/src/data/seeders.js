@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ROLE_ARRAY = exports.AGENCY_BRANCH_ARRAY = exports.STAFF_AGENCY_INCHARGE_ARRAY = exports.STAFF_ROLE_ARRAY = exports.STAFF_ARRAY = exports.CUSTOMER_ARRAY = exports.USER_ADDRESS_LIST_ARRAY = exports.USER_ARRAY = void 0;
+exports.CUSTOMER_TAG_LIST_ARRAY = exports.TAG_ARRAY = exports.ROLE_ARRAY = exports.AGENCY_BRANCH_ARRAY = exports.STAFF_AGENCY_INCHARGE_ARRAY = exports.STAFF_ROLE_ARRAY = exports.STAFF_ARRAY = exports.CUSTOMER_ARRAY = exports.USER_ADDRESS_LIST_ARRAY = exports.USER_ARRAY = exports.PRICE_ARRAY = void 0;
 const USER_ARRAY = [
     {
         id: "27e83e28-b3de-4212-be39-81e61198d77b",
@@ -4844,37 +4844,846 @@ const ROLE_ARRAY = [
     {
         id: "b351a4dc-4fa7-4170-840c-201405eba532",
         role_title: "Admin",
-        role_description: "",
+        role_description: "Những mô tả chi tiết về role sẽ được lưu ở cột này",
     },
     {
         id: "2a546d25-1e44-4fa3-818d-5ac6cc436aa6",
         role_title: "Sale sàn thương mại",
-        role_description: "",
+        role_description: "Những mô tả chi tiết về role sẽ được lưu ở cột này",
     },
     {
         id: "1ca075ba-3074-4c15-9e74-f4ca173f5ad0",
         role_title: "Quản lí kho bảo hành",
-        role_description: "",
+        role_description: "Những mô tả chi tiết về role sẽ được lưu ở cột này",
     },
     {
         id: "e120bf18-2295-4295-bca6-6a437ec8f16b",
         role_title: "Nhân viên nhập hàng",
-        role_description: "",
+        role_description: "Những mô tả chi tiết về role sẽ được lưu ở cột này",
     },
     {
         id: "0c781708-d825-4618-9b6d-d92e9ccc3036",
         role_title: "Nhân viên giao hàng",
-        role_description: "",
+        role_description: "Những mô tả chi tiết về role sẽ được lưu ở cột này",
     },
     {
         id: "360abded-96bf-45c6-a12d-ae6ef45bf540",
         role_title: "Quản lí kho",
-        role_description: "",
+        role_description: "Những mô tả chi tiết về role sẽ được lưu ở cột này",
     },
     {
         id: "42dec332-be26-4463-9363-b6000fd3715c",
         role_title: "Nhân viên bán hàng",
-        role_description: "",
+        role_description: "Những mô tả chi tiết về role sẽ được lưu ở cột này",
     },
 ];
 exports.ROLE_ARRAY = ROLE_ARRAY;
+const TAG_ARRAY = [
+    {
+        id: "98262ca5-484a-4d83-b124-27cc121d548e",
+        tag_title: "Tiktok",
+        tag_description: "Những mô tả chi tiết về tag sẽ được lưu ở cột này",
+    },
+    {
+        id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+        tag_title: "Shopee",
+        tag_description: "Những mô tả chi tiết về tag sẽ được lưu ở cột này",
+    },
+    {
+        id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+        tag_title: "Market place",
+        tag_description: "Những mô tả chi tiết về tag sẽ được lưu ở cột này",
+    },
+    {
+        id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+        tag_title: "Màn hình kho",
+        tag_description: "Những mô tả chi tiết về tag sẽ được lưu ở cột này",
+    },
+    {
+        id: "19b4d273-c844-4c65-9611-168091b7e841",
+        tag_title: "Lazada",
+        tag_description: "Những mô tả chi tiết về tag sẽ được lưu ở cột này",
+    },
+    {
+        id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+        tag_title: "Kho màn hình",
+        tag_description: "Những mô tả chi tiết về tag sẽ được lưu ở cột này",
+    },
+];
+exports.TAG_ARRAY = TAG_ARRAY;
+const CUSTOMER_TAG_LIST_ARRAY = [
+    {
+        customer_id: "cf29df72-9d48-4b3a-9ff5-8bd73ae59c44",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "cf29df72-9d48-4b3a-9ff5-8bd73ae59c44",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "cf29df72-9d48-4b3a-9ff5-8bd73ae59c44",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "cf29df72-9d48-4b3a-9ff5-8bd73ae59c44",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "4fbcb2a2-2af4-47e2-8874-3828e2122a39",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "4fbcb2a2-2af4-47e2-8874-3828e2122a39",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "4fbcb2a2-2af4-47e2-8874-3828e2122a39",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "4fbcb2a2-2af4-47e2-8874-3828e2122a39",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "c87988b5-2374-448d-b04e-dc5dba011b82",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "c87988b5-2374-448d-b04e-dc5dba011b82",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "7a5ec0bc-4e28-4f73-b3db-c083bb00e261",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "7a5ec0bc-4e28-4f73-b3db-c083bb00e261",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "dcbf550e-5e0f-4056-9599-a20edf5e3ec7",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "dcbf550e-5e0f-4056-9599-a20edf5e3ec7",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "0f86e5c6-9cef-422e-8842-d7440368472d",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "0f86e5c6-9cef-422e-8842-d7440368472d",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "0f86e5c6-9cef-422e-8842-d7440368472d",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "0f86e5c6-9cef-422e-8842-d7440368472d",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "0f86e5c6-9cef-422e-8842-d7440368472d",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "7e09802c-6e7d-426b-81ed-576ce25d1661",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "7e09802c-6e7d-426b-81ed-576ce25d1661",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "7e09802c-6e7d-426b-81ed-576ce25d1661",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "7e09802c-6e7d-426b-81ed-576ce25d1661",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "2efa515b-50d1-40e6-a823-789fb32fb7a1",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "2efa515b-50d1-40e6-a823-789fb32fb7a1",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "513235a8-13db-4ba3-aa61-f9cc7f330fa5",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "513235a8-13db-4ba3-aa61-f9cc7f330fa5",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "513235a8-13db-4ba3-aa61-f9cc7f330fa5",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "513235a8-13db-4ba3-aa61-f9cc7f330fa5",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "513235a8-13db-4ba3-aa61-f9cc7f330fa5",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "a9d89e81-3761-46af-bc61-857c6ace843b",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "a9d89e81-3761-46af-bc61-857c6ace843b",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "a9d89e81-3761-46af-bc61-857c6ace843b",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "f8ffa7ad-3e9b-4100-bda7-62fab2694433",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "f8ffa7ad-3e9b-4100-bda7-62fab2694433",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "f8ffa7ad-3e9b-4100-bda7-62fab2694433",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "2a036f10-6bc5-4f24-8297-0bfc90b6f85f",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "2a036f10-6bc5-4f24-8297-0bfc90b6f85f",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "668dccbb-6953-4785-b90d-f02f796d9568",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "668dccbb-6953-4785-b90d-f02f796d9568",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "668dccbb-6953-4785-b90d-f02f796d9568",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "22597223-e81c-4f48-9a13-e36c3080e24c",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "22597223-e81c-4f48-9a13-e36c3080e24c",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "e8a1ec64-fde3-4860-9bfb-b079759d5739",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "e8a1ec64-fde3-4860-9bfb-b079759d5739",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "e8a1ec64-fde3-4860-9bfb-b079759d5739",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "e8a1ec64-fde3-4860-9bfb-b079759d5739",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "be352850-fb4d-48cf-878b-9b64abc8e8bb",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "be352850-fb4d-48cf-878b-9b64abc8e8bb",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "be352850-fb4d-48cf-878b-9b64abc8e8bb",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "17281f7b-90ed-4e70-b0f3-e2f99d3a7d56",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "17281f7b-90ed-4e70-b0f3-e2f99d3a7d56",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "17281f7b-90ed-4e70-b0f3-e2f99d3a7d56",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "027cd69f-6bb0-43ab-8352-0986734efe8d",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "027cd69f-6bb0-43ab-8352-0986734efe8d",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "027cd69f-6bb0-43ab-8352-0986734efe8d",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "027cd69f-6bb0-43ab-8352-0986734efe8d",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "027cd69f-6bb0-43ab-8352-0986734efe8d",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "594bd3b6-9f29-462a-8cd5-6c19c826cbc5",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "594bd3b6-9f29-462a-8cd5-6c19c826cbc5",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "594bd3b6-9f29-462a-8cd5-6c19c826cbc5",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "5fa83073-5f32-4978-b428-ada511a4fac6",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "5fa83073-5f32-4978-b428-ada511a4fac6",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "5fa83073-5f32-4978-b428-ada511a4fac6",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "de32c59d-18a4-4da4-93a0-38c6dfe3c93f",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "de32c59d-18a4-4da4-93a0-38c6dfe3c93f",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "de32c59d-18a4-4da4-93a0-38c6dfe3c93f",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "de32c59d-18a4-4da4-93a0-38c6dfe3c93f",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "eac49421-ac53-4232-bd34-da0ea5c4da80",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "eac49421-ac53-4232-bd34-da0ea5c4da80",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "eac49421-ac53-4232-bd34-da0ea5c4da80",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "236ef4ca-6c7a-431f-bd49-c2bfb62b74d7",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "236ef4ca-6c7a-431f-bd49-c2bfb62b74d7",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "2a701cfb-539a-46d3-bd3f-15bcef475b15",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "2a701cfb-539a-46d3-bd3f-15bcef475b15",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "aab418f0-b0c6-42b0-917d-260a2f4e872c",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "aab418f0-b0c6-42b0-917d-260a2f4e872c",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "aab418f0-b0c6-42b0-917d-260a2f4e872c",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "aab418f0-b0c6-42b0-917d-260a2f4e872c",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "aab418f0-b0c6-42b0-917d-260a2f4e872c",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "297dc3ff-519c-4eef-b15b-18af8f13aec2",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "297dc3ff-519c-4eef-b15b-18af8f13aec2",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "297dc3ff-519c-4eef-b15b-18af8f13aec2",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "297dc3ff-519c-4eef-b15b-18af8f13aec2",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "49034d49-7fea-4514-8bfa-44e5698f95a5",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "49034d49-7fea-4514-8bfa-44e5698f95a5",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "0706bd1b-009e-477e-b9d7-65bae1e62afc",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "0706bd1b-009e-477e-b9d7-65bae1e62afc",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "075c1dee-a7af-4c41-b540-68f478111210",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "075c1dee-a7af-4c41-b540-68f478111210",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "075c1dee-a7af-4c41-b540-68f478111210",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "075c1dee-a7af-4c41-b540-68f478111210",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "9be61ad7-f0c6-4771-8f58-2c7b9c5222c8",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "9be61ad7-f0c6-4771-8f58-2c7b9c5222c8",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "9be61ad7-f0c6-4771-8f58-2c7b9c5222c8",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "9be61ad7-f0c6-4771-8f58-2c7b9c5222c8",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "0b3e59fe-2afb-46e3-88b1-3d693121966a",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "0b3e59fe-2afb-46e3-88b1-3d693121966a",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "0b3e59fe-2afb-46e3-88b1-3d693121966a",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "0b3e59fe-2afb-46e3-88b1-3d693121966a",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "0b3e59fe-2afb-46e3-88b1-3d693121966a",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "daefed0b-b97b-47d5-8805-8050268c1cba",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "daefed0b-b97b-47d5-8805-8050268c1cba",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "4e04cbc0-6dc6-4052-ba46-0dd4755e2b50",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "4e04cbc0-6dc6-4052-ba46-0dd4755e2b50",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "4e04cbc0-6dc6-4052-ba46-0dd4755e2b50",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "4e04cbc0-6dc6-4052-ba46-0dd4755e2b50",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "4e04cbc0-6dc6-4052-ba46-0dd4755e2b50",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "b4df905f-0608-4347-b8c1-fc375141aaa6",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "b4df905f-0608-4347-b8c1-fc375141aaa6",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "b4df905f-0608-4347-b8c1-fc375141aaa6",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "b4df905f-0608-4347-b8c1-fc375141aaa6",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "f07c2c2e-277e-4897-88d1-f19d0fcb9df9",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "f07c2c2e-277e-4897-88d1-f19d0fcb9df9",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "f07c2c2e-277e-4897-88d1-f19d0fcb9df9",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "f07c2c2e-277e-4897-88d1-f19d0fcb9df9",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "f07c2c2e-277e-4897-88d1-f19d0fcb9df9",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "162692f0-68ab-4cb6-b568-cf2eaedd3d83",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "162692f0-68ab-4cb6-b568-cf2eaedd3d83",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "162692f0-68ab-4cb6-b568-cf2eaedd3d83",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "162692f0-68ab-4cb6-b568-cf2eaedd3d83",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "a48aea24-250d-4eea-8d14-0c6fad88da1f",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "a48aea24-250d-4eea-8d14-0c6fad88da1f",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "a48aea24-250d-4eea-8d14-0c6fad88da1f",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "a48aea24-250d-4eea-8d14-0c6fad88da1f",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "a48aea24-250d-4eea-8d14-0c6fad88da1f",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "e07a4e12-182f-4103-a7d2-99746ee63a93",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "e07a4e12-182f-4103-a7d2-99746ee63a93",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "3b1f2cbc-2c7a-489d-8d30-111417f08a17",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "3b1f2cbc-2c7a-489d-8d30-111417f08a17",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "3b1f2cbc-2c7a-489d-8d30-111417f08a17",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "3b1f2cbc-2c7a-489d-8d30-111417f08a17",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "8bf01396-782f-4615-bad0-501b75891f72",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "8bf01396-782f-4615-bad0-501b75891f72",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "8bf01396-782f-4615-bad0-501b75891f72",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "8bf01396-782f-4615-bad0-501b75891f72",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "70fa91c3-ccb8-4ee3-a925-6f8e4b73009b",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "70fa91c3-ccb8-4ee3-a925-6f8e4b73009b",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "70fa91c3-ccb8-4ee3-a925-6f8e4b73009b",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "70fa91c3-ccb8-4ee3-a925-6f8e4b73009b",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "70fa91c3-ccb8-4ee3-a925-6f8e4b73009b",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "4a84f164-8145-49a3-aff0-71c1ad990429",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "4a84f164-8145-49a3-aff0-71c1ad990429",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "4a84f164-8145-49a3-aff0-71c1ad990429",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "4a84f164-8145-49a3-aff0-71c1ad990429",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "4a84f164-8145-49a3-aff0-71c1ad990429",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "ff64aba7-31b0-44ea-a978-9511437fe912",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "ff64aba7-31b0-44ea-a978-9511437fe912",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "d47ae1cb-08f0-4b91-817f-31c71dd82b89",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "d47ae1cb-08f0-4b91-817f-31c71dd82b89",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "d47ae1cb-08f0-4b91-817f-31c71dd82b89",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "d47ae1cb-08f0-4b91-817f-31c71dd82b89",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "d47ae1cb-08f0-4b91-817f-31c71dd82b89",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "39ba16af-a033-45b4-b03e-5238454682b9",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "39ba16af-a033-45b4-b03e-5238454682b9",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "39ba16af-a033-45b4-b03e-5238454682b9",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "39ba16af-a033-45b4-b03e-5238454682b9",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "39ba16af-a033-45b4-b03e-5238454682b9",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "c588647a-9151-4b4f-bfb8-8ed884c17d91",
+        tag_id: "19b4d273-c844-4c65-9611-168091b7e841",
+    },
+    {
+        customer_id: "c588647a-9151-4b4f-bfb8-8ed884c17d91",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "c588647a-9151-4b4f-bfb8-8ed884c17d91",
+        tag_id: "2611848d-9fa0-4680-aacc-2be81b11ac12",
+    },
+    {
+        customer_id: "c588647a-9151-4b4f-bfb8-8ed884c17d91",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "88227e10-c6df-4e73-99eb-e696c2810109",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "88227e10-c6df-4e73-99eb-e696c2810109",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "4e088964-008d-4662-947f-e004047774f8",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "4e088964-008d-4662-947f-e004047774f8",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "4e088964-008d-4662-947f-e004047774f8",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "50fe9f36-7cc9-4ce4-abc2-9552a5b2ad5b",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "50fe9f36-7cc9-4ce4-abc2-9552a5b2ad5b",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+    {
+        customer_id: "3babdad0-4573-4727-8235-f1718376ca99",
+        tag_id: "0c18dd40-443c-4ff9-8022-73ff41b1f807",
+    },
+    {
+        customer_id: "3babdad0-4573-4727-8235-f1718376ca99",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "c97acc39-4a44-4383-9129-32716b6b5609",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "c97acc39-4a44-4383-9129-32716b6b5609",
+        tag_id: "98262ca5-484a-4d83-b124-27cc121d548e",
+    },
+    {
+        customer_id: "c97acc39-4a44-4383-9129-32716b6b5609",
+        tag_id: "5d6912ed-632c-43b5-9c40-4df84685c8d0",
+    },
+    {
+        customer_id: "c97acc39-4a44-4383-9129-32716b6b5609",
+        tag_id: "041c6e7c-d8e0-4a34-b8b6-b396f0271f26",
+    },
+];
+exports.CUSTOMER_TAG_LIST_ARRAY = CUSTOMER_TAG_LIST_ARRAY;
+const PRICE_ARRAY = [
+    {
+        id: "b1071b31-cbf3-43b2-b302-cf18bcd7a3a8",
+        price_type: "Sell Price 1",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: true,
+        isSellDefault: false,
+    },
+    {
+        id: "211ea80c-6049-4d1e-b78b-ff7c16a65bdd",
+        price_type: "Sell Price 2",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: false,
+    },
+    {
+        id: "5410f420-7c9c-4460-8e7f-4c28772f5fb1",
+        price_type: "Sell Price 3",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: false,
+    },
+    {
+        id: "a024047c-6f3c-4274-b2e9-7384de9ceac5",
+        price_type: "Sell Price 4",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: false,
+    },
+    {
+        id: "32169e6f-4d08-4673-ab22-3bb3b261929f",
+        price_type: "Sell Price 5",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: false,
+    },
+    {
+        id: "8ca7b243-865b-43bb-8320-ac67ebee9d52",
+        price_type: "Sell Price 6",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: true,
+    },
+    {
+        id: "7dd753aa-0860-46c5-bc7e-5a50701f38c1",
+        price_type: "Sell Price 7",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: false,
+    },
+    {
+        id: "ec750adb-df12-46ea-a89b-a0e879e994ab",
+        price_type: "Sell Price 8",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: false,
+    },
+    {
+        id: "35535127-9507-44dd-a3da-6bf61a9ddfb2",
+        price_type: "Sell Price 9",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: false,
+    },
+    {
+        id: "f033caa9-aa61-4805-bc02-47ae25a12990",
+        price_type: "Sell Price 10",
+        price_description: "Những lưu ý về giá sẽ được lưu ở cột này",
+        isImportDefault: false,
+        isSellDefault: false,
+    },
+];
+exports.PRICE_ARRAY = PRICE_ARRAY;

@@ -20,7 +20,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
     customer_status!: string;
     staff_in_charge_note!: string;
     tags!: string;
-    static associate({ User, Staff, Order, UserHistoryOrders }: any) {
+    static associate({
+      User,
+      Staff,
+      Order,
+      UserHistoryOrders,
+      CustomerTag,
+    }: any) {
       Customer.belongsTo(User, {
         foreignKey: "user_id",
       });
@@ -31,6 +37,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
       Customer.hasMany(UserHistoryOrders, {
         foreignKey: "customer_id",
       });
+      Customer.hasMany(CustomerTag , {
+        foreignKey: "customer_id"
+      } )
     }
   }
   Customer.init(

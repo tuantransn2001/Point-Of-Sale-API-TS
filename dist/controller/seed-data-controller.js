@@ -68,9 +68,10 @@ const handleGenerateSeedData = (action) => {
 };
 class SeedDataController {
     static async start(req, res) {
-        handleGenerateSeedData("start");
+        // handleGenerateSeedData("start");
         res.status(201).send({
             status: "Success",
+            CUSTOMER_TAG_LIST_ARRAY: seeders_1.CUSTOMER_TAG_LIST_ARRAY,
             message: "Seed data success",
         });
     }

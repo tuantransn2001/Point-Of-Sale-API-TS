@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 const { v4: uuidv4 } = require("uuid");
 import db from "../models";
-const { Customer, User, UserAddress } = db;
+const { Customer, User, UserAddress, CustomerTag, Tag } = db;
 import {
   handleFormatCustomer,
   handleFormatUpdateDataByValidValue,
@@ -22,6 +22,16 @@ class CustomerController {
         include: [
           {
             model: Customer,
+            include: [
+              {
+                model: CustomerTag,
+                include: [
+                  {
+                    model: Tag,
+                  },
+                ],
+              },
+            ],
           },
           {
             model: UserAddress,
@@ -31,6 +41,7 @@ class CustomerController {
 
       res.status(200).send({
         status: "success",
+        // userCustomerList,
         data: handleFormatCustomer(userCustomerList, "isArray"),
       });
     } catch (err) {
@@ -48,6 +59,16 @@ class CustomerController {
             where: {
               user_id: id,
             },
+            include: [
+              {
+                model: CustomerTag,
+                include: [
+                  {
+                    model: Tag,
+                  },
+                ],
+              },
+            ],
           },
           {
             model: UserAddress,
@@ -94,10 +115,12 @@ class CustomerController {
         user_email,
         user_name,
         user_type: "customer",
+        user_password: "",
         isDelete: null,
       };
-
+      const customerID: string = uuidv4();
       const newCustomerRow: CustomerAttributes = {
+        id: customerID,
         user_id: newUserRow.id,
         staff_id,
         staff_in_charge_note,
@@ -130,7 +153,7 @@ class CustomerController {
         });
       } else {
         res.status(409).send({
-          status: "Fail",
+          status: "Conflict",
           message:
             "Create new customer fail - Please check request and try again!",
         });
@@ -151,7 +174,7 @@ class CustomerController {
       const foundUser = await User.findByPk(id);
       foundUser.isDelete = true;
       foundUser.save();
-      res.status(202).send({
+      res.status(200).send({
         status: "success",
         message: "Delete customer successfully!",
       });

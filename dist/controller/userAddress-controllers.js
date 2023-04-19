@@ -3,9 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const { v4: uuidv4 } = require("uuid");
 const models_1 = __importDefault(require("../models"));
-const { Customer, User, UserAddress } = models_1.default;
+const { UserAddress } = models_1.default;
 const common_1 = require("../src/common");
 class UserAddressController {
     static async addNewAddressByUserID(req, res, next) {
@@ -43,7 +42,7 @@ class UserAddressController {
                     id,
                 },
             });
-            res.status(201).send({
+            res.status(202).send({
                 status: "Success",
                 message: "Update Success",
             });
@@ -60,7 +59,7 @@ class UserAddressController {
                     id,
                 },
             });
-            res.status(201).send({
+            res.status(200).send({
                 status: "success",
                 message: "Delete successfully address",
             });

@@ -9,7 +9,6 @@ const models_1 = __importDefault(require("../models"));
 dotenv_1.default.config();
 class AuthController {
     static async login(req, res, next) {
-        var _a;
         try {
             const { phone, password, } = req.body;
             const foundUser = await models_1.default.User.findOne({
@@ -28,7 +27,8 @@ class AuthController {
                             id,
                             user_name,
                         };
-                        const jwtSecretKey = (_a = process.env.JWT_TOKEN_SECRET_KEY) !== null && _a !== void 0 ? _a : "default is string";
+                        const jwtSecretKey = process.env
+                            .JWT_TOKEN_SECRET_KEY;
                         const token = jsonwebtoken_1.default.sign(tokenPayload, jwtSecretKey, {
                             expiresIn: "3d",
                         });

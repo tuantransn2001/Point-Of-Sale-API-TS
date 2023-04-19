@@ -1,12 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-const { v4: uuidv4 } = require("uuid");
 import db from "../models";
-const { Customer, User, UserAddress } = db;
-import { User, Customer, Address } from "../src/ts/types/type";
-import {
-  handleFormatCustomer,
-  handleFormatUpdateDataByValidValue,
-} from "../src/common";
+const { UserAddress } = db;
+
+import { handleFormatUpdateDataByValidValue } from "../src/common";
+import { UserAddressAttributes } from "../src/ts/interfaces/app_interfaces";
 interface NewAddressAttributes {
   user_province: string;
   user_district: string;
@@ -49,14 +46,15 @@ class UserAddressController {
       const { user_province, user_district, user_specific_address } = req.body;
 
       const foundAddress = await UserAddress.findByPk(id);
-      const updateAddressRow: Address = handleFormatUpdateDataByValidValue(
-        {
-          user_province,
-          user_district,
-          user_specific_address,
-        },
-        foundAddress.dataValues
-      );
+      const updateAddressRow: UserAddressAttributes =
+        handleFormatUpdateDataByValidValue(
+          {
+            user_province,
+            user_district,
+            user_specific_address,
+          },
+          foundAddress.dataValues
+        );
 
       await UserAddress.update(updateAddressRow, {
         where: {
@@ -64,7 +62,7 @@ class UserAddressController {
         },
       });
 
-      res.status(201).send({
+      res.status(202).send({
         status: "Success",
         message: "Update Success",
       });
@@ -85,7 +83,7 @@ class UserAddressController {
         },
       });
 
-      res.status(201).send({
+      res.status(200).send({
         status: "success",
         message: "Delete successfully address",
       });

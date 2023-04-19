@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import db from "../models";
 const { AgencyBranches } = db;
 import { handleFormatUpdateDataByValidValue } from "../src/common";
-import { AgencyBranch } from "../src/ts/types/type";
+import { AgencyBranchAttributes } from "../src/ts/interfaces/app_interfaces";
 class AgencyController {
   public static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const agencyBranchList: Array<AgencyBranch> =
+      const agencyBranchList: Array<AgencyBranchAttributes> =
         await AgencyBranches.findAll();
       res.status(200).send({
         status: "success",
@@ -77,9 +77,8 @@ class AgencyController {
           isDefaultCN,
         };
 
-        const newAgencyBrach: AgencyBranch = await AgencyBranches.create(
-          newAgencyBranchRow
-        );
+        const newAgencyBrach: AgencyBranchAttributes =
+          await AgencyBranches.create(newAgencyBranchRow);
 
         res.status(201).send({
           status: "Success",
@@ -111,7 +110,7 @@ class AgencyController {
 
       const targetAgencyID: string = id;
       const foundAgencyBranch: {
-        dataValues: AgencyBranch;
+        dataValues: AgencyBranchAttributes;
       } = await AgencyBranches.findOne({
         where: {
           id: targetAgencyID,
@@ -132,7 +131,7 @@ class AgencyController {
         );
       }
 
-      const updateAgencyBrach: AgencyBranch =
+      const updateAgencyBrach: AgencyBranchAttributes =
         handleFormatUpdateDataByValidValue(
           {
             isDefaultCN,

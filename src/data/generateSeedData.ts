@@ -18,10 +18,11 @@ const USER_ARRAY = [
 ];
 const CUSTOMER_ARRAY = new Array();
 const USER_ADDRESS_LIST_ARRAY = new Array();
+const CUSTOMER_TAG_LIST_ARRAY = new Array();
 const CUSTOMER_ARRAY_LENGTH = 50;
 
 for (let index = 0; index <= CUSTOMER_ARRAY_LENGTH; index++) {
-  const randomZeroToThreeNum = randomIntFromInterval(0, 3);
+  const randomZeroToThreeNum = randomIntFromInterval(1, 4);
 
   const newUser = {
     id: uuidv4(),
@@ -39,18 +40,6 @@ for (let index = 0; index <= CUSTOMER_ARRAY_LENGTH; index++) {
     user_type: "customer",
     isDelete: null,
   };
-
-  const newUserAddress = {
-    id: uuidv4(),
-    user_id: newUser.id,
-    user_province: "Thành phố Hồ Chí Minh",
-    user_district: `Quận ${randomStringByCharsetAndLength("alphanumeric", 10)}`,
-    user_specific_address: `Số nhà ... ${randomStringByCharsetAndLength(
-      "alphanumeric",
-      10
-    )}`,
-  };
-
   const newCustomer = {
     id: uuidv4(),
     user_id: newUser.id,
@@ -60,9 +49,26 @@ for (let index = 0; index <= CUSTOMER_ARRAY_LENGTH; index++) {
     tags: "Shoppe , Tiki",
   };
 
-  USER_ARRAY.push(newUser);
-  USER_ADDRESS_LIST_ARRAY.push(newUserAddress);
+  for (let index = 0; index <= randomZeroToThreeNum; index++) {
+    const newUserAddress = {
+      id: uuidv4(),
+      user_id: newUser.id,
+      user_province: "Thành phố Hồ Chí Minh",
+      user_district: `Quận ${randomStringByCharsetAndLength(
+        "alphanumeric",
+        10
+      )}`,
+      user_specific_address: `Số nhà ... ${randomStringByCharsetAndLength(
+        "alphanumeric",
+        10
+      )}`,
+    };
+    USER_ADDRESS_LIST_ARRAY.push(newUserAddress);
+   
+  }
+
   CUSTOMER_ARRAY.push(newCustomer);
+  USER_ARRAY.push(newUser);
 }
 
 const STAFF_ARRAY_LENGTH = 100;
@@ -145,6 +151,7 @@ for (
     }
   }
 }
+
 export {
   USER_ARRAY,
   USER_ADDRESS_LIST_ARRAY,
@@ -152,4 +159,5 @@ export {
   STAFF_ARRAY,
   STAFF_ROLE_ARRAY,
   STAFF_AGENCY_INCHARGE_ARRAY,
+  CUSTOMER_TAG_LIST_ARRAY,
 };

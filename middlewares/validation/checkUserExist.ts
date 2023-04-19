@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../src/ts/types/type";
 import db from "../../models";
+import { UserAttributes } from "../../src/ts/interfaces/app_interfaces";
 const { User } = db;
 const checkUserExist =
   () => async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { user_code, user_name, user_phone, user_email }: User = req.body;
+      const { user_code, user_name, user_phone, user_email }: UserAttributes =
+        req.body;
       const errorMessage: Array<string> = new Array();
       // * ================= Name =============
       if (user_name)

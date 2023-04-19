@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const { v4: uuidv4 } = require("uuid");
 const models_1 = __importDefault(require("../models"));
-const { Customer, User, UserAddress } = models_1.default;
+const { Customer, User, UserAddress, CustomerTag, Tag } = models_1.default;
 const common_1 = require("../src/common");
 class CustomerController {
     static async getAll(req, res, next) {
@@ -18,6 +18,16 @@ class CustomerController {
                 include: [
                     {
                         model: Customer,
+                        include: [
+                            {
+                                model: CustomerTag,
+                                include: [
+                                    {
+                                        model: Tag,
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         model: UserAddress,
@@ -26,6 +36,7 @@ class CustomerController {
             });
             res.status(200).send({
                 status: "success",
+                // userCustomerList,
                 data: (0, common_1.handleFormatCustomer)(userCustomerList, "isArray"),
             });
         }
@@ -43,6 +54,16 @@ class CustomerController {
                         where: {
                             user_id: id,
                         },
+                        include: [
+                            {
+                                model: CustomerTag,
+                                include: [
+                                    {
+                                        model: Tag,
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         model: UserAddress,
@@ -77,9 +98,12 @@ class CustomerController {
                 user_email,
                 user_name,
                 user_type: "customer",
+                user_password: "",
                 isDelete: null,
             };
+            const customerID = uuidv4();
             const newCustomerRow = {
+                id: customerID,
                 user_id: newUserRow.id,
                 staff_id,
                 staff_in_charge_note,
@@ -107,7 +131,7 @@ class CustomerController {
             }
             else {
                 res.status(409).send({
-                    status: "Fail",
+                    status: "Conflict",
                     message: "Create new customer fail - Please check request and try again!",
                 });
             }
@@ -124,7 +148,7 @@ class CustomerController {
             const foundUser = await User.findByPk(id);
             foundUser.isDelete = true;
             foundUser.save();
-            res.status(202).send({
+            res.status(200).send({
                 status: "success",
                 message: "Delete customer successfully!",
             });
