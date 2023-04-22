@@ -1,5 +1,5 @@
 import { Router } from "express";
-const AuthController = require("../controller/auth-controller.js");
+const AuthController = require("../controller/auth-controller");
 import errorMiddleware from "../middlewares/errorHandler";
 const authRouter = Router();
 

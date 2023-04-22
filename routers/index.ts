@@ -1,9 +1,9 @@
 import { Router } from "express";
-import authRouter from "../routers/auth-router";
-import seedRouter from "../routers/seed-data-router";
-import customerRouter from "../routers/customer-router";
-import staffRouter from "../routers/staff-router";
-import agencyBranchRouter from "../routers/agencyBranch-router";
+import authRouter from "./auth-router";
+import seedRouter from "./seed-data-router";
+import customerRouter from "./customer-router";
+import staffRouter from "./staff-router";
+import agencyBranchRouter from "./agencyBranch-router";
 import userAddressRouter from "./userAddress-router";
 import tagRouter from "./tag-router";
 import roleRouter from "./role-router";
