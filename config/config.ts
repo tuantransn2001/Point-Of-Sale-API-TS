@@ -1,27 +1,13 @@
 require("dotenv").config();
+
 module.exports = {
   development: {
-    password: process.env.DB_PW,
-    database: process.env.DB_NAME,
-    dialect: process.env.DB_DIALECT,
-    port: process.env.DB_PORT,
-    username: "postgres",
-    host: "127.0.0.1",
+    url: `${process.env.DB_URL}${process.env.SSL_REQUIRE}`,
   },
   test: {
-    password: process.env.DB_PW,
-    database: process.env.DB_NAME,
-    dialect: process.env.DB_DIALECT,
-    port: process.env.DB_PORT,
-    username: "postgres",
-    host: "127.0.0.1",
+    url: `${process.env.DB_URL}${process.env.SSL_REQUIRE}`,
   },
   production: {
-    password: process.env.DB_PW,
-    database: process.env.DB_NAME,
-    dialect: process.env.DB_DIALECT,
-    port: process.env.DB_PORT,
-    username: "postgres",
-    host: "127.0.0.1",
+    url: `${process.env.DB_URL}${process.env.SSL_REQUIRE}`,
   },
 };
