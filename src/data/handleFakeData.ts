@@ -9,6 +9,7 @@ import {
   ROLE_ARRAY,
   TAG_ARRAY,
   CUSTOMER_TAG_LIST_ARRAY,
+  PRICE_ARRAY,
 } from "./seeders";
 import db from "../../models";
 const {
@@ -22,6 +23,7 @@ const {
   StaffRole,
   Tag,
   CustomerTag,
+  Price,
 } = db;
 
 export const handleFakeData = () => {
@@ -29,6 +31,10 @@ export const handleFakeData = () => {
     {
       Model: User,
       data: USER_ARRAY,
+    },
+    {
+      Model: Price,
+      data: PRICE_ARRAY,
     },
     {
       Model: Customer,

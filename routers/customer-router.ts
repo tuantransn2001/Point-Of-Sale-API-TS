@@ -27,7 +27,7 @@ customerRouter.get(
 customerRouter.post(
   "/create",
   authenticate,
-  // checkUserExist(),
+  checkUserExist(),
   CustomerController.create,
   errorMiddleware
 );
