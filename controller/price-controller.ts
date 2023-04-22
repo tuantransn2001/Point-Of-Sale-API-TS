@@ -4,8 +4,19 @@ import { PriceAttributes } from "../src/ts/interfaces/app_interfaces";
 import db from "../models";
 import { handleFormatUpdateDataByValidValue } from "../src/common";
 const { Price } = db;
+
+type PriceTypeOnlyIsImportIsSell =
+  | Omit<
+      PriceAttributes,
+      "id" | "price_type" | "price_description" | "isImportDefault"
+    >
+  | Omit<
+      PriceAttributes,
+      "id" | "price_type" | "price_description" | "isSellDefault"
+    >;
+
 class PriceController {
-  static async getAll(req: Request, res: Response, next: NextFunction) {
+  static async getAll(_: Request, res: Response, next: NextFunction) {
     try {
       const priceList = await Price.findAll();
 
@@ -36,16 +47,7 @@ class PriceController {
         });
       } else {
         if (isImportDefault | isSellDefault) {
-          const whereConditionArray: Array<
-            | Omit<
-                PriceAttributes,
-                "id" | "price_type" | "price_description" | "isImportDefault"
-              >
-            | Omit<
-                PriceAttributes,
-                "id" | "price_type" | "price_description" | "isSellDefault"
-              >
-          > = [
+          const whereConditionArray: Array<PriceTypeOnlyIsImportIsSell> = [
             {
               isSellDefault,
             },
@@ -80,6 +82,50 @@ class PriceController {
         res.status(201).send({
           status: "Success",
           message: "Create new price success",
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async checkDefaultPrice(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+
+      const foundPrice = await Price.findOne({
+        where: {
+          id,
+        },
+      });
+
+      const IsPriceDefaultObj: PriceTypeOnlyIsImportIsSell = {
+        isSellDefault: foundPrice.dataValues.isSellDefault,
+        isImportDefault: foundPrice.dataValues.isImportDefault,
+      };
+
+      const isPriceDefault = Object.values(IsPriceDefaultObj).some(
+        (isDefault) => isDefault
+      );
+
+      if (!isPriceDefault) {
+        next();
+      } else {
+        const NOTIFICATION = new Array();
+        Object.keys(IsPriceDefaultObj).map((key, index) => {
+          if (Object.values(IsPriceDefaultObj)[index]) {
+            NOTIFICATION.push(
+              `Cann't modified price with id: ${id} while ${key} is default`
+            );
+          }
+        });
+
+        res.status(406).send({
+          status: "Not Acceptable",
+          message: NOTIFICATION,
         });
       }
     } catch (err) {

@@ -1,6 +1,8 @@
 import express, { Express } from "express";
-import dotenv from "dotenv";
+import config from "config";
 import rootRouter from "./routers";
+import cors from "cors";
+require("dotenv").config();
 import {
   USER_ARRAY,
   USER_ADDRESS_LIST_ARRAY,
@@ -28,13 +30,16 @@ const {
   CustomerTag,
   Price,
 } = db;
-dotenv.config();
 
 const app: Express = express();
-const ROOT_URL: string = process.env.BASE_URL as string;
-const PORT: string = process.env.PORT as string;
+
+const root_url = config.get<string>("root_url");
+const port = config.get<string>("port");
+const host = config.get<string>("host");
+
+app.use(cors()); // ? Allow cors
 app.use(express.json()); // ? Converted Data into JSON type - Important
-app.use(ROOT_URL, rootRouter); // ? Router Set up
+app.use(root_url, rootRouter); // ? Router Set up
 
 (async () => {
   await db.sequelize.sync({ force: true }).then(() => {
@@ -84,9 +89,9 @@ app.use(ROOT_URL, rootRouter); // ? Router Set up
       await Model.bulkCreate(data);
     });
 
-    app.listen(PORT, () => {
+    app.listen(port, () => {
       console.log("Connected - Synchronous Database Success");
-      console.log(`Server is running http://localhost:${PORT}`);
+      console.log(`🚀 Server is running 🚀 - http://${host}:${port}`);
     });
   });
 })();

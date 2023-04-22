@@ -7,6 +7,7 @@ import {
   TagAttributes,
   CustomerTagAttributes,
 } from "../ts/interfaces/app_interfaces";
+
 export const handleGetFirstNameFromFullName = (fullName: string) => {
   let targetIndex: number | undefined;
   for (let index = fullName.length - 1; index >= 0; index--) {
