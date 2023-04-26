@@ -8,7 +8,7 @@ const {
   StaffAgencyBranchInCharge,
   Role,
   UserAddress,
-  AgencyBranches,
+  AgencyBranch,
 } = db;
 import {
   handleFormatStaff,
@@ -51,7 +51,7 @@ class StaffController {
       });
 
       const roleList = await Role.findAll();
-      const agencyBranchList = await AgencyBranches.findAll();
+      const agencyBranchList = await AgencyBranch.findAll();
       res.status(200).send({
         status: "success",
         data: handleFormatStaff(
@@ -475,7 +475,7 @@ class StaffController {
         ],
       });
       const roleList = await Role.findAll();
-      const agencyBranchList = await AgencyBranches.findAll();
+      const agencyBranchList = await AgencyBranch.findAll();
       res.status(200).send({
         status: "success",
         data: handleFormatStaff(

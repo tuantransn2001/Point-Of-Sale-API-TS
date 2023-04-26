@@ -15,7 +15,7 @@ const {
   User,
   Customer,
   UserAddress,
-  AgencyBranches,
+  AgencyBranch,
   Role,
   Staff,
   StaffAgencyBranchInCharge,
@@ -44,7 +44,7 @@ const handleGenerateSeedData = (action: string) => {
       data: USER_ADDRESS_LIST_ARRAY,
     },
     {
-      Model: AgencyBranches,
+      Model: AgencyBranch,
       data: AGENCY_BRANCH_ARRAY,
     },
     {

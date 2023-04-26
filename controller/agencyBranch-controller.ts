@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import db from "../models";
-const { AgencyBranches } = db;
+const { AgencyBranch } = db;
 import { handleFormatUpdateDataByValidValue } from "../src/common";
 import { AgencyBranchAttributes } from "../src/ts/interfaces/app_interfaces";
 class AgencyController {
   public static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const agencyBranchList: Array<AgencyBranchAttributes> =
-        await AgencyBranches.findAll();
+        await AgencyBranch.findAll();
       res.status(200).send({
         status: "success",
         data: agencyBranchList,
@@ -31,7 +31,7 @@ class AgencyController {
 
       const targetAgencyCode: string = agency_branch_code;
 
-      const foundAgencyBranch = await AgencyBranches.findOne({
+      const foundAgencyBranch = await AgencyBranch.findOne({
         where: {
           agency_branch_code: targetAgencyCode,
         },
@@ -46,7 +46,7 @@ class AgencyController {
       } else {
         const targetIsDefaultCN: boolean = true;
         if (isDefaultCN) {
-          await AgencyBranches.update(
+          await AgencyBranch.update(
             {
               isDefaultCN: !targetIsDefaultCN,
             },
@@ -78,7 +78,7 @@ class AgencyController {
         };
 
         const newAgencyBrach: AgencyBranchAttributes =
-          await AgencyBranches.create(newAgencyBranchRow);
+          await AgencyBranch.create(newAgencyBranchRow);
 
         res.status(201).send({
           status: "Success",
@@ -111,7 +111,7 @@ class AgencyController {
       const targetAgencyID: string = id;
       const foundAgencyBranch: {
         dataValues: AgencyBranchAttributes;
-      } = await AgencyBranches.findOne({
+      } = await AgencyBranch.findOne({
         where: {
           id: targetAgencyID,
         },
@@ -119,7 +119,7 @@ class AgencyController {
 
       if (isDefaultCN) {
         const targetIsDefaultCN: boolean = true;
-        await AgencyBranches.update(
+        await AgencyBranch.update(
           {
             isDefaultCN: !targetIsDefaultCN,
           },
@@ -146,7 +146,7 @@ class AgencyController {
           foundAgencyBranch.dataValues
         );
 
-      await AgencyBranches.update(updateAgencyBrach, {
+      await AgencyBranch.update(updateAgencyBrach, {
         where: {
           id: targetAgencyID,
         },
