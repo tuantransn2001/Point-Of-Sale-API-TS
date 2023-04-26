@@ -84,7 +84,7 @@ export const handleFormatCustomer = (
       createdAt,
       updatedAt,
     } = UserCustomerArray.dataValues;
-    const { customer_status, staff_in_charge_note, tags } =
+    const { customer_status, staff_in_charge_note } =
       UserCustomerArray.dataValues.Customer.dataValues;
     const tagList: Array<TagAttributes> =
       UserCustomerArray.dataValues.Customer.dataValues.CustomerTags.map(
@@ -151,7 +151,7 @@ export const handleFormatCustomer = (
       createdAt,
       updatedAt,
     } = User.dataValues;
-    const { customer_status, staff_in_charge_note, tags } =
+    const { customer_status, staff_in_charge_note } =
       User.dataValues.Customer.dataValues;
 
     const tagList: Array<TagAttributes> =
@@ -403,6 +403,7 @@ export const handleFormatStaff = (
 
           const staffAgencyBranchInCharge: Array<{
             id: string;
+            agency_branch_id: string;
             createdAt: Date;
             updatedAt: Date;
             agency_branch_inCharge_name: string | undefined;
@@ -420,6 +421,7 @@ export const handleFormatStaff = (
               )[0].dataValues.agency_branch_name;
               return {
                 id,
+                agency_branch_id,
                 createdAt,
                 updatedAt,
                 agency_branch_inCharge_name: currentAgencyBranchName,
@@ -430,6 +432,7 @@ export const handleFormatStaff = (
             id,
             createdAt,
             updatedAt,
+            role_id,
             role: currentStaffRole,
             agencyBranchesInCharge: staffAgencyBranchInCharge,
           };
@@ -504,7 +507,6 @@ export const handleFormatStaff = (
 
       const staffRoleList: StaffResult["staffRoleList"] =
         UserStaff.dataValues.Staff.dataValues.StaffRoles.map(
-          // TODO: fix
           (StaffRole: any) => {
             const { id, role_id, createdAt, updatedAt } = StaffRole.dataValues;
 
@@ -531,9 +533,10 @@ export const handleFormatStaff = (
                 )[0].dataValues.agency_branch_name;
                 return {
                   id,
+                  agency_branch_id,
+                  agency_branch_inCharge_name: currentAgencyBranchName,
                   createdAt,
                   updatedAt,
-                  agency_branch_inCharge_name: currentAgencyBranchName,
                 };
               }
             );
@@ -541,6 +544,7 @@ export const handleFormatStaff = (
               id,
               createdAt,
               updatedAt,
+              role_id,
               role: currentStaffRole,
               agencyBranchesInCharge: staffAgencyBranchInCharge,
             };

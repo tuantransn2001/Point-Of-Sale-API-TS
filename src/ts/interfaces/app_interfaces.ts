@@ -69,7 +69,6 @@ interface CustomerAttributes {
   staff_id: string;
   customer_status: string;
   staff_in_charge_note: string;
-  tags: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
