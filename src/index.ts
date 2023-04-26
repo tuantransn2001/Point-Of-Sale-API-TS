@@ -18,7 +18,7 @@ app.use(ROOT_URL, rootRouter); // * Router Set up
 (async () => {
   await db.sequelize.sync({ force: true }).then(() => {
     app.listen(PORT, () => {
-      handleFakeData();
+      // handleFakeData();
       console.log("Connected - Synchronous Database Success");
       console.log(`🚀 Server is running 🚀 - http://${HOST}:${PORT}`);
     });
