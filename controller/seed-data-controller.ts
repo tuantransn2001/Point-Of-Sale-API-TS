@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import { Response, Request } from "express";
+
 import {
   USER_ARRAY,
   USER_ADDRESS_LIST_ARRAY,
@@ -8,7 +9,9 @@ import {
   STAFF_AGENCY_INCHARGE_ARRAY,
   AGENCY_BRANCH_ARRAY,
   ROLE_ARRAY,
+  TAG_ARRAY,
   CUSTOMER_TAG_LIST_ARRAY,
+  PRICE_ARRAY,
 } from "../src/data/seeders";
 import db from "../models";
 const {
@@ -20,6 +23,9 @@ const {
   Staff,
   StaffAgencyBranchInCharge,
   StaffRole,
+  Tag,
+  CustomerTag,
+  Price,
 } = db;
 
 const handleGenerateSeedData = (action: string) => {
@@ -32,12 +38,24 @@ const handleGenerateSeedData = (action: string) => {
       data: USER_ARRAY,
     },
     {
+      Model: Price,
+      data: PRICE_ARRAY,
+    },
+    {
       Model: Customer,
       data: CUSTOMER_ARRAY,
     },
     {
       Model: Staff,
       data: STAFF_ARRAY,
+    },
+    {
+      Model: Tag,
+      data: TAG_ARRAY,
+    },
+    {
+      Model: CustomerTag,
+      data: CUSTOMER_TAG_LIST_ARRAY,
     },
     {
       Model: UserAddress,
@@ -51,7 +69,6 @@ const handleGenerateSeedData = (action: string) => {
       Model: Role,
       data: ROLE_ARRAY,
     },
-
     {
       Model: StaffRole,
       data: STAFF_ROLE_ARRAY,

@@ -159,9 +159,7 @@ class CustomerController {
         });
       }
     } catch (err) {
-      // TODO: ID Sai
-      console.log(err);
-      // next(err);
+      next(err);
     }
   }
   public static async deleteByID(

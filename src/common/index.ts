@@ -101,7 +101,6 @@ export const handleFormatCustomer = (
         }
       );
 
-    console.log(UserCustomerArray.dataValues.Customer.dataValues);
     const address_list: Array<UserAddressAttributes> =
       UserCustomerArray.dataValues.UserAddresses.map(
         (address: { dataValues: UserAddressAttributes }) => {

@@ -149,9 +149,14 @@ class StaffController {
       );
 
       const staffAddressRowArr: Array<UserAddressAttributes> = address_list.map(
-        (address: Array<UserAddressAttributes>) => {
+        (address: UserAddressAttributes) => {
+          const { user_province, user_district, user_specific_address } =
+            address;
+
           return {
-            ...address,
+            user_province,
+            user_district,
+            user_specific_address,
             user_id: userID,
           };
         }
