@@ -8,12 +8,6 @@ import {
   CustomerTagAttributes,
 } from "../ts/interfaces/app_interfaces";
 
-export const isEmpty = (target: Array<any> | Object): boolean => {
-  return target === null || target === undefined
-    ? true
-    : Object.keys(target).length === 0;
-};
-
 export const handleGetFirstNameFromFullName = (fullName: string) => {
   let targetIndex: number | undefined;
   for (let index = fullName.length - 1; index >= 0; index--) {
