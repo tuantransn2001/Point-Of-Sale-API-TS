@@ -14,6 +14,7 @@ import {
   handleFormatStaff,
   handleFormatUpdateDataByValidValue,
   randomStringByCharsetAndLength,
+  isEmpty,
 } from "../../src/common/";
 import {
   StaffAttributes,
@@ -186,99 +187,13 @@ class StaffController {
       next(err);
     }
   }
+
   public static async updateByID(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
-    try {
-      const { id } = req.params;
-      const {
-        user_name,
-        user_phone,
-        user_email,
-        staff_birthday,
-        staff_gender,
-        staff_address_list,
-      } = req.body;
-
-      const foundUser = await User.findOne({
-        where: {
-          isDelete: null,
-          user_type: "staff",
-          id,
-        },
-      });
-      const userID: string = foundUser.dataValues.id;
-      const foundStaff = await Staff.findOne({
-        user_id: userID,
-      });
-      const staffID: string = foundStaff.dataValues.id;
-      const userRowUpdate: UserAddressAttributes =
-        handleFormatUpdateDataByValidValue(
-          { user_name, user_phone, user_email },
-          foundUser.dataValues
-        );
-      const staffRowUpdate: StaffAttributes =
-        handleFormatUpdateDataByValidValue(
-          {
-            staff_birthday,
-            staff_gender,
-          },
-          foundStaff.dataValues
-        );
-
-      if (userRowUpdate && staffRowUpdate) {
-        await User.update(userRowUpdate, {
-          where: {
-            id: userID,
-          },
-        });
-        await Staff.update(staffRowUpdate, {
-          where: {
-            id: staffID,
-          },
-        });
-        // ? Handle modify address list
-        const isAddressListEmpty: boolean = staff_address_list.length === 0;
-        if (isAddressListEmpty) {
-          // ? Dependency empty -> Delete old address
-          await UserAddress.destroy({
-            where: {
-              user_id: userID,
-            },
-          });
-        } else {
-          // ? Update the new one
-
-          const staffAddressRowArr: Array<UserAddressAttributes> =
-            staff_address_list.map((address: UserAddressAttributes) => {
-              return {
-                ...address,
-                user_id: userID,
-              };
-            });
-          await UserAddress.destroy({
-            where: {
-              user_id: userID,
-            },
-          });
-          await UserAddress.bulkCreate(staffAddressRowArr);
-        }
-
-        res.status(202).send({
-          status: "Success",
-          message: "Update new staff successfully",
-        });
-      } else {
-        res.status(409).send({
-          status: "Conflict",
-          message: "Update staff fail - Please check request and try again!",
-        });
-      }
-    } catch (err) {
-      next(err);
-    }
+    res.send("test");
   }
   public static async deleteByID(
     req: Request,
