@@ -194,6 +194,7 @@ class StaffController {
     try {
       const { id } = req.params;
       const {
+        user_code,
         user_name,
         user_phone,
         user_email,
@@ -202,80 +203,90 @@ class StaffController {
         staff_address_list,
       } = req.body;
 
-      const foundUser = await User.findOne({
+      const foundUserStaff = await User.findOne({
         where: {
+          id,
           isDelete: null,
           user_type: "staff",
-          id,
         },
-      });
-      const userID: string = foundUser.dataValues.id;
-      const foundStaff = await Staff.findOne({
-        user_id: userID,
-      });
-      const staffID: string = foundStaff.dataValues.id;
-      const userRowUpdate: UserAddressAttributes =
-        handleFormatUpdateDataByValidValue(
-          { user_name, user_phone, user_email },
-          foundUser.dataValues
-        );
-      const staffRowUpdate: StaffAttributes =
-        handleFormatUpdateDataByValidValue(
+        include: [
           {
-            staff_birthday,
-            staff_gender,
+            model: Staff,
           },
-          foundStaff.dataValues
-        );
+        ],
+      });
 
-      if (userRowUpdate && staffRowUpdate) {
-        await User.update(userRowUpdate, {
-          where: {
-            id: userID,
-          },
-        });
-        await Staff.update(staffRowUpdate, {
-          where: {
-            id: staffID,
-          },
-        });
-        // ? Handle modify address list
-        const isAddressListEmpty: boolean = staff_address_list.length === 0;
-        if (isAddressListEmpty) {
-          // ? Dependency empty -> Delete old address
-          await UserAddress.destroy({
-            where: {
-              user_id: userID,
-            },
-          });
-        } else {
-          // ? Update the new one
-
-          const staffAddressRowArr: Array<UserAddressAttributes> =
-            staff_address_list.map((address: UserAddressAttributes) => {
-              return {
-                ...address,
-                user_id: userID,
-              };
-            });
-          await UserAddress.destroy({
-            where: {
-              user_id: userID,
-            },
-          });
-          await UserAddress.bulkCreate(staffAddressRowArr);
+      const userDataValues: Object = Object.keys(
+        foundUserStaff.dataValues
+      ).reduce((result: object, key: any) => {
+        if (key !== "Staff") {
+          result = { ...result, [key]: foundUserStaff.dataValues[key] };
         }
 
-        res.status(202).send({
-          status: "Success",
-          message: "Update new staff successfully",
+        return result;
+      }, {});
+      const StaffDataValue: Object = foundUserStaff.dataValues.Staff.dataValues;
+
+      const userRowUpdate = handleFormatUpdateDataByValidValue(
+        {
+          user_code,
+          user_name,
+          user_phone,
+          user_email,
+        },
+        userDataValues
+      );
+      const staffRowUpdate = handleFormatUpdateDataByValidValue(
+        {
+          staff_gender,
+          staff_birthday,
+        },
+        StaffDataValue
+      );
+      await User.update(userRowUpdate, {
+        where: {
+          id: foundUserStaff.dataValues.id,
+        },
+      });
+      await Staff.update(staffRowUpdate, {
+        where: {
+          id: foundUserStaff.dataValues.Staff.dataValues.id,
+        },
+      });
+
+      if (staff_address_list.length === 0) {
+        await UserAddress.destroy({
+          where: {
+            user_id: foundUserStaff.dataValues.id,
+          },
         });
       } else {
-        res.status(409).send({
-          status: "Conflict",
-          message: "Update staff fail - Please check request and try again!",
+        await UserAddress.destroy({
+          where: {
+            user_id: foundUserStaff.dataValues.id,
+          },
         });
+
+        const updateUserAddressRow: Array<UserAddressAttributes> =
+          staff_address_list.map((address: UserAddressAttributes) => {
+            const { user_province, user_district, user_specific_address } =
+              address;
+
+            return {
+              user_id: foundUserStaff.dataValues.id,
+              user_province,
+              user_district,
+              user_specific_address,
+            };
+          });
+
+        await UserAddress.bulkCreate(updateUserAddressRow);
       }
+
+      res.status(201).send({
+        status: "Success",
+        message: "Update staff success!",
+      });
     } catch (err) {
       next(err);
     }

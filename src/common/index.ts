@@ -8,6 +8,12 @@ import {
   CustomerTagAttributes,
 } from "../ts/interfaces/app_interfaces";
 
+export const isEmpty = (target: Object): boolean => {
+  return target === undefined || target === null
+    ? true
+    : Object.keys(target).length === 0;
+};
+
 export const handleGetFirstNameFromFullName = (fullName: string) => {
   let targetIndex: number | undefined;
   for (let index = fullName.length - 1; index >= 0; index--) {
@@ -214,7 +220,7 @@ export const handleFormatUpdateDataByValidValue = (
 ) => {
   return Object.keys(targetObj).reduce(
     (result, key) => {
-      if (defaultValue.hasOwnProperty(key)) {
+      if (defaultValue.hasOwnProperty(key) && targetObj[key] !== undefined) {
         result = { ...result, [key]: targetObj[key] };
       }
 

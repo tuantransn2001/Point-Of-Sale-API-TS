@@ -5,7 +5,7 @@ const FileManagerPlugin = require("filemanager-webpack-plugin");
 
 module.exports = {
   target: "node",
-  mode: "production",
+  mode: "development",
   watch: true,
   entry: ["./src/app.ts", "./src/models/index.ts"],
   devServer: {
@@ -17,7 +17,7 @@ module.exports = {
   },
   output: {
     filename: "app.js",
-    path: path.resolve(__dirname, "build/production"),
+    path: path.resolve(__dirname, "build/development"),
   },
   module: {
     rules: [
@@ -40,7 +40,7 @@ module.exports = {
           copy: [
             {
               source: "./src/models/*.ts*",
-              destination: "./build/production/models/",
+              destination: "./build/development/models/",
               globOptions: {
                 ignore: "./src/models/index.ts",
               },

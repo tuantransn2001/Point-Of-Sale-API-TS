@@ -26,7 +26,7 @@ staffRouter.get(
   errorHandler
 );
 staffRouter.patch(
-  "/update-by-id/:id",
+  "/update-personal-by-id/:id",
   authenticate,
   checkExist(User),
   checkUserExist(),

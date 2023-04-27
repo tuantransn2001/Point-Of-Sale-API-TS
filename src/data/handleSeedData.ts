@@ -18,6 +18,7 @@ const {
   UserAddress,
   AgencyBranch,
   Role,
+  RolePermission,
   Staff,
   StaffAgencyBranchInCharge,
   StaffRole,
@@ -80,8 +81,9 @@ export const handleSeedData = () => {
 export const handleResetData = () => {
   [
     StaffAgencyBranchInCharge,
-    Role,
     StaffRole,
+    Role,
+    RolePermission,
     CustomerTag,
     UserAddress,
     Tag,
@@ -91,6 +93,6 @@ export const handleResetData = () => {
     Customer,
     Staff,
   ].forEach(async (Model) => {
-    await Model.truncate();
+    await Model.truncate({ cascade: true });
   });
 };

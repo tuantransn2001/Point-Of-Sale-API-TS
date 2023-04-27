@@ -1,11 +1,40 @@
+require("dotenv").config();
 module.exports = {
-  development: {
-    url: "postgres://postgres_db_test_user:5b0xAsqGaukaRMyWpHnfLQIWx6ylckY4@dpg-ch4frmu4dad97s2qauh0-a.singapore-postgres.render.com/postgres_db_test?ssl=true",
+  cloud: {
+    development: {
+      url: `${process.env.DB_URL}${process.env.SSL_REQUIRE}`,
+    },
+    stage: {
+      url: `${process.env.DB_URL}${process.env.SSL_REQUIRE}`,
+    },
+    production: {
+      url: `${process.env.DB_URL}${process.env.SSL_REQUIRE}`,
+    },
   },
-  stage: {
-    url: "postgres://postgres_db_test_user:5b0xAsqGaukaRMyWpHnfLQIWx6ylckY4@dpg-ch4frmu4dad97s2qauh0-a.singapore-postgres.render.com/postgres_db_test?ssl=true",
-  },
-  production: {
-    url: "postgres://postgres_db_test_user:5b0xAsqGaukaRMyWpHnfLQIWx6ylckY4@dpg-ch4frmu4dad97s2qauh0-a.singapore-postgres.render.com/postgres_db_test?ssl=true",
+  local: {
+    development: {
+      password: process.env.DB_PW,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      host: process.env.DB_HOST,
+      dialect: process.env.DB_DIALECT,
+    },
+    test: {
+      password: process.env.DB_PW,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      host: process.env.DB_HOST,
+      dialect: process.env.DB_DIALECT,
+    },
+    production: {
+      password: process.env.DB_PW,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      host: process.env.DB_HOST,
+      dialect: process.env.DB_DIALECT,
+    },
   },
 };

@@ -7,6 +7,7 @@ const checkUserExist =
     try {
       const { user_code, user_name, user_phone, user_email }: UserAttributes =
         req.body;
+
       const errorMessage: Array<string> = new Array();
       // * ================= Name =============
       if (user_name)

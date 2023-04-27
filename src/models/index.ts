@@ -8,8 +8,18 @@ const configDB = require("../config/configDB");
 const db: any = {};
 let sequelize: any;
 
-const environment: string = process.env.NODE_ENVIRONMENT as string;
-sequelize = new Sequelize(configDB[environment].url);
+const NODE_ENVIRONMENT: string = process.env.NODE_ENVIRONMENT as string;
+const RUNNING_ON: string = process.env.SERVER_RUNNING_ON as string;
+
+switch (RUNNING_ON) {
+  case "cloud": {
+    sequelize = new Sequelize(configDB[RUNNING_ON][NODE_ENVIRONMENT].url);
+    break;
+  }
+  case "local": {
+    sequelize = new Sequelize(configDB[RUNNING_ON][NODE_ENVIRONMENT]);
+  }
+}
 
 const currentPath: string = `${__dirname}/models`;
 fs.readdirSync(currentPath)
