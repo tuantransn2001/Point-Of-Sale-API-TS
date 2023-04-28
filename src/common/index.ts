@@ -30,6 +30,7 @@ interface CustomerResult {
   id: string;
   user_code: string;
   customer_id: string | undefined;
+  staff_id: string | undefined;
   customer_status: string | undefined;
   customer_name: string;
   customer_phone: string;
@@ -133,6 +134,7 @@ export const handleFormatCustomer = (
     return {
       id,
       customer_id: UserCustomerArray.dataValues.Customer.dataValues.id,
+      staff_id: UserCustomerArray.dataValues.Customer.dataValues.staff_id,
       user_code,
       customer_phone: user_phone,
       customer_email: user_email,
@@ -199,6 +201,7 @@ export const handleFormatCustomer = (
       id,
       user_code,
       customer_id: User.dataValues.Customer.dataValues.id,
+      staff_id: User.dataValues.Customer.dataValues.staff_id,
       customer_phone: user_phone,
       customer_email: user_email,
       customer_name: user_name,
@@ -399,7 +402,6 @@ export const handleFormatStaff = (
 
     const staffRoleList: StaffResult["staffRoleList"] =
       userStaffList.dataValues.Staff.dataValues.StaffRoles.map(
-        // TODO: fix
         (StaffRole: any) => {
           const { id, role_id, createdAt, updatedAt } = StaffRole.dataValues;
 

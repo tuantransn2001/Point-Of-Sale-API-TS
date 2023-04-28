@@ -38,12 +38,12 @@ export const handleSeedData = () => {
       data: PRICE_ARRAY,
     },
     {
-      Model: Customer,
-      data: CUSTOMER_ARRAY,
-    },
-    {
       Model: Staff,
       data: STAFF_ARRAY,
+    },
+    {
+      Model: Customer,
+      data: CUSTOMER_ARRAY,
     },
     {
       Model: Tag,
