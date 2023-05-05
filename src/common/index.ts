@@ -220,7 +220,6 @@ export const handleFormatCustomer = (
       id,
       user_code,
       customer_id: User.dataValues.Customer.dataValues.id,
-      staff_id: User.dataValues.Customer.dataValues.staff_id,
       customer_phone: user_phone,
       customer_email: user_email,
       customer_name: user_name,
