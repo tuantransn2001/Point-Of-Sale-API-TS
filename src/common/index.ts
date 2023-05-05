@@ -6,6 +6,8 @@ import {
   UserAddressAttributes,
   TagAttributes,
   CustomerTagAttributes,
+  StaffAttributes,
+  UserAttributes,
 } from "../ts/interfaces/app_interfaces";
 
 export const isEmpty = (target: Object): boolean => {
@@ -30,7 +32,7 @@ interface CustomerResult {
   id: string;
   user_code: string;
   customer_id: string | undefined;
-  staff_id: string | undefined;
+  staff_in_charge?: Object;
   customer_status: string | undefined;
   customer_name: string;
   customer_phone: string;
@@ -47,8 +49,14 @@ interface QueryTagAttributes extends CustomerTagAttributes {
     dataValues: TagAttributes;
   };
 }
+interface QueryStaffAttributes extends StaffAttributes {
+  User: {
+    dataValues: UserAttributes;
+  };
+}
 interface QueryCustomerAttributes extends CustomerAttributes {
   CustomerTags: Array<QueryTagAttributes>;
+  Staff: { dataValues: QueryStaffAttributes };
 }
 interface UserCustomerAttributes {
   dataValues: {
@@ -131,16 +139,27 @@ export const handleFormatCustomer = (
         }
       );
 
+    const staff_in_charge = {
+      staff_id:
+        UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues.id,
+      user_staff_id:
+        UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues
+          .user_id,
+      staff_name:
+        UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues.User
+          .dataValues.user_name,
+    };
+
     return {
       id,
       customer_id: UserCustomerArray.dataValues.Customer.dataValues.id,
-      staff_id: UserCustomerArray.dataValues.Customer.dataValues.staff_id,
       user_code,
       customer_phone: user_phone,
       customer_email: user_email,
       customer_name: user_name,
       customer_status,
       staff_in_charge_note,
+      staff_in_charge,
       tags: tagList,
       address_list,
       createdAt,

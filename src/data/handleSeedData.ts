@@ -34,12 +34,12 @@ export const handleSeedData = () => {
       data: USER_ARRAY,
     },
     {
-      Model: Price,
-      data: PRICE_ARRAY,
-    },
-    {
       Model: Staff,
       data: STAFF_ARRAY,
+    },
+    {
+      Model: Price,
+      data: PRICE_ARRAY,
     },
     {
       Model: Customer,
@@ -50,12 +50,12 @@ export const handleSeedData = () => {
       data: TAG_ARRAY,
     },
     {
-      Model: CustomerTag,
-      data: CUSTOMER_TAG_LIST_ARRAY,
-    },
-    {
       Model: UserAddress,
       data: USER_ADDRESS_LIST_ARRAY,
+    },
+    {
+      Model: CustomerTag,
+      data: CUSTOMER_TAG_LIST_ARRAY,
     },
     {
       Model: AgencyBranch,

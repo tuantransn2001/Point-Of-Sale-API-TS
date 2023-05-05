@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 const { v4: uuidv4 } = require("uuid");
 import db from "../models";
-const { Customer, User, UserAddress, CustomerTag, Tag } = db;
+const { Customer, User, UserAddress, CustomerTag, Tag, Staff } = db;
 import {
   handleFormatCustomer,
   handleFormatUpdateDataByValidValue,
@@ -66,6 +66,14 @@ class CustomerController {
                 include: [
                   {
                     model: Tag,
+                  },
+                ],
+              },
+              {
+                model: Staff,
+                include: [
+                  {
+                    model: User,
                   },
                 ],
               },
