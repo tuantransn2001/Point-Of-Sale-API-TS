@@ -214,7 +214,6 @@ class CustomerController {
         staff_id,
         staff_in_charge_note,
         tags,
-        address_list,
       } = req.body;
 
       const { id } = req.params;
@@ -259,23 +258,7 @@ class CustomerController {
           };
         }
       );
-      const userAddressRowArray: Array<UserAddressAttributes> =
-        address_list.map((address: UserAddressAttributes) => {
-          const { user_province, user_district, user_specific_address } =
-            address;
-          return {
-            user_id: userID,
-            user_province,
-            user_district,
-            user_specific_address,
-          };
-        });
-      if (
-        userRowUpdated &&
-        customerRowUpdated &&
-        customerTagRowArr &&
-        userAddressRowArray
-      ) {
+      if (userRowUpdated && customerRowUpdated && customerTagRowArr) {
         await User.update(userRowUpdated, {
           where: {
             id: userID,
@@ -292,21 +275,6 @@ class CustomerController {
           },
         });
         await CustomerTag.bulkCreate(customerTagRowArr);
-        // ? HANDLE UPDATE ADDRESS
-        if (userAddressRowArray.length === 0) {
-          await UserAddress.destroy({
-            where: {
-              user_id: userID,
-            },
-          });
-        } else {
-          await UserAddress.destroy({
-            where: {
-              user_id: userID,
-            },
-          });
-          await UserAddress.bulkCreate(userAddressRowArray);
-        }
 
         res.status(202).send({
           status: "success",
