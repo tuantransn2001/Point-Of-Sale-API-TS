@@ -5,6 +5,7 @@ const { Customer, User, UserAddress, CustomerTag, Tag, Staff } = db;
 import {
   handleFormatCustomer,
   handleFormatUpdateDataByValidValue,
+  isEmpty,
 } from "../../src/common";
 import {
   UserAddressAttributes,
@@ -244,7 +245,6 @@ class CustomerController {
             customer_status,
             staff_id,
             staff_in_charge_note,
-            tags,
           },
           foundCustomer.dataValues
         );
@@ -258,35 +258,39 @@ class CustomerController {
           };
         }
       );
-      if (userRowUpdated && customerRowUpdated && customerTagRowArr) {
+      if (!isEmpty(userRowUpdated)) {
         await User.update(userRowUpdated, {
           where: {
             id: userID,
           },
         });
+      }
+      if (!isEmpty(customerRowUpdated)) {
         await Customer.update(customerRowUpdated, {
           where: {
-            user_id: customerID,
+            id: customerID,
           },
         });
+      }
+      if (customerTagRowArr.length > 0) {
         await CustomerTag.destroy({
           where: {
             customer_id: customerID,
           },
         });
         await CustomerTag.bulkCreate(customerTagRowArr);
-
-        res.status(202).send({
-          status: "success",
-          message: "Update successfully!",
-        });
       } else {
-        res.status(409).send({
-          status: "Conflict",
-          message:
-            "Update new customer fail - Please check request and try again!",
+        await CustomerTag.destroy({
+          where: {
+            customer_id: customerID,
+          },
         });
       }
+
+      res.status(202).send({
+        status: "success",
+        message: "Update successfully!",
+      });
     } catch (err) {
       next(err);
     }
