@@ -104,10 +104,11 @@ export const handleFormatCustomer = (
     const tagList: Array<TagAttributes> =
       UserCustomerArray.dataValues.Customer.dataValues.CustomerTags.map(
         (tag: QueryTagAttributes) => {
-          const { id, createdAt, updatedAt, Tag } = tag;
+          const { id, tag_id, createdAt, updatedAt, Tag } = tag;
 
           return {
             id,
+            tag_id,
             tag_title: Tag.dataValues.tag_title,
             tag_description: Tag.dataValues.tag_description,
             createdAt,
@@ -184,10 +185,11 @@ export const handleFormatCustomer = (
     const tagList: Array<TagAttributes> =
       User.dataValues.Customer.dataValues.CustomerTags.map(
         (tag: QueryTagAttributes) => {
-          const { id, createdAt, updatedAt, Tag } = tag;
+          const { id, tag_id, createdAt, updatedAt, Tag } = tag;
 
           return {
             id,
+            tag_id,
             tag_title: Tag.dataValues.tag_title,
             tag_description: Tag.dataValues.tag_description,
             createdAt,

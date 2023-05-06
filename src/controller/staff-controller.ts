@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import bcrypt from "bcrypt";
 const { v4: uuidv4 } = require("uuid");
 import db from "../models";
 const {
@@ -80,16 +81,18 @@ class StaffController {
         address_list,
       } = req.body;
       const userID: string = uuidv4();
+
       const newUserRow: UserAttributes = {
         id: userID,
         user_type: "staff",
         user_code: randomStringByCharsetAndLength("alphanumeric", 6),
         user_phone,
         user_email,
-        user_password,
         user_name,
         isDelete: null,
+        user_password: "",
       };
+
       const staffID: string = uuidv4();
       const newStaffRow: StaffAttributes = {
         id: staffID,
@@ -164,7 +167,25 @@ class StaffController {
         staffAgencyBranchesInChargeRowArr &&
         staffAddressRowArr
       ) {
-        await User.create(newUserRow);
+        // ? ======================================================================
+        // ? ============================ HAS PASSWORD ============================
+        const saltRounds = 10;
+        bcrypt.hash(user_password, saltRounds, function (err, hashedPW) {
+          // Store hash in your password DB.
+          if (err) {
+            next(err);
+          } else {
+            (async () => {
+              const newUserRowWithHashedPassword = {
+                ...newUserRow,
+                user_password: hashedPW,
+              };
+              await User.create(newUserRowWithHashedPassword);
+            })();
+          }
+        });
+        // ? ======================================================================
+
         await Staff.create(newStaffRow);
         await StaffRole.bulkCreate(staffRolesRowArr);
         await StaffAgencyBranchInCharge.bulkCreate(
@@ -173,6 +194,11 @@ class StaffController {
         await UserAddress.bulkCreate(staffAddressRowArr);
         res.status(201).send({
           status: "Success",
+          newUserRow,
+          newStaffRow,
+          staffRolesRowArr,
+          staffAgencyBranchesInChargeRowArr,
+          staffAddressRowArr,
           message: "Create new staff successfully",
         });
       } else {
