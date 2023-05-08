@@ -42,7 +42,7 @@ export default (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      staff_id: DataTypes.UUID,
+      staff_id: { type: DataTypes.UUID, allowNull: true },
       user_id: { type: DataTypes.UUID },
       customer_status: { type: DataTypes.STRING },
       staff_in_charge_note: { type: DataTypes.STRING },

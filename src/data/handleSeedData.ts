@@ -18,7 +18,6 @@ const {
   UserAddress,
   AgencyBranch,
   Role,
-  RolePermission,
   Staff,
   StaffAgencyBranchInCharge,
   StaffRole,
@@ -38,12 +37,12 @@ export const handleSeedData = () => {
       data: STAFF_ARRAY,
     },
     {
-      Model: Customer,
-      data: CUSTOMER_ARRAY,
-    },
-    {
       Model: Price,
       data: PRICE_ARRAY,
+    },
+    {
+      Model: Customer,
+      data: CUSTOMER_ARRAY,
     },
     {
       Model: Tag,
@@ -75,24 +74,5 @@ export const handleSeedData = () => {
     },
   ].forEach(async ({ Model, data }) => {
     await Model.bulkCreate(data);
-  });
-};
-
-export const handleResetData = () => {
-  [
-    StaffAgencyBranchInCharge,
-    StaffRole,
-    Role,
-    RolePermission,
-    CustomerTag,
-    UserAddress,
-    Tag,
-    AgencyBranch,
-    User,
-    Price,
-    Customer,
-    Staff,
-  ].forEach(async (Model) => {
-    await Model.truncate({ cascade: true });
   });
 };

@@ -42,6 +42,7 @@ export default (sequelize: any, DataTypes: any) => {
       },
       user_password: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
       user_name: {
         type: DataTypes.STRING,

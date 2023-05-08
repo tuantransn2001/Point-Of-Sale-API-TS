@@ -32,7 +32,7 @@ interface CustomerResult {
   id: string;
   user_code: string;
   customer_id: string | undefined;
-  staff_in_charge?: Object;
+  staff_in_charge?: Object | null;
   customer_status: string | undefined;
   customer_name: string;
   customer_phone: string;
@@ -88,7 +88,6 @@ export const handleFormatCustomer = (
   formatType: string
 ): Array<CustomerResult> | CustomerResult => {
   // ? Handle Case Format Object options
-
   if (formatType === "isObject") {
     const {
       id,
@@ -140,17 +139,23 @@ export const handleFormatCustomer = (
         }
       );
 
-    const staff_in_charge = {
-      staff_id:
-        UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues.id,
-      user_staff_id:
-        UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues
-          .user_id,
-      staff_name:
-        UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues.User
-          .dataValues.user_name,
-    };
-
+    const isStaffInChargeExist: boolean =
+      UserCustomerArray.dataValues.Customer.dataValues.Staff === null
+        ? false
+        : true;
+    const staff_in_charge = isStaffInChargeExist
+      ? {
+          staff_id:
+            UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues
+              .id,
+          user_staff_id:
+            UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues
+              .user_id,
+          staff_name:
+            UserCustomerArray.dataValues.Customer.dataValues.Staff.dataValues
+              .User.dataValues.user_name,
+        }
+      : null;
     return {
       id,
       customer_id: UserCustomerArray.dataValues.Customer.dataValues.id,

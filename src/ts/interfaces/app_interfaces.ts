@@ -66,7 +66,7 @@ interface ProductAttributes {
 interface CustomerAttributes {
   id: string;
   user_id: string;
-  staff_id: string;
+  staff_id: string | null;
   customer_status: string;
   staff_in_charge_note: string;
   createdAt?: Date;
@@ -114,7 +114,7 @@ interface UserAttributes {
   user_code: string;
   user_phone: string;
   user_email: string;
-  user_password: string;
+  user_password: string | null;
   user_name: string;
   user_type: string;
   isDelete: boolean | null;

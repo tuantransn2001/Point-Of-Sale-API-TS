@@ -1,8 +1,10 @@
+import HashStringHandler from "../utils/hashString/string.hash";
 import { NextFunction, Request, Response } from "express";
 const { v4: uuidv4 } = require("uuid");
 import db from "../models";
 const {
   StaffRole,
+  Customer,
   Staff,
   User,
   StaffAgencyBranchInCharge,
@@ -21,6 +23,7 @@ import {
   StaffRoleAttributes,
   StaffAgencyBranchInChargeAttributes,
   UserAttributes,
+  CustomerAttributes,
 } from "@/src/ts/interfaces/app_interfaces";
 class StaffController {
   public static async getAll(_: Request, res: Response, next: NextFunction) {
@@ -79,6 +82,8 @@ class StaffController {
         roles,
         address_list,
       } = req.body;
+      const hashPW: string = HashStringHandler.hash(user_password, 10);
+
       const userID: string = uuidv4();
       const newUserRow: UserAttributes = {
         id: userID,
@@ -86,7 +91,7 @@ class StaffController {
         user_code: randomStringByCharsetAndLength("alphanumeric", 6),
         user_phone,
         user_email,
-        user_password,
+        user_password: hashPW,
         user_name,
         isDelete: null,
       };
@@ -173,6 +178,7 @@ class StaffController {
         await UserAddress.bulkCreate(staffAddressRowArr);
         res.status(201).send({
           status: "Success",
+          newUserRow,
           message: "Create new staff successfully",
         });
       } else {
@@ -297,10 +303,29 @@ class StaffController {
     next: NextFunction
   ) {
     try {
-      const { id } = req.params; // ? ID nay la user id
-      const foundUser = await User.findByPk(id);
+      const { id } = req.params; // ? This is userID
+      const foundUser = await User.findOne({
+        where: {
+          id,
+        },
+        include: [{ model: Staff, include: [{ model: Customer }] }],
+      });
+
       foundUser.isDelete = true;
       foundUser.save();
+      // ? Delete data staff_in_charge in Customer
+      const staff_id: string = foundUser.dataValues.Staff.dataValues.id;
+      const customerList = await Customer.findAll({
+        where: {
+          staff_id,
+        },
+      });
+      customerList.forEach(async (customer: CustomerAttributes) => {
+        await Customer.update(
+          { staff_id: null },
+          { where: { id: customer.id } }
+        );
+      });
       res.status(200).send({
         status: "success",
         message: "Delete customer successfully!",

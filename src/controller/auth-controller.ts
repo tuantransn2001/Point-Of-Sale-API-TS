@@ -1,11 +1,10 @@
+require("dotenv").config();
 import { NextFunction, Request, Response } from "express";
 import { UserAttributes } from "@/src/ts/interfaces/app_interfaces";
-import dotenv from "dotenv";
+import HashStringHandler from "../utils/hashString/string.hash";
 import jwt from "jsonwebtoken";
 import db from "../models";
-
-dotenv.config();
-
+const { User } = db;
 class AuthController {
   public static async login(req: Request, res: Response, next: NextFunction) {
     try {
@@ -19,7 +18,7 @@ class AuthController {
 
       const foundUser: {
         dataValues: UserAttributes;
-      } = await db.User.findOne({
+      } = await User.findOne({
         where: {
           user_phone: phone,
         },
@@ -27,8 +26,11 @@ class AuthController {
       // ? Check user is exist or not by phone
       if (foundUser) {
         // * Case Exist
-        const isMatchPassword: boolean =
-          foundUser.dataValues.user_password === password;
+        const userDB_PW: string = foundUser.dataValues.user_password as string;
+        const isMatchPassword: boolean = HashStringHandler.verify(
+          password,
+          userDB_PW
+        );
         switch (isMatchPassword) {
           case true: {
             const { id, user_name } = foundUser.dataValues;
