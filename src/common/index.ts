@@ -56,7 +56,7 @@ interface QueryStaffAttributes extends StaffAttributes {
 }
 interface QueryCustomerAttributes extends CustomerAttributes {
   CustomerTags: Array<QueryTagAttributes>;
-  Staff: { dataValues: QueryStaffAttributes };
+  Staff: { dataValues: QueryStaffAttributes } ;
 }
 interface UserCustomerAttributes {
   dataValues: {

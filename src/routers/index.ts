@@ -10,13 +10,14 @@ import priceRouter from "./price-router";
 
 const rootRouter = Router();
 
-rootRouter.use("/auth", authRouter);
-rootRouter.use("/customer", customerRouter);
-rootRouter.use("/address", userAddressRouter);
-rootRouter.use("/agency-branch", agencyBranchRouter);
-rootRouter.use("/staff", staffRouter);
-rootRouter.use("/tag", tagRouter);
-rootRouter.use("/role", roleRouter);
-rootRouter.use("/price", priceRouter);
+rootRouter
+  .use("/auth", authRouter)
+  .use("/customer", customerRouter)
+  .use("/address", userAddressRouter)
+  .use("/agency-branch", agencyBranchRouter)
+  .use("/staff", staffRouter)
+  .use("/tag", tagRouter)
+  .use("/role", roleRouter)
+  .use("/price", priceRouter);
 
 export default rootRouter;

@@ -5,6 +5,7 @@ const { Customer, User, UserAddress, CustomerTag, Tag, Staff } = db;
 import {
   handleFormatCustomer,
   handleFormatUpdateDataByValidValue,
+  isEmpty,
 } from "../../src/common";
 import {
   UserAddressAttributes,
@@ -216,16 +217,12 @@ class CustomerController {
         tags,
       } = req.body;
       const { id } = req.params;
-
       const foundUser = await User.findByPk(id);
       const foundCustomer = await Customer.findOne({
         where: {
-          user_id: foundUser.id,
+          user_id: id,
         },
       });
-
-      const userID: string = foundUser.dataValues.id;
-      const customerID: string = foundCustomer.dataValues.id;
 
       const userRowUpdated: UserAddressAttributes =
         handleFormatUpdateDataByValidValue(
@@ -246,7 +243,7 @@ class CustomerController {
           },
           foundCustomer.dataValues
         );
-
+      const customerID: string = foundCustomer.dataValues.id;
       const customerTagRowArr: Array<CustomerTagAttributes> = tags.map(
         (tagID: string) => {
           return {
@@ -256,35 +253,36 @@ class CustomerController {
           };
         }
       );
-      if (userRowUpdated && customerRowUpdated && customerTagRowArr) {
+
+      if (!isEmpty(userRowUpdated)) {
         await User.update(userRowUpdated, {
           where: {
-            id: userID,
+            id: foundUser.id,
           },
         });
-        await Customer.update(customerRowUpdated, {
-          where: {
-            id: customerID,
-          },
-        });
+      }
+      if (!isEmpty(customerRowUpdated)) {
+        await foundCustomer.set(customerRowUpdated);
+        await foundCustomer.save();
+      }
+      if (tags.length > 0) {
         await CustomerTag.destroy({
           where: {
             customer_id: customerID,
           },
         });
         await CustomerTag.bulkCreate(customerTagRowArr);
-
-        res.status(202).send({
-          status: "success",
-          message: "Update successfully!",
-        });
       } else {
-        res.status(409).send({
-          status: "Conflict",
-          message:
-            "Update new customer fail - Please check request and try again!",
+        await CustomerTag.destroy({
+          where: {
+            customer_id: customerID,
+          },
         });
       }
+      res.status(202).send({
+        status: "success",
+        message: "Update successfully!",
+      });
     } catch (err) {
       next(err);
     }

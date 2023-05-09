@@ -2,10 +2,10 @@ require("dotenv").config();
 module.exports = {
   cloud: {
     development: {
-      url: `${process.env.DB_URL}${process.env.SSL_REQUIRE}`,
+      url: `${process.env.DB_DEV_URL}${process.env.SSL_REQUIRE}`,
     },
     production: {
-      url: `${process.env.DB_URL}${process.env.SSL_REQUIRE}`,
+      url: `${process.env.DB_PROD_URL}${process.env.SSL_REQUIRE}`,
     },
   },
   local: {

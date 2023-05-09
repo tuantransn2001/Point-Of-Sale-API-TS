@@ -1,6 +1,6 @@
 require("dotenv").config();
 import HashStringHandler from "../utils/hashString/string.hash";
-
+const SALT_ROUNDS: number = +(process.env.SALT_ROUNDS as string);
 const ADMIN_PASSWORD: string = process.env.ADMIN_PASSWORD as string;
 
 const USER_ARRAY = [
@@ -10,7 +10,7 @@ const USER_ARRAY = [
     user_type: "admin",
     user_phone: "0123456789",
     user_email: "admin@gmail.com",
-    user_password: HashStringHandler.hash(ADMIN_PASSWORD, 10),
+    user_password: HashStringHandler.hash(ADMIN_PASSWORD, SALT_ROUNDS),
     user_code: "UNIT-12",
   },
   {

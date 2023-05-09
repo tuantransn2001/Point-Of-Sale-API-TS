@@ -10,41 +10,38 @@ import {
   authorize,
   errorHandler,
 } from "../middlewares";
-staffRouter.get("/get-all", authenticate, StaffController.getAll, errorHandler);
-staffRouter.post(
-  "/create",
-  authenticate,
-  authorize,
-  checkUserExist(),
-  StaffController.create,
-  errorHandler
-);
-staffRouter.get(
-  "/get-by-id/:id",
-  authenticate,
-  StaffController.getByID,
-  errorHandler
-);
-staffRouter.patch(
-  "/update-personal-by-id/:id",
-  authenticate,
-  checkExist(User),
-  checkUserExist(),
-  StaffController.updateByID,
-  errorHandler
-);
-staffRouter.delete(
-  "/delete-by-id/:id",
-  authenticate,
-  checkExist(User),
-  StaffController.deleteByID,
-  errorHandler
-);
-staffRouter.patch(
-  "/update-role-by-id/:id",
-  authenticate,
-  checkExist(User),
-  StaffController.updateRoleByID,
-  errorHandler
-);
+
+staffRouter
+  .get("/get-all", authenticate, StaffController.getAll, errorHandler)
+  .post(
+    "/create",
+    authenticate,
+    authorize,
+    checkUserExist(),
+    StaffController.create,
+    errorHandler
+  )
+  .get("/get-by-id/:id", authenticate, StaffController.getByID, errorHandler)
+  .patch(
+    "/update-personal-by-id/:id",
+    authenticate,
+    checkExist(User),
+    checkUserExist(),
+    StaffController.updateByID,
+    errorHandler
+  )
+  .delete(
+    "/delete-by-id/:id",
+    authenticate,
+    checkExist(User),
+    StaffController.deleteByID,
+    errorHandler
+  )
+  .patch(
+    "/update-role-by-id/:id",
+    authenticate,
+    checkExist(User),
+    StaffController.updateRoleByID,
+    errorHandler
+  );
 export default staffRouter;

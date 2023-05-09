@@ -10,41 +10,37 @@ import db from "../models";
 const { User } = db;
 const customerRouter = Router();
 
-customerRouter.get(
-  "/get-all",
-  authenticate,
-  CustomerController.getAll,
-  errorHandler
-);
-customerRouter.get(
-  "/get-by-id/:id",
-  authenticate,
-  checkExist(User),
-  CustomerController.getByID,
-  errorHandler
-);
-customerRouter.post(
-  "/create",
-  authenticate,
-  checkUserExist(),
-  CustomerController.create,
-  errorHandler
-);
+customerRouter
+  .get("/get-all", authenticate, CustomerController.getAll, errorHandler)
+  .get(
+    "/get-by-id/:id",
+    authenticate,
+    checkExist(User),
+    CustomerController.getByID,
+    errorHandler
+  )
+  .post(
+    "/create",
+    authenticate,
+    checkUserExist(),
+    CustomerController.create,
+    errorHandler
+  )
 
-customerRouter.delete(
-  "/delete-by-id/:id",
-  authenticate,
-  checkExist(User),
-  CustomerController.deleteByID,
-  errorHandler
-);
-customerRouter.patch(
-  "/update-personalInfo-by-id/:id",
-  authenticate,
-  checkExist(User),
-  checkUserExist(),
-  CustomerController.updatePersonalInfoByID,
-  errorHandler
-);
+  .delete(
+    "/delete-by-id/:id",
+    authenticate,
+    checkExist(User),
+    CustomerController.deleteByID,
+    errorHandler
+  )
+  .patch(
+    "/update-personalInfo-by-id/:id",
+    authenticate,
+    checkExist(User),
+    checkUserExist(),
+    CustomerController.updatePersonalInfoByID,
+    errorHandler
+  );
 
 export default customerRouter;

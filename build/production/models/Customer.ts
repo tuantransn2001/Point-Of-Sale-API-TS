@@ -9,7 +9,7 @@ export default (sequelize: any, DataTypes: any) => {
   {
     id!: string;
     user_id!: string;
-    staff_id!: string;
+    staff_id!: string | null;
     customer_status!: string;
     staff_in_charge_note!: string;
     static associate({

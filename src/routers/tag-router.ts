@@ -6,21 +6,22 @@ const { Tag } = db;
 
 const tagRouter = Router();
 
-tagRouter.get("/get-all", authenticate, TagController.getAll, errorHandler);
-tagRouter.post("/create", authenticate, TagController.create, errorHandler);
-tagRouter.patch(
-  "/update-by-id/:id",
-  authenticate,
-  checkExist(Tag),
-  TagController.updateByID,
-  errorHandler
-);
-tagRouter.delete(
-  "/delete-by-id/:id",
-  authenticate,
-  checkExist(Tag),
-  TagController.deleteByID,
-  errorHandler
-);
+tagRouter
+  .get("/get-all", authenticate, TagController.getAll, errorHandler)
+  .post("/create", authenticate, TagController.create, errorHandler)
+  .patch(
+    "/update-by-id/:id",
+    authenticate,
+    checkExist(Tag),
+    TagController.updateByID,
+    errorHandler
+  )
+  .delete(
+    "/delete-by-id/:id",
+    authenticate,
+    checkExist(Tag),
+    TagController.deleteByID,
+    errorHandler
+  );
 
 export default tagRouter;

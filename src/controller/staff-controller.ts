@@ -1,6 +1,7 @@
-import HashStringHandler from "../utils/hashString/string.hash";
-import { NextFunction, Request, Response } from "express";
+require("dotenv").config();
 const { v4: uuidv4 } = require("uuid");
+import { NextFunction, Request, Response } from "express";
+import HashStringHandler from "../utils/hashString/string.hash";
 import db from "../models";
 const {
   StaffRole,
@@ -82,7 +83,8 @@ class StaffController {
         roles,
         address_list,
       } = req.body;
-      const hashPW: string = HashStringHandler.hash(user_password, 10);
+      const SALT_ROUNDS: number = +(process.env.SALT_ROUNDS as string);
+      const hashPW: string = HashStringHandler.hash(user_password, SALT_ROUNDS);
 
       const userID: string = uuidv4();
       const newUserRow: UserAttributes = {

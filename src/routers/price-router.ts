@@ -10,37 +10,38 @@ import {
 import db from "../models";
 const { Price } = db;
 
-priceRouter.get(
-  "/get-all",
-  authenticate,
-  authorize,
-  PriceController.getAll,
-  errorHandler
-);
-priceRouter.post(
-  "/create",
-  authenticate,
-  authorize,
-  PriceController.create,
-  errorHandler
-);
-priceRouter.patch(
-  "/update-by-id/:id",
-  authenticate,
-  authorize,
-  checkExist(Price),
-  PriceController.checkDefaultPrice,
-  PriceController.updateByID,
-  errorHandler
-);
-priceRouter.delete(
-  "/delete-by-id/:id",
-  authenticate,
-  authorize,
-  checkExist(Price),
-  PriceController.checkDefaultPrice,
-  PriceController.deleteByID,
-  errorHandler
-);
+priceRouter
+  .get(
+    "/get-all",
+    authenticate,
+    authorize,
+    PriceController.getAll,
+    errorHandler
+  )
+  .post(
+    "/create",
+    authenticate,
+    authorize,
+    PriceController.create,
+    errorHandler
+  )
+  .patch(
+    "/update-by-id/:id",
+    authenticate,
+    authorize,
+    checkExist(Price),
+    PriceController.checkDefaultPrice,
+    PriceController.updateByID,
+    errorHandler
+  )
+  .delete(
+    "/delete-by-id/:id",
+    authenticate,
+    authorize,
+    checkExist(Price),
+    PriceController.checkDefaultPrice,
+    PriceController.deleteByID,
+    errorHandler
+  );
 
 export default priceRouter;

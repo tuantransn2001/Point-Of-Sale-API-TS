@@ -10,28 +10,29 @@ import {
   errorHandler,
 } from "../middlewares";
 
-agencyBranchRouter.get(
-  "/get-all",
-  authenticate,
-  authorize,
-  AgencyController.getAll,
-  errorHandler
-);
-agencyBranchRouter.post(
-  "/create",
-  authenticate,
-  authorize,
-  AgencyController.checkAgencyBranchExistByCode,
-  AgencyController.create,
-  errorHandler
-);
-agencyBranchRouter.patch(
-  "/update-by-id/:id",
-  authenticate,
-  authorize,
-  checkExist(AgencyBranch),
-  AgencyController.checkAgencyBranchExistByCode,
-  AgencyController.updateByID,
-  errorHandler
-);
+agencyBranchRouter
+  .get(
+    "/get-all",
+    authenticate,
+    authorize,
+    AgencyController.getAll,
+    errorHandler
+  )
+  .post(
+    "/create",
+    authenticate,
+    authorize,
+    AgencyController.checkAgencyBranchExistByCode,
+    AgencyController.create,
+    errorHandler
+  )
+  .patch(
+    "/update-by-id/:id",
+    authenticate,
+    authorize,
+    checkExist(AgencyBranch),
+    AgencyController.checkAgencyBranchExistByCode,
+    AgencyController.updateByID,
+    errorHandler
+  );
 export default agencyBranchRouter;
