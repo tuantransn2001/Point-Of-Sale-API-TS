@@ -10,6 +10,14 @@ import {
   TAG_ARRAY,
   CUSTOMER_TAG_LIST_ARRAY,
   PRICE_ARRAY,
+  BRAND_ARRAY,
+  TYPE_ARRAY,
+  PRODUCT_ARRAY,
+  PRODUCT_TAG_LIST_ARRAY,
+  ADDITIONAL_PRODUCT_INFORMATION,
+  PRODUCT_VARIANT_DETAIL_ARRAY,
+  PRODUCT_VARIANT_PRICE_ARRAY,
+  PRODUCT_VARIANT_PROPERTY_ARRAY,
 } from "./seeders";
 import db from "../models";
 const {
@@ -24,10 +32,26 @@ const {
   Tag,
   CustomerTag,
   Price,
+  Brand,
+  Type,
+  Products,
+  ProductTagList,
+  AdditionProductInformation,
+  ProductVariantDetail,
+  ProductVariantPrice,
+  ProductVariantProperty,
 } = db;
 
 export const handleSeedData = () => {
   [
+    {
+      Model: Brand,
+      data: BRAND_ARRAY,
+    },
+    {
+      Model: Type,
+      data: TYPE_ARRAY,
+    },
     {
       Model: User,
       data: USER_ARRAY,
@@ -71,6 +95,31 @@ export const handleSeedData = () => {
     {
       Model: StaffAgencyBranchInCharge,
       data: STAFF_AGENCY_INCHARGE_ARRAY,
+    },
+    {
+      Model: Products,
+      data: PRODUCT_ARRAY,
+    },
+    {
+      Model: AdditionProductInformation,
+      data: ADDITIONAL_PRODUCT_INFORMATION,
+    },
+    {
+      Model: ProductTagList,
+      data: PRODUCT_TAG_LIST_ARRAY,
+    },
+
+    {
+      Model: ProductVariantDetail,
+      data: PRODUCT_VARIANT_DETAIL_ARRAY,
+    },
+    {
+      Model: ProductVariantPrice,
+      data: PRODUCT_VARIANT_PRICE_ARRAY,
+    },
+    {
+      Model: ProductVariantProperty,
+      data: PRODUCT_VARIANT_PROPERTY_ARRAY,
     },
   ].forEach(async ({ Model, data }) => {
     await Model.bulkCreate(data);

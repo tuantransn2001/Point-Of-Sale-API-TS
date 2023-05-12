@@ -1,12 +1,13 @@
 "use strict";
 import { Model } from "sequelize";
-import { ProductVariantAttributes } from "@/src/ts/interfaces/app_interfaces";
+import { ProductVariantDetailAttributes } from "@/src/ts/interfaces/app_interfaces";
 export default (sequelize: any, DataTypes: any) => {
-  class ProductVariant
-    extends Model<ProductVariantAttributes>
-    implements ProductVariantAttributes
+  class ProductVariantDetail
+    extends Model<ProductVariantDetailAttributes>
+    implements ProductVariantDetailAttributes
   {
     id!: string;
+    product_id!: string;
     product_variant_name!: string;
     product_variant_SKU!: string;
     product_variant_barcode!: string;
@@ -17,9 +18,26 @@ export default (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({}: any) {}
+    static associate({
+      Products,
+      ProductVariantPrice,
+      ProductVariantProperty,
+    }: any) {
+      ProductVariantDetail.belongsTo(Products, {
+        foreignKey: "product_id",
+        as: "Variants",
+      });
+      ProductVariantDetail.hasMany(ProductVariantPrice, {
+        foreignKey: "product_variant_id",
+        as: "Variant_Prices",
+      });
+      ProductVariantDetail.hasMany(ProductVariantProperty, {
+        foreignKey: "product_variant_id",
+        as: "Properties",
+      });
+    }
   }
-  ProductVariant.init(
+  ProductVariantDetail.init(
     {
       id: {
         allowNull: false,
@@ -27,7 +45,9 @@ export default (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-
+      product_id: {
+        type: DataTypes.UUID,
+      },
       product_variant_name: {
         type: DataTypes.STRING,
       },
@@ -46,8 +66,8 @@ export default (sequelize: any, DataTypes: any) => {
     },
     {
       sequelize,
-      modelName: "ProductVariant",
+      modelName: "ProductVariantDetail",
     }
   );
-  return ProductVariant;
+  return ProductVariantDetail;
 };

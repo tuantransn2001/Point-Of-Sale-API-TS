@@ -1,8 +1,8 @@
 require("dotenv").config();
 import express, { Express } from "express";
 import cors from "cors";
-import rootRouter from "./routers";
 import db from "./models";
+import rootRouter from "./routers";
 import { handleSeedData } from "./data/handleSeedData";
 // ? ============================== INITIATE SERVER ====================================
 const app: Express = express();

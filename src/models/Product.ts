@@ -6,7 +6,7 @@ export default (sequelize: any, DataTypes: any) => {
     id!: string;
     order_product_item_id!: string;
     agency_branch_product_item_id!: string;
-    addition_product_information_id!: string;
+    product_name!: string;
     product_classify!: string;
     product_SKU!: string;
     /**
@@ -14,7 +14,18 @@ export default (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({}: any) {}
+    static associate({
+      AdditionProductInformation,
+      ProductVariantDetail,
+    }: any) {
+      Products.hasOne(AdditionProductInformation, {
+        foreignKey: "product_id",
+      });
+      Products.hasMany(ProductVariantDetail, {
+        foreignKey: "product_id",
+        as: "Variants",
+      });
+    }
   }
   Products.init(
     {
@@ -24,15 +35,16 @@ export default (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-
       order_product_item_id: {
         type: DataTypes.UUID,
+        allowNull: true,
       },
       agency_branch_product_item_id: {
         type: DataTypes.UUID,
+        allowNull: true,
       },
-      addition_product_information_id: {
-        type: DataTypes.UUID,
+      product_name: {
+        type: DataTypes.STRING,
       },
       product_classify: {
         type: DataTypes.STRING,

@@ -43,7 +43,6 @@ interface CustomerResult {
   createdAt: Date;
   updatedAt: Date;
 }
-
 interface QueryTagAttributes extends CustomerTagAttributes {
   Tag: {
     dataValues: TagAttributes;
@@ -56,7 +55,7 @@ interface QueryStaffAttributes extends StaffAttributes {
 }
 interface QueryCustomerAttributes extends CustomerAttributes {
   CustomerTags: Array<QueryTagAttributes>;
-  Staff: { dataValues: QueryStaffAttributes } ;
+  Staff: { dataValues: QueryStaffAttributes };
 }
 interface UserCustomerAttributes {
   dataValues: {
@@ -79,7 +78,6 @@ interface UserCustomerAttributes {
     };
   };
 }
-
 type UserCustomerParameterType = UserCustomerAttributes &
   Array<UserCustomerAttributes>;
 
@@ -264,11 +262,13 @@ export const randomIntFromInterval = (min: number, max: number) => {
 
 export const randomStringByCharsetAndLength = (
   charset: string,
-  length: number
+  length: number,
+  formatType: string
 ): string => {
   return randomstring.generate({
     charset: charset,
     length: length,
+    capitalization: formatType ? formatType : "lowercase",
   });
 };
 
@@ -610,4 +610,50 @@ export const handleFormatStaff = (
   );
 
   return staffListResult;
+};
+
+export const cartesian = (...a) =>
+  a.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
+
+export const handleGenerateVariantBaseOnProperties = (
+  properties: Array<any>
+) => {
+  const { keys, combineValues } = properties.reduce(
+    (res: any, property: any) => {
+      const { key, values }: any = property;
+      res.keys.push(key);
+      res.combineValues.push(values);
+      return res;
+    },
+    {
+      keys: [],
+      combineValues: [],
+    }
+  );
+
+  return { keys, productVariants: cartesian(...combineValues) };
+};
+
+interface ErrorContainer {
+  [props: string]: string;
+}
+type Falsy = false | 0 | "" | null | undefined;
+export const checkMissPropertyInObjectBaseOnValueCondition = (
+  baseObject: ErrorContainer,
+  valueCondition: Falsy
+): Array<string> => {
+  const arrMissArray: Array<string> = Object.keys(baseObject).reduce(
+    (res: any, key: string) => {
+      if (
+        baseObject.hasOwnProperty(key) &&
+        baseObject[key] === valueCondition
+      ) {
+        res.push(key);
+      }
+      return res;
+    },
+    []
+  );
+
+  return arrMissArray;
 };

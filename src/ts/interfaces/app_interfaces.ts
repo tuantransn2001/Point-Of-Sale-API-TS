@@ -57,7 +57,7 @@ interface ProductAttributes {
   id: string;
   order_product_item_id: string;
   agency_branch_product_item_id: string;
-  addition_product_information_id: string;
+  product_name: string;
   product_classify: string;
   product_SKU: string;
   createdAt?: Date;
@@ -171,14 +171,16 @@ interface ProductTagItemAttributes {
 
 interface AdditionProductInformationAttributes {
   id: string;
+  product_id: string;
   type_id: string;
   brand_id: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-interface ProductVariantAttributes {
+interface ProductVariantDetailAttributes {
   id: string;
+  product_id: string;
   product_variant_name: string;
   product_variant_SKU: string;
   product_variant_barcode: string;
@@ -220,7 +222,7 @@ export {
   PriceAttributes,
   ProductVariantPriceAttributes,
   ProductVariantPropertyAttributes,
-  ProductVariantAttributes,
+  ProductVariantDetailAttributes,
   AdditionProductInformationAttributes,
   ProductTagItemAttributes,
   BrandAttributes,

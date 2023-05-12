@@ -90,7 +90,11 @@ class StaffController {
       const newUserRow: UserAttributes = {
         id: userID,
         user_type: "staff",
-        user_code: randomStringByCharsetAndLength("alphanumeric", 6),
+        user_code: randomStringByCharsetAndLength(
+          "alphanumeric",
+          6,
+          "uppercase"
+        ),
         user_phone,
         user_email,
         user_password: hashPW,

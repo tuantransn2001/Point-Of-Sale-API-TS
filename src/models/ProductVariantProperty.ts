@@ -16,7 +16,12 @@ export default (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({}: any) {}
+    static associate({ ProductVariantDetail }: any) {
+      ProductVariantProperty.belongsTo(ProductVariantDetail, {
+        foreignKey: "product_variant_id",
+        as: "Properties",
+      });
+    }
   }
   ProductVariantProperty.init(
     {
@@ -26,7 +31,6 @@ export default (sequelize: any, DataTypes: any) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-
       product_variant_id: {
         type: DataTypes.UUID,
       },

@@ -11,7 +11,15 @@ export default (sequelize: any, DataTypes: any) => {
     tag_id!: string;
     addition_product_information_id!: string;
 
-    static associate({}: any) {}
+    static associate({ Tag, AdditionProductInformation }: any) {
+      ProductTagList.belongsTo(Tag, {
+        foreignKey: "tag_id",
+      });
+      ProductTagList.belongsTo(AdditionProductInformation, {
+        foreignKey: "addition_product_information_id",
+        as: "Product_Tag_List",
+      });
+    }
   }
   ProductTagList.init(
     {

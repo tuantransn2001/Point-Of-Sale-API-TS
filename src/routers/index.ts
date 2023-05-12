@@ -7,6 +7,7 @@ import userAddressRouter from "./userAddress-router";
 import tagRouter from "./tag-router";
 import roleRouter from "./role-router";
 import priceRouter from "./price-router";
+import productRouter from "./product-router";
 
 const rootRouter = Router();
 
@@ -18,6 +19,7 @@ rootRouter
   .use("/staff", staffRouter)
   .use("/tag", tagRouter)
   .use("/role", roleRouter)
-  .use("/price", priceRouter);
+  .use("/price", priceRouter)
+  .use("/product", productRouter);
 
 export default rootRouter;

@@ -7,10 +7,25 @@ export default (sequelize: any, DataTypes: any) => {
     implements AdditionProductInformationAttributes
   {
     id!: string;
+    product_id!: string;
     type_id!: string;
     brand_id!: string;
 
-    static associate({}: any) {}
+    static associate({ Type, Brand, Products, ProductTagList }: any) {
+      AdditionProductInformation.belongsTo(Type, {
+        foreignKey: "type_id",
+      });
+      AdditionProductInformation.belongsTo(Brand, {
+        foreignKey: "brand_id",
+      });
+      AdditionProductInformation.belongsTo(Products, {
+        foreignKey: "product_id",
+      });
+      AdditionProductInformation.hasMany(ProductTagList, {
+        foreignKey: "addition_product_information_id",
+        as: "Product_Tag_List",
+      });
+    }
   }
   AdditionProductInformation.init(
     {
@@ -19,6 +34,9 @@ export default (sequelize: any, DataTypes: any) => {
         primaryKey: true,
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
+      },
+      product_id: {
+        type: DataTypes.UUID,
       },
       type_id: {
         type: DataTypes.UUID,
