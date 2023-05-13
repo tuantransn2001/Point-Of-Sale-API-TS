@@ -80,7 +80,10 @@ export const handleSeedData = () => {
       Model: Customer,
       data: CUSTOMER_ARRAY,
     },
-
+    {
+      Model: Tag,
+      data: TAG_ARRAY,
+    },
     {
       Model: UserAddress,
       data: USER_ADDRESS_LIST_ARRAY,
@@ -89,7 +92,14 @@ export const handleSeedData = () => {
       Model: CustomerTag,
       data: CUSTOMER_TAG_LIST_ARRAY,
     },
-
+    {
+      Model: AgencyBranch,
+      data: AGENCY_BRANCH_ARRAY,
+    },
+    {
+      Model: Role,
+      data: ROLE_ARRAY,
+    },
     {
       Model: StaffRole,
       data: STAFF_ROLE_ARRAY,

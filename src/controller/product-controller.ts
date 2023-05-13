@@ -36,6 +36,7 @@ class ProductController {
                 model: ProductVariantPrice,
                 include: [{ model: Price }],
                 as: "Variant_Prices",
+                separate: true,
               },
             ],
           },
@@ -45,6 +46,7 @@ class ProductController {
               {
                 model: ProductTagList,
                 as: "Product_Tag_List",
+                separate: true,
                 include: [
                   {
                     model: Tag,

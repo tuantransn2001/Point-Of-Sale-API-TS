@@ -28,6 +28,7 @@ class CustomerController {
             include: [
               {
                 model: CustomerTag,
+                separate: true,
                 include: [
                   {
                     model: Tag,
