@@ -161,13 +161,11 @@ class AgencyController {
       });
 
       if (foundAgencyBranch) {
-        res
-          .status(409)
-          .send({
-            status: "Conflict",
-            message:
-              "Agency Branchs has been already exists! Please check CN_code and try again!",
-          });
+        res.status(409).send({
+          status: "Conflict",
+          message:
+            "Agency Branchs has been already exists! Please check CN_code and try again!",
+        });
       } else {
         next();
       }
